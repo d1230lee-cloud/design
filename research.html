@@ -1,0 +1,1073 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Research Report · Visual References for Samsung TV One UI (N+2~3)</title>
+<style>
+  :root{
+    --bg:#08080d;
+    --bg-2:#0d0d14;
+    --surface:#13131c;
+    --surface-2:#1a1a26;
+    --surface-3:#22222f;
+    --border:rgba(255,255,255,0.08);
+    --border-strong:rgba(255,255,255,0.16);
+    --text:#ffffff;
+    --text-2:rgba(255,255,255,0.72);
+    --text-3:rgba(255,255,255,0.45);
+    --primary:#5b8def;
+    --primary-2:#7aa3ff;
+    --accent:#00d4ff;
+    --accent-2:#a78bfa;
+    --warm:#ffb86b;
+    --good:#3ddc97;
+    --bad:#ff6b6b;
+    --radius:18px;
+    --radius-sm:10px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Pretendard","Apple SD Gothic Neo","Noto Sans KR","Segoe UI",Roboto,sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased;font-feature-settings:"ss01","cv11"}
+  a{color:var(--primary-2);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1180px;margin:0 auto;padding:48px 32px 96px}
+  .eyebrow{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-3);font-weight:600}
+  h1{font-size:44px;line-height:1.15;letter-spacing:-0.02em;margin:14px 0 12px;font-weight:700}
+  h2{font-size:30px;line-height:1.2;letter-spacing:-0.01em;margin:0 0 16px;font-weight:700}
+  h3{font-size:20px;letter-spacing:-0.01em;margin:0 0 10px;font-weight:700}
+  h4{font-size:14px;letter-spacing:.04em;text-transform:uppercase;color:var(--text-3);margin:0 0 10px;font-weight:600}
+  p{margin:0 0 12px;color:var(--text-2);font-size:15px}
+  .lede{font-size:18px;color:var(--text-2);max-width:780px}
+  .muted{color:var(--text-3)}
+  .pill{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:var(--surface-2);color:var(--text-2);border:1px solid var(--border);font-size:12px;font-weight:500}
+  .pill.primary{background:linear-gradient(135deg,rgba(91,141,239,.22),rgba(0,212,255,.16));border-color:rgba(91,141,239,.45);color:#cfe0ff}
+  .pill.accent{background:rgba(167,139,250,.14);border-color:rgba(167,139,250,.4);color:#dccfff}
+  .pill.warm{background:rgba(255,184,107,.12);border-color:rgba(255,184,107,.35);color:#ffd9a8}
+  .pill.good{background:rgba(61,220,151,.12);border-color:rgba(61,220,151,.35);color:#b8f3d4}
+  .row{display:flex;flex-wrap:wrap;gap:8px}
+
+  .hero{
+    position:relative;overflow:hidden;border:1px solid var(--border);border-radius:24px;padding:56px 48px;margin-bottom:48px;
+    background:
+      radial-gradient(1200px 500px at 10% -10%, rgba(91,141,239,.30), transparent 60%),
+      radial-gradient(900px 400px at 100% 0%, rgba(0,212,255,.18), transparent 55%),
+      radial-gradient(700px 400px at 50% 120%, rgba(167,139,250,.18), transparent 60%),
+      linear-gradient(180deg,#0e0e18,#0a0a12);
+  }
+  .hero::after{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.05) 1px,transparent 1px);background-size:24px 24px;mask-image:linear-gradient(180deg,transparent,#000 30%,#000 70%,transparent);pointer-events:none}
+  .hero .meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:24px;position:relative;z-index:1}
+  .hero h1, .hero p, .hero .meta, .hero .eyebrow{position:relative;z-index:1}
+
+  section{margin:64px 0}
+  .section-head{display:flex;align-items:end;justify-content:space-between;margin-bottom:24px;gap:16px;flex-wrap:wrap}
+  .section-head .num{font-size:13px;color:var(--text-3);font-weight:600;letter-spacing:.16em}
+
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px}
+  .card.elev{background:linear-gradient(180deg,var(--surface-2),var(--surface));}
+  .grid{display:grid;gap:18px}
+  .grid.c2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid.c3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .grid.c4{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .grid.c5{grid-template-columns:repeat(5,minmax(0,1fr))}
+  @media (max-width:900px){.grid.c2,.grid.c3,.grid.c4,.grid.c5{grid-template-columns:1fr}}
+
+  .process{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+  .process .step{position:relative;padding:18px 16px;border-radius:14px;background:var(--surface);border:1px solid var(--border)}
+  .process .step .num{font-size:11px;color:var(--accent);letter-spacing:.16em;font-weight:700}
+  .process .step h3{font-size:15px;margin:8px 0 6px}
+  .process .step p{font-size:13px;color:var(--text-3);margin:0}
+  @media (max-width:900px){.process{grid-template-columns:1fr 1fr}}
+
+  .scale{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:12px}
+  .scale .ax{padding:18px;border-radius:14px;background:var(--surface);border:1px solid var(--border);position:relative;overflow:hidden}
+  .scale .ax::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--c)}
+  .scale .ax .letter{font-size:36px;font-weight:800;color:var(--c);line-height:1;letter-spacing:-0.02em}
+  .scale .ax h3{font-size:14px;margin:8px 0 6px;color:var(--text)}
+  .scale .ax p{font-size:12px;color:var(--text-3);margin:0}
+  @media (max-width:900px){.scale{grid-template-columns:1fr 1fr}}
+
+  .criteria-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .criteria-grid .c{padding:16px;border-radius:14px;background:var(--surface);border:1px solid var(--border)}
+  .criteria-grid .c .ico{font-size:18px}
+  .criteria-grid .c h3{font-size:14px;margin:8px 0 4px}
+  .criteria-grid .c p{font-size:12.5px;color:var(--text-3);margin:0}
+  @media (max-width:900px){.criteria-grid{grid-template-columns:1fr 1fr}}
+
+  .case{display:grid;grid-template-columns:1.05fr 1fr;gap:0;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--surface)}
+  .case .visual{background:#06060c;display:flex;align-items:center;justify-content:center;padding:24px;min-height:280px;position:relative}
+  .case .visual svg{width:100%;height:auto;max-width:480px}
+  .case .body{padding:24px}
+  .case .head{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+  .case .head .brand{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--text-3)}
+  .case .name{font-size:22px;font-weight:700;letter-spacing:-0.01em;margin:6px 0 4px}
+  .case .tag{font-size:13px;color:var(--text-3)}
+  .case ul{list-style:none;padding:0;margin:14px 0}
+  .case ul li{position:relative;padding:8px 0 8px 22px;border-top:1px solid var(--border);font-size:14px;color:var(--text-2)}
+  .case ul li:last-child{border-bottom:1px solid var(--border)}
+  .case ul li::before{content:"";position:absolute;left:6px;top:14px;width:6px;height:6px;border-radius:2px;background:var(--accent)}
+  .case .applic{margin-top:14px;padding:14px;border-radius:12px;background:linear-gradient(135deg,rgba(91,141,239,.16),rgba(0,212,255,.08));border:1px solid rgba(91,141,239,.3)}
+  .case .applic h4{color:#a8c8ff;margin-bottom:6px;letter-spacing:.06em}
+  .case .applic p{color:#dde7ff;font-size:13.5px;margin:0}
+  .case .src{margin-top:10px;font-size:11.5px;color:var(--text-3)}
+  @media (max-width:900px){.case{grid-template-columns:1fr}}
+
+  .matrix{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+  .matrix .row-h{display:grid;grid-template-columns:60px 1.4fr 1.6fr 1.6fr;gap:0;background:var(--surface-2);padding:14px 18px;font-size:12px;color:var(--text-3);font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+  .matrix .row-r{display:grid;grid-template-columns:60px 1.4fr 1.6fr 1.6fr;gap:0;padding:18px;border-top:1px solid var(--border);align-items:start}
+  .matrix .row-r .n{font-size:18px;font-weight:800;color:var(--accent);letter-spacing:-0.02em}
+  .matrix .row-r h3{font-size:15px;margin:0 0 4px}
+  .matrix .row-r p{font-size:13px;color:var(--text-3);margin:0}
+  .matrix .row-r .src-pill{display:inline-block;padding:3px 8px;border-radius:6px;background:var(--surface-3);font-size:11px;color:var(--text-2);margin-right:4px;margin-top:4px}
+  @media (max-width:900px){.matrix .row-h{display:none}.matrix .row-r{grid-template-columns:1fr;gap:8px;padding:16px}}
+
+  .apply{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  .apply .card{padding:22px}
+  .apply .card .num{font-size:11px;font-weight:700;letter-spacing:.16em;color:var(--accent)}
+  .apply .card h3{margin:8px 0 6px;font-size:17px}
+  .apply .card p{font-size:13.5px}
+  .apply .card .meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+  @media (max-width:900px){.apply{grid-template-columns:1fr}}
+
+  .footer{margin-top:80px;border-top:1px solid var(--border);padding-top:24px;color:var(--text-3);font-size:12.5px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+  .nav{position:sticky;top:0;z-index:5;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);background:rgba(8,8,13,.7);border-bottom:1px solid var(--border);padding:12px 24px;margin:-48px -32px 32px}
+  .nav .inner{max-width:1180px;margin:0 auto;display:flex;gap:14px;align-items:center;flex-wrap:wrap;font-size:12.5px}
+  .nav a{color:var(--text-2);padding:6px 10px;border-radius:8px}
+  .nav a:hover{background:var(--surface);text-decoration:none;color:var(--text)}
+  .nav .dot{width:6px;height:6px;border-radius:50%;background:var(--good);box-shadow:0 0 8px var(--good)}
+
+  .kbd{display:inline-block;padding:2px 6px;border-radius:6px;background:var(--surface-3);border:1px solid var(--border);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11.5px;color:var(--text)}
+  .divider{height:1px;background:var(--border);margin:32px 0}
+  .stack{display:flex;flex-direction:column;gap:12px}
+  .stat{display:flex;gap:14px;align-items:baseline}
+  .stat .v{font-size:30px;font-weight:800;letter-spacing:-0.02em}
+  .stat .l{color:var(--text-3);font-size:12.5px}
+
+  @media print{
+    body{background:white;color:black}
+    .hero,.card,.case,.matrix{box-shadow:none}
+    .nav{display:none}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="nav">
+    <div class="inner">
+      <span class="dot"></span>
+      <strong style="color:var(--text)">Research Report</strong>
+      <span class="muted">·</span>
+      <a href="#process">프로세스</a>
+      <a href="#framework">프레임워크</a>
+      <a href="#scope">탐색 영역</a>
+      <a href="#cases">사례</a>
+      <a href="#insights">핵심 인사이트</a>
+      <a href="#apply">TV 적용안</a>
+      <span class="muted" style="margin-left:auto">v1.0 · 2026-05-11</span>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="eyebrow">Visual Reference Research · 리서치팀 Agent</div>
+    <h1>AI 시대 N+2~3년을 위한<br/>삼성 TV One UI 비주얼 레퍼런스 리서치</h1>
+    <p class="lede">TV 카테고리 외부에서 N+2~3년 후 사용자에게 익숙해질 시각/상호작용 언어를 선제적으로 흡수하기 위한 횡단 리서치. <strong style="color:#fff">AI 서비스 UX</strong>와 <strong style="color:#fff">차세대 웹/OS</strong> 두 축에서 10개 사례를 분석하고, 삼성 TV One UI에 적용 가능한 7개 핵심 인사이트로 압축했습니다.</p>
+    <div class="meta">
+      <span class="pill primary">Phase 1 · Discovery</span>
+      <span class="pill">담당 · 리서치팀 Agent</span>
+      <span class="pill">병렬 · 기획팀 / 디자인팀 입력값</span>
+      <span class="pill warm">검토 대기</span>
+    </div>
+  </header>
+
+  <section>
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Executive Summary</div>
+        <h2>한 페이지로 보는 결론</h2>
+      </div>
+    </div>
+    <div class="grid c3">
+      <div class="card elev">
+        <div class="stat"><div class="v" style="color:var(--accent)">10</div><div class="l">분석 사례<br/>(AI 5 + Web/OS 5)</div></div>
+        <p class="muted" style="font-size:12.5px;margin-top:14px">ChatGPT · Claude · Perplexity · Gemini Live · Copilot / Apple Liquid Glass · Dia · Linear · Raycast · Notion AI</p>
+      </div>
+      <div class="card elev">
+        <div class="stat"><div class="v" style="color:var(--primary-2)">5</div><div class="l">분석 축<br/>S.C.A.L.E 프레임워크</div></div>
+        <p class="muted" style="font-size:12.5px;margin-top:14px">Surface · Content · Agency · Legibility · Experience</p>
+      </div>
+      <div class="card elev">
+        <div class="stat"><div class="v" style="color:var(--accent-2)">7</div><div class="l">TV 적용<br/>핵심 인사이트</div></div>
+        <p class="muted" style="font-size:12.5px;margin-top:14px">Generative Surface, Glass Depth, Agentic Hub, Confidence Visualization, Adaptive Density, Voice-first Visual, Ambient → Active Continuum</p>
+      </div>
+    </div>
+    <div class="card elev" style="margin-top:14px">
+      <h4>한 줄 요약</h4>
+      <p style="color:var(--text);font-size:16px;margin:0">"TV 화면은 더 이상 <em>리스트와 썸네일의 격자</em>가 아니라, <strong style="color:#fff">사용자 의도에 따라 매번 다르게 조립되는 거실의 공기 같은 표면(Generative Ambient Surface)</strong>이 되어야 한다." — 이는 AI 서비스의 Generative UI, Apple Liquid Glass의 공간감, Agentic Browser의 의도 기반 인터랙션이 공통으로 가리키는 방향이며, 삼성 TV는 이미 One UI Tizen 9에서 agentic AI 방향성을 제시했기에 이 흐름의 시각적 완성도를 선점할 위치에 있습니다.</p>
+    </div>
+  </section>
+
+  <section id="process">
+    <div class="section-head">
+      <div>
+        <div class="num">01</div>
+        <h2>리서치 진행 프로세스</h2>
+      </div>
+      <span class="pill">5-Phase · 병렬 진행</span>
+    </div>
+    <p class="lede" style="margin-bottom:20px">각 단계는 <strong style="color:#fff">발산(Diverge) → 수렴(Converge)</strong>을 반복하며, 디자인팀·기획팀이 동일 자료를 기반으로 동시 작업할 수 있도록 산출물을 표준화했습니다.</p>
+    <div class="process">
+      <div class="step">
+        <div class="num">PHASE 01</div>
+        <h3>Scoping</h3>
+        <p>"N+2~3년 TV"의 컨텍스트 정의 — 거실, lean-back, 다중 사용자, AI 동거. 기존 TV 카테고리는 의도적으로 후순위.</p>
+      </div>
+      <div class="step">
+        <div class="num">PHASE 02</div>
+        <h3>Domain Mapping</h3>
+        <p>TV 외 영역을 4분면(AI 서비스 / 웹·OS / 모빌리티 / 엔터)으로 매핑 후, 사용자 합의에 따라 AI · 웹/OS 두 영역에 집중.</p>
+      </div>
+      <div class="step">
+        <div class="num">PHASE 03</div>
+        <h3>Case Harvest</h3>
+        <p>각 영역에서 5개씩, 총 10개 사례를 선정. 시각·상호작용 패턴을 동일한 카드 포맷(브랜드/패턴/인사이트/적용)으로 정리.</p>
+      </div>
+      <div class="step">
+        <div class="num">PHASE 04</div>
+        <h3>Pattern Distillation</h3>
+        <p>10개 사례 → 7개 횡단 인사이트로 압축. 중복은 통합하고, TV 컨텍스트에 부적합한 패턴은 제외.</p>
+      </div>
+      <div class="step">
+        <div class="num">PHASE 05</div>
+        <h3>TV Translation</h3>
+        <p>각 인사이트를 "삼성 TV One UI에 적용 시 어떻게 보일지"로 번역 — 디자인팀 키비주얼 브리프의 1차 입력값.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="framework">
+    <div class="section-head">
+      <div>
+        <div class="num">02</div>
+        <h2>분석 프레임워크 — S.C.A.L.E</h2>
+      </div>
+      <span class="pill accent">5축 · 사례별 점수화 가능</span>
+    </div>
+    <p class="lede" style="margin-bottom:8px">TV는 <strong style="color:#fff">먼 거리(10-foot UI), lean-back 자세, 다인 시청, 음성·리모컨 혼합</strong>이라는 고유 제약이 있습니다. 일반 PC/모바일용 디자인 평가축으로는 부족하므로, TV에 그대로 번역 가능한 5축을 정의했습니다.</p>
+    <div class="scale">
+      <div class="ax" style="--c:#5b8def">
+        <div class="letter">S</div>
+        <h3>Surface</h3>
+        <p>표면의 물성·깊이감. Glass / Depth / Layering. 거실 공간과 어떻게 어우러지는가.</p>
+      </div>
+      <div class="ax" style="--c:#00d4ff">
+        <div class="letter">C</div>
+        <h3>Content</h3>
+        <p>콘텐츠 표현 방식. 격자형 카드 vs Generative UI. 매번 다르게 조립되는가.</p>
+      </div>
+      <div class="ax" style="--c:#a78bfa">
+        <div class="letter">A</div>
+        <h3>Agency</h3>
+        <p>사용자–AI 관계. 도구(Tool) → 비서(Assistant) → 대리인(Agent). 의도를 어디까지 위임하는가.</p>
+      </div>
+      <div class="ax" style="--c:#ffb86b">
+        <div class="letter">L</div>
+        <h3>Legibility</h3>
+        <p>2~4m 거리에서의 가독성·인지부하. Glanceable한가, 한 화면이 한 가지를 말하는가.</p>
+      </div>
+      <div class="ax" style="--c:#3ddc97">
+        <div class="letter">E</div>
+        <h3>Experience</h3>
+        <p>컨텍스트 적응. 시간/사람/콘텐츠/조도에 따라 변하는 Ambient ↔ Active 연속체.</p>
+      </div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <h4>활용 방법</h4>
+      <p>각 사례 분석 카드에서 5축 중 <strong style="color:#fff">강하게 발현된 축을 칩(Pill)으로 표시</strong>합니다. 디자인팀은 이 분포를 보고 "어떤 축이 아직 TV에서 약한가"를 한눈에 파악할 수 있습니다.</p>
+    </div>
+  </section>
+
+  <section id="scope">
+    <div class="section-head">
+      <div>
+        <div class="num">03</div>
+        <h2>TV 외 어떤 영역을 살펴봤는가</h2>
+      </div>
+      <span class="pill">4분면 → 2영역 집중</span>
+    </div>
+    <div class="grid c2">
+      <div class="card elev">
+        <h3 style="display:flex;align-items:center;gap:8px"><span class="pill primary">집중</span> AI 서비스 UX</h3>
+        <p>대화·생성·추론을 시각화하는 새로운 문법이 가장 빠르게 표준화되는 영역. N+2~3년 후 TV에서 자연어로 "오늘 저녁 같이 볼 만한 거 추천해줘"라고 했을 때 화면이 어떻게 응답해야 하는가의 직접적 모델.</p>
+        <h4 style="margin-top:14px">선정 사례</h4>
+        <p style="font-size:13px">ChatGPT (Canvas/Voice) · Claude (Artifacts/Projects) · Perplexity (Answer Card) · Gemini Live (Multimodal) · Microsoft Copilot (Side-by-side)</p>
+      </div>
+      <div class="card elev">
+        <h3 style="display:flex;align-items:center;gap:8px"><span class="pill primary">집중</span> 차세대 웹 / OS</h3>
+        <p>"화면=물질"이라는 새로운 시각 언어(Liquid Glass, Spatial)와 "주소창=의도창"이라는 새로운 상호작용 모델이 교차하는 영역. TV 화면이 거실 가구·벽지와 어우러지는 표면이 되어야 한다는 문제와 직결.</p>
+        <h4 style="margin-top:14px">선정 사례</h4>
+        <p style="font-size:13px">Apple visionOS / Liquid Glass · Dia AI Browser · Linear · Raycast · Notion AI</p>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--text-3)">참고만 — 자동차 인포테인먼트</h3>
+        <p class="muted" style="font-size:13px">대화면 + 음성 + Glanceable이라는 점에서 TV와 유사하나, 안전 제약(주의 분산 최소화)이 너무 강해 시각 표현 자유도는 TV가 더 높음. 이번 라운드 제외.</p>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--text-3)">참고만 — 게이밍/엔터테인먼트 OS</h3>
+        <p class="muted" style="font-size:13px">PS5·Apple TV·Netflix는 이미 TV 팀이 깊이 알고 있는 영역. 이번 라운드는 "외부 신선도"를 우선했기에 후순위. Phase 06에서 별도 비교 리서치 예정.</p>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:18px">
+      <h4>선정 기준 (4가지)</h4>
+      <div class="criteria-grid" style="margin-top:10px">
+        <div class="c"><div class="ico" style="color:var(--accent)">◆</div><h3>① 시간성</h3><p>N+2~3년 후에도 유효한 패턴인가. 일시적 트렌드는 제외.</p></div>
+        <div class="c"><div class="ico" style="color:var(--primary-2)">◆</div><h3>② 번역가능성</h3><p>10-foot UI / lean-back 환경으로 번역 가능한가.</p></div>
+        <div class="c"><div class="ico" style="color:var(--accent-2)">◆</div><h3>③ 차별성</h3><p>기존 TV에서 본 적 없는 시각·상호작용 언어인가.</p></div>
+        <div class="c"><div class="ico" style="color:var(--warm)">◆</div><h3>④ 검증가능성</h3><p>실제 출시·사용 중인 사례인가. (컨셉 영상 제외)</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="cases">
+    <div class="section-head">
+      <div>
+        <div class="num">04</div>
+        <h2>사례 분석 · 10 References</h2>
+      </div>
+      <span class="pill accent">AI 5 + Web/OS 5</span>
+    </div>
+
+    <h3 style="margin:8px 0 14px;color:var(--text-3);font-size:13px;letter-spacing:.16em;text-transform:uppercase">A. AI 서비스 UX</h3>
+    <div class="stack">
+
+      <article class="case">
+        <div class="visual">
+          <svg viewBox="0 0 480 300" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="ct1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#10a37f" stop-opacity=".25"/><stop offset="1" stop-color="#0e8268" stop-opacity=".05"/></linearGradient>
+            </defs>
+            <rect x="0" y="0" width="480" height="300" rx="14" fill="#0a0a12"/>
+            <rect x="14" y="14" width="180" height="272" rx="10" fill="#13131c" stroke="rgba(255,255,255,.08)"/>
+            <rect x="26" y="28" width="120" height="10" rx="3" fill="rgba(255,255,255,.16)"/>
+            <rect x="26" y="46" width="156" height="40" rx="8" fill="rgba(255,255,255,.06)"/>
+            <rect x="26" y="96" width="156" height="56" rx="8" fill="url(#ct1)"/>
+            <rect x="26" y="160" width="120" height="40" rx="8" fill="rgba(255,255,255,.06)"/>
+            <rect x="26" y="252" width="156" height="22" rx="11" fill="rgba(255,255,255,.08)"/>
+            <rect x="206" y="14" width="260" height="272" rx="10" fill="#0f1814" stroke="rgba(16,163,127,.4)"/>
+            <rect x="220" y="28" width="80" height="10" rx="3" fill="#10a37f"/>
+            <rect x="220" y="50" width="232" height="6" rx="2" fill="rgba(255,255,255,.18)"/>
+            <rect x="220" y="62" width="200" height="6" rx="2" fill="rgba(255,255,255,.14)"/>
+            <rect x="220" y="74" width="220" height="6" rx="2" fill="rgba(255,255,255,.14)"/>
+            <rect x="220" y="92" width="232" height="100" rx="6" fill="rgba(16,163,127,.18)" stroke="rgba(16,163,127,.3)"/>
+            <text x="226" y="148" fill="#7ed4b8" font-family="ui-monospace,monospace" font-size="9">// generated component</text>
+            <text x="226" y="162" fill="#7ed4b8" font-family="ui-monospace,monospace" font-size="9">&lt;Chart data={revenue}/&gt;</text>
+            <rect x="220" y="200" width="232" height="68" rx="6" fill="rgba(255,255,255,.04)"/>
+            <circle cx="240" cy="234" r="10" fill="#10a37f"/>
+            <rect x="258" y="226" width="60" height="6" rx="2" fill="rgba(255,255,255,.4)"/>
+            <rect x="258" y="240" width="180" height="6" rx="2" fill="rgba(255,255,255,.16)"/>
+            <rect x="258" y="252" width="140" height="6" rx="2" fill="rgba(255,255,255,.14)"/>
+          </svg>
+        </div>
+        <div class="body">
+          <div class="head">
+            <span class="brand">A·01</span>
+            <span class="pill">Generative UI</span>
+            <span class="pill accent">Side-by-side</span>
+          </div>
+          <div class="name">ChatGPT — Canvas</div>
+          <div class="tag">대화 옆에 "응답이 살아있는 작업 표면"을 띄우고 함께 편집</div>
+          <ul>
+            <li>응답이 텍스트 스트림이 아니라 <b>독립적으로 조작 가능한 객체</b>로 분리됨</li>
+            <li>왼쪽=대화(Intent), 오른쪽=결과물(Surface)의 <b>2-pane 분리</b>로 인지 부하 감소</li>
+            <li>객체 단위로 부분 수정·되돌리기가 가능한 <b>Direct Manipulation</b></li>
+          </ul>
+          <div class="applic">
+            <h4>→ TV 적용</h4>
+            <p>"음성으로 추천 받기"의 결과를 단순 캐러셀로 뱉지 않고, <b>화면 우측에 "오늘 저녁의 큐레이션 보드"라는 객체</b>로 띄워 리모컨으로 항목을 빼고 추가할 수 있게.</p>
+          </div>
+          <div class="src">참고: openai.com/canvas, 2024–2026</div>
+        </div>
+      </article>
+
+      <article class="case">
+        <div class="visual">
+          <svg viewBox="0 0 480 300" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="cl1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cc785c" stop-opacity=".25"/><stop offset="1" stop-color="#cc785c" stop-opacity="0"/></linearGradient>
+            </defs>
+            <rect x="0" y="0" width="480" height="300" rx="14" fill="#0a0a12"/>
+            <rect x="14" y="14" width="160" height="272" rx="10" fill="#141119" stroke="rgba(255,255,255,.08)"/>
+            <rect x="26" y="28" width="60" height="8" rx="3" fill="rgba(204,120,92,.7)"/>
+            <rect x="26" y="46" width="136" height="36" rx="8" fill="rgba(255,255,255,.05)"/>
+            <rect x="26" y="92" width="136" height="48" rx="8" fill="url(#cl1)"/>
+            <rect x="26" y="150" width="100" height="36" rx="8" fill="rgba(255,255,255,.05)"/>
+            <rect x="186" y="14" width="280" height="272" rx="10" fill="#1a1612" stroke="rgba(204,120,92,.45)"/>
+            <rect x="200" y="28" width="252" height="22" rx="6" fill="rgba(255,255,255,.04)"/>
+            <text x="208" y="44" fill="#cc785c" font-family="-apple-system,sans-serif" font-size="11" font-weight="600">artifact · interactive</text>
+            <rect x="200" y="62" width="252" height="160" rx="8" fill="rgba(255,255,255,.03)" stroke="rgba(255,255,255,.08)"/>
+            <circle cx="326" cy="142" r="50" fill="none" stroke="rgba(204,120,92,.4)" stroke-width="1.5" stroke-dasharray="3 3"/>
+            <circle cx="326" cy="142" r="34" fill="rgba(204,120,92,.18)"/>
+            <circle cx="326" cy="142" r="6" fill="#cc785c"/>
+            <rect x="216" y="80" width="80" height="6" rx="2" fill="rgba(255,255,255,.4)"/>
+            <rect x="216" y="92" width="60" height="6" rx="2" fill="rgba(255,255,255,.2)"/>
+            <rect x="200" y="234" width="252" height="38" rx="8" fill="rgba(255,255,255,.04)"/>
+            <circle cx="218" cy="253" r="6" fill="#cc785c"/>
+            <circle cx="238" cy="253" r="6" fill="rgba(255,255,255,.3)"/>
+            <circle cx="258" cy="253" r="6" fill="rgba(255,255,255,.3)"/>
+            <rect x="380" y="246" width="56" height="14" rx="7" fill="#cc785c"/>
+          </svg>
+        </div>
+        <div class="body">
+          <div class="head">
+            <span class="brand">A·02</span>
+            <span class="pill">Object UI</span>
+            <span class="pill accent">Persistence</span>
+          </div>
+          <div class="name">Claude — Artifacts / Projects</div>
+          <div class="tag">대화에서 만들어진 결과를 "꺼내서 다시 열 수 있는 물건"으로</div>
+          <ul>
+            <li>휘발성 응답을 <b>재방문·재실행 가능한 시각 객체</b>로 보존</li>
+            <li>미리보기·코드·실행이 동일 표면 위에서 전환되는 <b>다층(Layered) 표현</b></li>
+            <li>프로젝트 단위로 컨텍스트를 묶는 <b>맥락 컨테이너</b>의 시각화</li>
+          </ul>
+          <div class="applic">
+            <h4>→ TV 적용</h4>
+            <p>지난 주말 가족이 함께 본 <b>"여행 계획 보드"</b>를 TV 홈 한 켠에서 다시 열 수 있도록. 대화는 사라져도 <b>"우리 집의 객체"</b>는 남는다는 시간 축의 UI.</p>
+          </div>
+          <div class="src">참고: anthropic.com, Artifacts (2024–) / Projects</div>
+        </div>
+      </article>
+
+      <article class="case">
+        <div class="visual">
+          <svg viewBox="0 0 480 300" xmlns="http://www.w3.org/2000/svg">
+            <rect x="0" y="0" width="480" height="300" rx="14" fill="#0a0a12"/>
+            <rect x="20" y="20" width="440" height="40" rx="20" fill="#0e1418" stroke="rgba(32,178,201,.6)"/>
+            <circle cx="44" cy="40" r="8" fill="none" stroke="#20b2c9" stroke-width="2"/>
+            <line x1="50" y1="46" x2="56" y2="52" stroke="#20b2c9" stroke-width="2"/>
+            <text x="68" y="45" fill="rgba(255,255,255,.7)" font-family="-apple-system,sans-serif" font-size="13">2026 거실 인테리어 트렌드는?</text>
+            <rect x="20" y="76" width="440" height="158" rx="12" fill="#0c1418" stroke="rgba(255,255,255,.08)"/>
+            <rect x="34" y="92" width="80" height="8" rx="3" fill="#20b2c9"/>
+            <rect x="34" y="110" width="412" height="6" rx="2" fill="rgba(255,255,255,.3)"/>
+            <rect x="34" y="122" width="380" height="6" rx="2" fill="rgba(255,255,255,.22)"/>
+            <rect x="34" y="134" width="400" height="6" rx="2" fill="rgba(255,255,255,.22)"/>
+            <rect x="34" y="146" width="320" height="6" rx="2" fill="rgba(255,255,255,.22)"/>
+            <rect x="34" y="168" width="80" height="22" rx="4" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.1)"/>
+            <text x="44" y="183" fill="rgba(255,255,255,.7)" font-family="-apple-system,sans-serif" font-size="10">[1] dezeen</text>
+            <rect x="120" y="168" width="80" height="22" rx="4" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.1)"/>
+            <text x="130" y="183" fill="rgba(255,255,255,.7)" font-family="-apple-system,sans-serif" font-size="10">[2] elledecor</text>
+            <rect x="206" y="168" width="80" height="22" rx="4" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.1)"/>
+            <text x="216" y="183" fill="rgba(255,255,255,.7)" font-family="-apple-system,sans-serif" font-size="10">[3] vogue</text>
+            <rect x="34" y="200" width="92" height="22" rx="11" fill="rgba(32,178,201,.18)" stroke="rgba(32,178,201,.5)"/>
+            <text x="50" y="215" fill="#7ddfee" font-family="-apple-system,sans-serif" font-size="10">자세히 알아보기 →</text>
+            <rect x="20" y="248" width="440" height="38" rx="10" fill="#0c1418" stroke="rgba(255,255,255,.06)"/>
+            <rect x="34" y="262" width="120" height="10" rx="4" fill="rgba(255,255,255,.18)"/>
+            <rect x="166" y="262" width="100" height="10" rx="4" fill="rgba(255,255,255,.18)"/>
+            <rect x="278" y="262" width="160" height="10" rx="4" fill="rgba(255,255,255,.18)"/>
+          </svg>
+        </div>
+        <div class="body">
+          <div class="head">
+            <span class="brand">A·03</span>
+            <span class="pill">Answer Card</span>
+            <span class="pill accent">Source Grounding</span>
+          </div>
+          <div class="name">Perplexity — Answer + Sources</div>
+          <div class="tag">"검색 결과 리스트"를 폐기하고 "답 카드 + 출처 칩"으로 대체</div>
+          <ul>
+            <li>10개 링크 → <b>1개 답 카드</b>로 압축. 사용자는 결정에 도달.</li>
+            <li>출처를 작은 칩으로 인라인 배치 → <b>신뢰성의 시각화</b></li>
+            <li>"관련 질문" 칩으로 <b>다음 의도를 제안</b>하는 대화형 탐색</li>
+          </ul>
+          <div class="applic">
+            <h4>→ TV 적용</h4>
+            <p>"오늘 뭐 볼까?"에 대해 무한 캐러셀 대신 <b>"오늘의 한 편 카드 + 왜 추천했는지(출처/근거 칩)"</b>를 보여주고, 아래에 <b>"기분이 다르다면…" 관련 의도 칩</b>을 깔아 음성으로 분기.</p>
+          </div>
+          <div class="src">참고: perplexity.ai, Answer Engine pattern</div>
+        </div>
+      </article>
+
+      <article class="case">
+        <div class="visual">
+          <svg viewBox="0 0 480 300" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="orb" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#8ab4f8" stop-opacity=".9"/><stop offset=".6" stop-color="#a78bfa" stop-opacity=".4"/><stop offset="1" stop-color="#a78bfa" stop-opacity="0"/></radialGradient>
+            </defs>
+            <rect x="0" y="0" width="480" height="300" rx="14" fill="#06060a"/>
+            <rect x="20" y="20" width="440" height="220" rx="12" fill="#0a0a14"/>
+            <circle cx="120" cy="140" r="50" fill="rgba(138,180,248,.08)"/>
+            <rect x="220" y="80" width="180" height="120" rx="8" fill="rgba(138,180,248,.05)" stroke="rgba(138,180,248,.2)" stroke-dasharray="3 4"/>
+            <text x="232" y="100" fill="#8ab4f8" font-family="-apple-system,sans-serif" font-size="10">recognized · plant</text>
+            <rect x="232" y="108" width="120" height="6" rx="2" fill="rgba(138,180,248,.5)"/>
+            <rect x="232" y="120" width="80" height="6" rx="2" fill="rgba(138,180,248,.3)"/>
+            <rect x="20" y="200" width="440" height="40" rx="20" fill="rgba(0,0,0,.55)" stroke="rgba(255,255,255,.08)"/>
+            <text x="38" y="225" fill="#fff" font-family="-apple-system,sans-serif" font-size="13">"이 식물은 햇빛을 더 받게 해주세요…"</text>
+            <circle cx="240" cy="270" r="22" fill="url(#orb)"/>
+            <circle cx="240" cy="270" r="14" fill="rgba(255,255,255,.08)"/>
+            <circle cx="240" cy="270" r="7" fill="#fff"/>
+            <g stroke="#8ab4f8" stroke-width="2" stroke-linecap="round" opacity=".7">
+              <line x1="180" y1="270" x2="180" y2="270"/>
+              <line x1="190" y1="262" x2="190" y2="278"/>
+              <line x1="200" y1="258" x2="200" y2="282"/>
+              <line x1="210" y1="266" x2="210" y2="274"/>
+              <line x1="280" y1="266" x2="280" y2="274"/>
+              <line x1="290" y1="258" x2="290" y2="282"/>
+              <line x1="300" y1="262" x2="300" y2="278"/>
+            </g>
+          </svg>
+        </div>
+        <div class="body">
+          <div class="head">
+            <span class="brand">A·04</span>
+            <span class="pill">Multimodal</span>
+            <span class="pill accent">Voice-first Visual</span>
+          </div>
+          <div class="name">Gemini Live · ChatGPT Voice</div>
+          <div class="tag">화면이 입이 되고, 화면이 귀가 되는 시각 언어</div>
+          <ul>
+            <li>음성/카메라 입력을 <b>화면 위 부드러운 오브(Orb)와 자막</b>으로 형상화</li>
+            <li>인식된 객체에 <b>대각선 점선 박스 + 레이블 칩</b>으로 시각적 동의 표현</li>
+            <li>사용자 발화는 <b>반투명 캡션 바</b>로 화면 하단에 흐름</li>
+          </ul>
+          <div class="applic">
+            <h4>→ TV 적용</h4>
+            <p>리모컨 마이크를 누르면 화면 하단에 <b>리퀴드 오브 + 실시간 자막 바</b>가 떠오르고, 인식된 콘텐츠 카드에는 점선 하이라이트가 즉시 입혀지는 식. 음성 모드 진입을 <b>모달 팝업이 아닌 표면의 변화</b>로 표현.</p>
+          </div>
+          <div class="src">참고: gemini.google.com/live, chat.openai.com (Voice)</div>
+        </div>
+      </article>
+
+      <article class="case">
+        <div class="visual">
+          <svg viewBox="0 0 480 300" xmlns="http://www.w3.org/2000/svg">
+            <rect x="0" y="0" width="480" height="300" rx="14" fill="#0a0a12"/>
+            <rect x="14" y="14" width="320" height="272" rx="10" fill="#11131a" stroke="rgba(255,255,255,.06)"/>
+            <rect x="28" y="28" width="120" height="10" rx="3" fill="rgba(255,255,255,.4)"/>
+            <rect x="28" y="46" width="292" height="200" rx="6" fill="rgba(255,255,255,.04)"/>
+            <g fill="rgba(255,255,255,.18)">
+              <rect x="40" y="62" width="220" height="6" rx="2"/>
+              <rect x="40" y="76" width="260" height="6" rx="2"/>
+              <rect x="40" y="90" width="180" height="6" rx="2"/>
+              <rect x="40" y="112" width="240" height="6" rx="2"/>
+              <rect x="40" y="126" width="200" height="6" rx="2"/>
+            </g>
+            <rect x="40" y="148" width="260" height="22" rx="4" fill="rgba(124,77,255,.16)" stroke="rgba(124,77,255,.45)"/>
+            <text x="48" y="163" fill="#cab8ff" font-family="-apple-system,sans-serif" font-size="10">⌘ Copilot 제안 · 결론 단락 추가</text>
+            <rect x="346" y="14" width="120" height="272" rx="10" fill="#15121f" stroke="rgba(124,77,255,.3)"/>
+            <text x="358" y="30" fill="#cab8ff" font-family="-apple-system,sans-serif" font-size="10" font-weight="700">COPILOT</text>
+            <rect x="358" y="40" width="96" height="36" rx="6" fill="rgba(255,255,255,.05)"/>
+            <rect x="368" y="50" width="60" height="6" rx="2" fill="rgba(255,255,255,.4)"/>
+            <rect x="368" y="62" width="76" height="6" rx="2" fill="rgba(255,255,255,.2)"/>
+            <rect x="358" y="84" width="96" height="56" rx="6" fill="rgba(124,77,255,.12)"/>
+            <rect x="368" y="94" width="50" height="6" rx="2" fill="#cab8ff"/>
+            <rect x="368" y="106" width="76" height="6" rx="2" fill="rgba(202,184,255,.5)"/>
+            <rect x="368" y="118" width="60" height="6" rx="2" fill="rgba(202,184,255,.5)"/>
+            <rect x="358" y="246" width="96" height="28" rx="14" fill="rgba(255,255,255,.06)" stroke="rgba(255,255,255,.1)"/>
+            <text x="368" y="263" fill="rgba(255,255,255,.6)" font-family="-apple-system,sans-serif" font-size="9">무엇을 도와드릴까요?</text>
+          </svg>
+        </div>
+        <div class="body">
+          <div class="head">
+            <span class="brand">A·05</span>
+            <span class="pill">Inline Suggestion</span>
+            <span class="pill accent">Side Panel</span>
+          </div>
+          <div class="name">Microsoft Copilot — Inline + Side</div>
+          <div class="tag">AI는 별도 앱이 아니라 모든 표면의 "옆 자리"에 상주</div>
+          <ul>
+            <li>본문 흐름 안에 <b>인라인 제안 라인(보라 톤)</b>으로 비파괴적 개입</li>
+            <li>사이드 패널은 <b>대화가 아니라 액션 카드</b>의 모음</li>
+            <li>"무엇을 도와드릴까요?" 입력창의 <b>고정된 위치</b> = 신뢰의 시각화</li>
+          </ul>
+          <div class="applic">
+            <h4>→ TV 적용</h4>
+            <p>시청 중에도 화면 우측에 <b>접힌 가이드 패널</b>이 상시 존재. 자막·요약·다음 화·관련 작품 등 <b>현재 콘텐츠 컨텍스트 액션 카드</b>를 항상 한 손 거리(리모컨 한 번)로 두는 구조.</p>
+          </div>
+          <div class="src">참고: copilot.microsoft.com, M365 Copilot</div>
+        </div>
+      </article>
+
+    </div>
+
+    <h3 style="margin:32px 0 14px;color:var(--text-3);font-size:13px;letter-spacing:.16em;text-transform:uppercase">B. 차세대 웹 / OS</h3>
+    <div class="stack">
+
+      <article class="case">
+        <div class="visual">
+          <svg viewBox="0 0 480 300" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="bg6" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3a4a6e"/><stop offset=".5" stop-color="#704a8e"/><stop offset="1" stop-color="#c66a8e"/></linearGradient>
+              <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(255,255,255,.18)"/><stop offset="1" stop-color="rgba(255,255,255,.04)"/></linearGradient>
+              <filter id="bl"><feGaussianBlur stdDeviation="3"/></filter>
+            </defs>
+            <rect x="0" y="0" width="480" height="300" rx="14" fill="url(#bg6)"/>
+            <circle cx="100" cy="80" r="80" fill="rgba(255,255,255,.18)" filter="url(#bl)"/>
+            <circle cx="380" cy="240" r="100" fill="rgba(255,200,255,.18)" filter="url(#bl)"/>
+            <rect x="40" y="60" width="200" height="80" rx="20" fill="url(#glass)" stroke="rgba(255,255,255,.25)"/>
+            <circle cx="70" cy="100" r="14" fill="rgba(255,255,255,.4)"/>
+            <rect x="92" y="92" width="100" height="6" rx="2" fill="rgba(255,255,255,.6)"/>
+            <rect x="92" y="104" width="80" height="6" rx="2" fill="rgba(255,255,255,.4)"/>
+            <rect x="80" y="160" width="320" height="100" rx="22" fill="url(#glass)" stroke="rgba(255,255,255,.3)"/>
+            <rect x="100" y="180" width="60" height="60" rx="12" fill="rgba(255,255,255,.16)"/>
+            <rect x="172" y="184" width="120" height="8" rx="3" fill="rgba(255,255,255,.7)"/>
+            <rect x="172" y="200" width="180" height="6" rx="2" fill="rgba(255,255,255,.5)"/>
+            <rect x="172" y="212" width="160" height="6" rx="2" fill="rgba(255,255,255,.4)"/>
+            <rect x="172" y="226" width="100" height="14" rx="7" fill="rgba(255,255,255,.25)"/>
+          </svg>
+        </div>
+        <div class="body">
+          <div class="head">
+            <span class="brand">B·01</span>
+            <span class="pill">Glass Material</span>
+            <span class="pill accent">Spatial Depth</span>
+          </div>
+          <div class="name">Apple visionOS · Liquid Glass (2026)</div>
+          <div class="tag">UI가 색이 아니라 "물질"이 되는 시각 언어</div>
+          <ul>
+            <li>컨트롤이 솔리드 블록이 아닌 <b>유리층 위에 떠 있는</b> 구조 → "콘텐츠가 항상 리드"</li>
+            <li>주변 빛/배경에 따라 <b>대비·색조가 동적으로 적응</b></li>
+            <li>레이어를 겹칠 때 <b>가독성이 무너지지 않도록</b> 머터리얼 가이드라인 명시</li>
+          </ul>
+          <div class="applic">
+            <h4>→ TV 적용</h4>
+            <p>홈/검색/설정 등 시스템 표면을 <b>"콘텐츠 위에 떠 있는 유리"</b>로 통일. Ambient Mode와 시청 화면 사이에 어색한 모달 컷이 사라지고, <b>장면 전환이 "표면의 깊이 변화"</b>로 표현.</p>
+          </div>
+          <div class="src">참고: developer.apple.com/visionos, Liquid Glass (visionOS·iOS 2026)</div>
+        </div>
+      </article>
+
+      <article class="case">
+        <div class="visual">
+          <svg viewBox="0 0 480 300" xmlns="http://www.w3.org/2000/svg">
+            <rect x="0" y="0" width="480" height="300" rx="14" fill="#0a0a12"/>
+            <rect x="20" y="20" width="440" height="30" rx="6" fill="#13131c"/>
+            <circle cx="38" cy="35" r="5" fill="#ff6b6b"/>
+            <circle cx="54" cy="35" r="5" fill="#ffb86b"/>
+            <circle cx="70" cy="35" r="5" fill="#3ddc97"/>
+            <rect x="100" y="62" width="280" height="48" rx="24" fill="#0c1018" stroke="rgba(167,139,250,.7)" stroke-width="1.5"/>
+            <text x="118" y="91" fill="rgba(255,255,255,.7)" font-family="-apple-system,sans-serif" font-size="13">이 페이지 요약하고 다음 할 일 만들어줘</text>
+            <circle cx="358" cy="86" r="14" fill="rgba(167,139,250,.25)" stroke="rgba(167,139,250,.6)"/>
+            <text x="354" y="91" fill="#a78bfa" font-family="-apple-system,sans-serif" font-size="12" font-weight="700">✦</text>
+            <rect x="20" y="130" width="290" height="156" rx="10" fill="#13131c" stroke="rgba(255,255,255,.06)"/>
+            <rect x="36" y="146" width="120" height="10" rx="3" fill="rgba(255,255,255,.4)"/>
+            <g fill="rgba(255,255,255,.16)">
+              <rect x="36" y="166" width="258" height="6" rx="2"/>
+              <rect x="36" y="178" width="240" height="6" rx="2"/>
+              <rect x="36" y="190" width="220" height="6" rx="2"/>
+              <rect x="36" y="208" width="258" height="6" rx="2"/>
+              <rect x="36" y="220" width="200" height="6" rx="2"/>
+              <rect x="36" y="240" width="240" height="6" rx="2"/>
+              <rect x="36" y="252" width="180" height="6" rx="2"/>
+            </g>
+            <rect x="320" y="130" width="140" height="156" rx="10" fill="#16121f" stroke="rgba(167,139,250,.4)"/>
+            <text x="332" y="148" fill="#a78bfa" font-family="-apple-system,sans-serif" font-size="9" font-weight="700">SUMMARY</text>
+            <rect x="332" y="156" width="116" height="6" rx="2" fill="rgba(255,255,255,.7)"/>
+            <rect x="332" y="166" width="100" height="6" rx="2" fill="rgba(255,255,255,.5)"/>
+            <rect x="332" y="176" width="110" height="6" rx="2" fill="rgba(255,255,255,.5)"/>
+            <text x="332" y="200" fill="#a78bfa" font-family="-apple-system,sans-serif" font-size="9" font-weight="700">NEXT</text>
+            <rect x="332" y="208" width="116" height="22" rx="11" fill="rgba(167,139,250,.18)" stroke="rgba(167,139,250,.4)"/>
+            <text x="342" y="223" fill="#dccfff" font-family="-apple-system,sans-serif" font-size="10">→ Notion에 추가</text>
+            <rect x="332" y="234" width="116" height="22" rx="11" fill="rgba(167,139,250,.18)" stroke="rgba(167,139,250,.4)"/>
+            <text x="342" y="249" fill="#dccfff" font-family="-apple-system,sans-serif" font-size="10">→ Slack 공유</text>
+          </svg>
+        </div>
+        <div class="body">
+          <div class="head">
+            <span class="brand">B·02</span>
+            <span class="pill">Intent Bar</span>
+            <span class="pill accent">Agentic</span>
+          </div>
+          <div class="name">Dia (The Browser Company) · 2026</div>
+          <div class="tag">"주소창 = AI 의도창"이라는 통합된 진입점</div>
+          <ul>
+            <li>URL 바와 AI 입력이 <b>하나의 입력 표면</b>으로 통합</li>
+            <li>응답이 좌측(원본)/우측(요약·액션)의 <b>이원 표면</b>으로 자동 분할</li>
+            <li>다음 행동 제안이 <b>외부 서비스로의 액션 칩</b>으로 형상화 (Notion·Slack 등)</li>
+          </ul>
+          <div class="applic">
+            <h4>→ TV 적용</h4>
+            <p>홈 화면 상단의 검색바를 <b>"내 거실 의도창"</b>으로 격상. 채널 번호도 받고, "30분짜리 가벼운 거"도 받는 단일 입구. 결과는 <b>"콘텐츠 + 다음 행동(녹화/공유/연속재생) 칩"</b>으로 응답.</p>
+          </div>
+          <div class="src">참고: diabrowser.com, 2025–2026 (Atlassian 인수)</div>
+        </div>
+      </article>
+
+      <article class="case">
+        <div class="visual">
+          <svg viewBox="0 0 480 300" xmlns="http://www.w3.org/2000/svg">
+            <rect x="0" y="0" width="480" height="300" rx="14" fill="#0a0a12"/>
+            <rect x="14" y="14" width="120" height="272" rx="10" fill="#0d0d14" stroke="rgba(255,255,255,.06)"/>
+            <rect x="26" y="28" width="80" height="10" rx="3" fill="rgba(255,255,255,.5)"/>
+            <g fill="rgba(255,255,255,.5)">
+              <circle cx="32" cy="60" r="3"/>
+              <rect x="42" y="56" width="64" height="8" rx="3"/>
+              <circle cx="32" cy="80" r="3" fill="#5b8def"/>
+              <rect x="42" y="76" width="64" height="8" rx="3"/>
+              <circle cx="32" cy="100" r="3"/>
+              <rect x="42" y="96" width="50" height="8" rx="3"/>
+            </g>
+            <rect x="146" y="14" width="320" height="272" rx="10" fill="#11111a" stroke="rgba(255,255,255,.06)"/>
+            <rect x="160" y="28" width="160" height="10" rx="3" fill="rgba(255,255,255,.7)"/>
+            <g>
+              <rect x="160" y="56" width="92" height="6" rx="2" fill="rgba(255,255,255,.4)"/>
+              <rect x="160" y="68" width="92" height="44" rx="6" fill="#171723"/>
+              <circle cx="170" cy="80" r="4" fill="#ffb86b"/>
+              <rect x="180" y="76" width="60" height="6" rx="2" fill="rgba(255,255,255,.6)"/>
+              <rect x="180" y="88" width="40" height="6" rx="2" fill="rgba(255,255,255,.3)"/>
+              <rect x="160" y="118" width="92" height="44" rx="6" fill="#171723"/>
+              <circle cx="170" cy="130" r="4" fill="#3ddc97"/>
+              <rect x="180" y="126" width="60" height="6" rx="2" fill="rgba(255,255,255,.6)"/>
+              <rect x="180" y="138" width="50" height="6" rx="2" fill="rgba(255,255,255,.3)"/>
+            </g>
+            <g>
+              <rect x="262" y="56" width="92" height="6" rx="2" fill="rgba(255,255,255,.4)"/>
+              <rect x="262" y="68" width="92" height="44" rx="6" fill="#171723"/>
+              <circle cx="272" cy="80" r="4" fill="#5b8def"/>
+              <rect x="282" y="76" width="56" height="6" rx="2" fill="rgba(255,255,255,.6)"/>
+              <rect x="282" y="88" width="36" height="6" rx="2" fill="rgba(255,255,255,.3)"/>
+            </g>
+            <g>
+              <rect x="364" y="56" width="92" height="6" rx="2" fill="rgba(255,255,255,.4)"/>
+              <rect x="364" y="68" width="92" height="44" rx="6" fill="#171723"/>
+              <circle cx="374" cy="80" r="4" fill="#a78bfa"/>
+              <rect x="384" y="76" width="56" height="6" rx="2" fill="rgba(255,255,255,.6)"/>
+              <rect x="384" y="88" width="40" height="6" rx="2" fill="rgba(255,255,255,.3)"/>
+            </g>
+            <rect x="200" y="190" width="220" height="80" rx="10" fill="#0a0a14" stroke="rgba(91,141,239,.5)"/>
+            <text x="214" y="210" fill="rgba(255,255,255,.4)" font-family="ui-monospace,monospace" font-size="10">⌘K</text>
+            <text x="240" y="210" fill="rgba(255,255,255,.8)" font-family="-apple-system,sans-serif" font-size="11">최근 본 영화 다시 보기</text>
+            <rect x="214" y="222" width="192" height="20" rx="4" fill="rgba(91,141,239,.18)"/>
+            <text x="222" y="236" fill="#a8c8ff" font-family="-apple-system,sans-serif" font-size="10">▸  Watch History · Last 7 days</text>
+            <rect x="214" y="246" width="192" height="20" rx="4" fill="rgba(255,255,255,.04)"/>
+            <text x="222" y="260" fill="rgba(255,255,255,.7)" font-family="-apple-system,sans-serif" font-size="10">▸  Continue Watching · Family</text>
+          </svg>
+        </div>
+        <div class="body">
+          <div class="head">
+            <span class="brand">B·03</span>
+            <span class="pill">Command Palette</span>
+            <span class="pill accent">Dense Type</span>
+          </div>
+          <div class="name">Linear — Keyboard-first Density</div>
+          <div class="tag">"메뉴 트리"가 아니라 "한 번의 의도 입력"으로 모든 것에 도달</div>
+          <ul>
+            <li><b>⌘K 명령 팔레트</b>가 모든 네비게이션을 단일 진입점으로 통합</li>
+            <li>색·아이콘·여백을 절제한 <b>고밀도 타이포 위주의 시각 언어</b></li>
+            <li>모든 액션이 <b>키보드만으로 도달 가능</b>한 정보 구조</li>
+          </ul>
+          <div class="applic">
+            <h4>→ TV 적용</h4>
+            <p>리모컨의 <b>⊕ 버튼 = TV의 ⌘K</b>로 재정의. 누르는 순간 화면 중앙에 떠오르는 <b>의도 입력 팔레트</b>가 채널·앱·설정·작품 검색을 하나로 통합. "메뉴를 가지러 가는" UI 종료.</p>
+          </div>
+          <div class="src">참고: linear.app, "designed for the keyboard"</div>
+        </div>
+      </article>
+
+      <article class="case">
+        <div class="visual">
+          <svg viewBox="0 0 480 300" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="bg-fade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a0f24"/><stop offset="1" stop-color="#06060c"/></linearGradient>
+            </defs>
+            <rect x="0" y="0" width="480" height="300" rx="14" fill="url(#bg-fade)"/>
+            <rect x="60" y="50" width="360" height="200" rx="14" fill="#13101c" stroke="rgba(255,109,144,.5)"/>
+            <rect x="74" y="64" width="332" height="40" rx="8" fill="rgba(255,255,255,.04)"/>
+            <text x="92" y="89" fill="rgba(255,255,255,.85)" font-family="-apple-system,sans-serif" font-size="14">tonight movie · cozy · short</text>
+            <rect x="380" y="74" width="20" height="20" rx="4" fill="rgba(255,109,144,.25)"/>
+            <text x="384" y="88" fill="#ff6d90" font-family="ui-monospace,monospace" font-size="10">↵</text>
+            <g>
+              <rect x="74" y="116" width="332" height="36" rx="6" fill="rgba(255,109,144,.15)"/>
+              <rect x="84" y="126" width="16" height="16" rx="3" fill="#ff6d90"/>
+              <rect x="108" y="125" width="160" height="7" rx="2" fill="rgba(255,255,255,.85)"/>
+              <rect x="108" y="138" width="100" height="6" rx="2" fill="rgba(255,255,255,.45)"/>
+              <text x="372" y="139" fill="rgba(255,255,255,.4)" font-family="ui-monospace,monospace" font-size="10">↵</text>
+            </g>
+            <g>
+              <rect x="74" y="156" width="332" height="32" rx="6" fill="rgba(255,255,255,.03)"/>
+              <rect x="84" y="166" width="16" height="12" rx="3" fill="rgba(255,255,255,.3)"/>
+              <rect x="108" y="167" width="180" height="6" rx="2" fill="rgba(255,255,255,.7)"/>
+              <rect x="108" y="178" width="120" height="6" rx="2" fill="rgba(255,255,255,.35)"/>
+            </g>
+            <g>
+              <rect x="74" y="192" width="332" height="32" rx="6" fill="rgba(255,255,255,.03)"/>
+              <rect x="84" y="202" width="16" height="12" rx="3" fill="rgba(255,255,255,.3)"/>
+              <rect x="108" y="203" width="160" height="6" rx="2" fill="rgba(255,255,255,.7)"/>
+              <rect x="108" y="214" width="100" height="6" rx="2" fill="rgba(255,255,255,.35)"/>
+            </g>
+            <rect x="60" y="252" width="360" height="20" rx="4" fill="rgba(0,0,0,.4)"/>
+            <text x="74" y="267" fill="rgba(255,255,255,.45)" font-family="ui-monospace,monospace" font-size="10">⌘ Open · ⌥ Preview · ⏎ Continue</text>
+          </svg>
+        </div>
+        <div class="body">
+          <div class="head">
+            <span class="brand">B·04</span>
+            <span class="pill">Launcher</span>
+            <span class="pill accent">Action-first</span>
+          </div>
+          <div class="name">Raycast — Action Launcher</div>
+          <div class="tag">UI는 호출했을 때만 나타나고, 끝나면 사라진다</div>
+          <ul>
+            <li>UI가 <b>상시 점유가 아닌 "호출되는 도구"</b>로 존재 → 화면 청결</li>
+            <li>입력에 따라 <b>결과·액션·미리보기가 한 화면에서 동시에 갱신</b></li>
+            <li>모든 결과 행에 <b>다음 액션 단축키가 인라인 노출</b></li>
+          </ul>
+          <div class="applic">
+            <h4>→ TV 적용</h4>
+            <p>설정·검색·앱 전환 같은 시스템 UI를 <b>"필요할 때만 떠오르고 사라지는 모드"</b>로. 거실 화면이 <b>대부분의 시간 동안 콘텐츠/Ambient 100%</b>를 점유하도록 — UI는 호출의 손님.</p>
+          </div>
+          <div class="src">참고: raycast.com</div>
+        </div>
+      </article>
+
+      <article class="case">
+        <div class="visual">
+          <svg viewBox="0 0 480 300" xmlns="http://www.w3.org/2000/svg">
+            <rect x="0" y="0" width="480" height="300" rx="14" fill="#0c0c12"/>
+            <rect x="20" y="20" width="440" height="260" rx="10" fill="#13131a" stroke="rgba(255,255,255,.06)"/>
+            <rect x="40" y="40" width="200" height="14" rx="3" fill="rgba(255,255,255,.85)"/>
+            <g fill="rgba(255,255,255,.6)">
+              <rect x="40" y="72" width="380" height="6" rx="2"/>
+              <rect x="40" y="84" width="320" height="6" rx="2"/>
+              <rect x="40" y="96" width="360" height="6" rx="2"/>
+            </g>
+            <rect x="40" y="116" width="380" height="44" rx="8" fill="rgba(91,141,239,.10)" stroke="rgba(91,141,239,.5)"/>
+            <circle cx="56" cy="138" r="6" fill="#5b8def"/>
+            <text x="68" y="142" fill="#a8c8ff" font-family="-apple-system,sans-serif" font-size="12">AI · 이 단락을 3줄로 요약</text>
+            <rect x="300" y="128" width="60" height="20" rx="4" fill="rgba(91,141,239,.25)"/>
+            <text x="312" y="142" fill="#cfe0ff" font-family="-apple-system,sans-serif" font-size="10">실행</text>
+            <rect x="368" y="128" width="40" height="20" rx="4" fill="rgba(255,255,255,.06)"/>
+            <text x="378" y="142" fill="rgba(255,255,255,.6)" font-family="-apple-system,sans-serif" font-size="10">취소</text>
+            <rect x="40" y="172" width="380" height="86" rx="8" fill="rgba(91,141,239,.06)" stroke="rgba(91,141,239,.25)" stroke-dasharray="3 3"/>
+            <text x="52" y="190" fill="#a8c8ff" font-family="-apple-system,sans-serif" font-size="10">AI generated · 검토 중</text>
+            <g fill="rgba(255,255,255,.7)">
+              <rect x="52" y="200" width="356" height="6" rx="2"/>
+              <rect x="52" y="212" width="320" height="6" rx="2"/>
+              <rect x="52" y="224" width="280" height="6" rx="2"/>
+            </g>
+            <rect x="52" y="236" width="76" height="18" rx="9" fill="rgba(61,220,151,.18)" stroke="rgba(61,220,151,.5)"/>
+            <text x="64" y="249" fill="#a3edc6" font-family="-apple-system,sans-serif" font-size="10">✓ 수락</text>
+            <rect x="136" y="236" width="76" height="18" rx="9" fill="rgba(255,255,255,.06)"/>
+            <text x="148" y="249" fill="rgba(255,255,255,.6)" font-family="-apple-system,sans-serif" font-size="10">✕ 거절</text>
+          </svg>
+        </div>
+        <div class="body">
+          <div class="head">
+            <span class="brand">B·05</span>
+            <span class="pill">Inline AI</span>
+            <span class="pill accent">Confidence/Diff</span>
+          </div>
+          <div class="name">Notion AI — Inline Generation</div>
+          <div class="tag">AI의 결과는 곧바로 본문에 들어가지 않고, "제안 상태"로 머문다</div>
+          <ul>
+            <li>AI 출력은 <b>점선 컨테이너 + "검토 중" 라벨</b>로 잠정 상태 표현</li>
+            <li>수락/거절 버튼이 <b>인라인에 명확하게 짝</b>으로 존재 → 통제권 확보</li>
+            <li>본문과 AI 결과가 <b>색·패턴으로 구분</b>되어 출처 혼동 방지</li>
+          </ul>
+          <div class="applic">
+            <h4>→ TV 적용</h4>
+            <p>AI 추천/요약/번역 등 <b>모든 AI 출력은 "확정 전 표면"으로 차별화</b>된 시각 처리. 사용자는 리모컨으로 한 번에 수락하거나 거절 — <b>AI는 항상 제안자, 사용자는 결정자</b>라는 시각 약속.</p>
+          </div>
+          <div class="src">참고: notion.so/ai</div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <section id="insights">
+    <div class="section-head">
+      <div>
+        <div class="num">05</div>
+        <h2>핵심 인사이트 7</h2>
+      </div>
+      <span class="pill good">10 사례 → 7 패턴 압축</span>
+    </div>
+    <div class="matrix">
+      <div class="row-h">
+        <div>#</div>
+        <div>인사이트</div>
+        <div>관찰된 사례</div>
+        <div>축 (S.C.A.L.E)</div>
+      </div>
+
+      <div class="row-r">
+        <div class="n">01</div>
+        <div>
+          <h3>Generative Surface — 화면은 매번 다르게 조립된다</h3>
+          <p>고정 격자가 아니라 의도/컨텍스트에 따라 매번 새로 조립되는 표면. "고정된 홈"이라는 개념이 흐려짐.</p>
+        </div>
+        <div>
+          <span class="src-pill">ChatGPT Canvas</span><span class="src-pill">Claude Artifacts</span><span class="src-pill">Dia</span>
+        </div>
+        <div>
+          <span class="pill" style="border-color:#5b8def;color:#a8c8ff">Surface</span>
+          <span class="pill" style="border-color:#00d4ff;color:#9be9f7">Content</span>
+        </div>
+      </div>
+
+      <div class="row-r">
+        <div class="n">02</div>
+        <div>
+          <h3>Glass Depth — UI는 색이 아니라 물질로 구분된다</h3>
+          <p>레이어와 빛 반응으로 위계를 만든다. 거실 공간과 어우러지는 "투명한 가구" 같은 표면.</p>
+        </div>
+        <div>
+          <span class="src-pill">Apple Liquid Glass</span><span class="src-pill">visionOS</span>
+        </div>
+        <div>
+          <span class="pill" style="border-color:#5b8def;color:#a8c8ff">Surface</span>
+          <span class="pill" style="border-color:#3ddc97;color:#b8f3d4">Experience</span>
+        </div>
+      </div>
+
+      <div class="row-r">
+        <div class="n">03</div>
+        <div>
+          <h3>Agentic Hub — 단일 의도 입력창이 모든 진입점을 통합</h3>
+          <p>채널·검색·설정·앱 등 분산된 진입을 "하나의 의도 입력 표면"으로 통합. 사용자는 어디로 갈지가 아니라 무엇을 원하는지를 말한다.</p>
+        </div>
+        <div>
+          <span class="src-pill">Dia</span><span class="src-pill">Linear ⌘K</span><span class="src-pill">Raycast</span>
+        </div>
+        <div>
+          <span class="pill" style="border-color:#a78bfa;color:#dccfff">Agency</span>
+          <span class="pill" style="border-color:#00d4ff;color:#9be9f7">Content</span>
+        </div>
+      </div>
+
+      <div class="row-r">
+        <div class="n">04</div>
+        <div>
+          <h3>Confidence &amp; Provenance Visualization — AI는 신뢰의 시각 언어를 가진다</h3>
+          <p>"AI가 만든 것"과 "사람이 확정한 것"을 시각으로 구분. 출처·확신도를 칩/점선/라벨로 보여 통제권을 유지.</p>
+        </div>
+        <div>
+          <span class="src-pill">Perplexity</span><span class="src-pill">Notion AI</span><span class="src-pill">Copilot</span>
+        </div>
+        <div>
+          <span class="pill" style="border-color:#a78bfa;color:#dccfff">Agency</span>
+          <span class="pill" style="border-color:#ffb86b;color:#ffd9a8">Legibility</span>
+        </div>
+      </div>
+
+      <div class="row-r">
+        <div class="n">05</div>
+        <div>
+          <h3>Adaptive Density — 하나의 표면이 멀리/가까이에 동시에 작동</h3>
+          <p>같은 화면이 lean-back에서는 크고 단순하게, lean-forward에서는 정보 밀도 있게 변형. 사용자 거리/입력 모드에 따른 자가 조정.</p>
+        </div>
+        <div>
+          <span class="src-pill">Linear</span><span class="src-pill">visionOS</span><span class="src-pill">Raycast</span>
+        </div>
+        <div>
+          <span class="pill" style="border-color:#ffb86b;color:#ffd9a8">Legibility</span>
+          <span class="pill" style="border-color:#3ddc97;color:#b8f3d4">Experience</span>
+        </div>
+      </div>
+
+      <div class="row-r">
+        <div class="n">06</div>
+        <div>
+          <h3>Voice-first Visual — 음성 입력은 화면 위 살아있는 객체로</h3>
+          <p>음성 모드 진입을 별도 모달이 아니라 "표면 자체의 변화"로 표현. 리퀴드 오브, 자막 바, 인식 박스 등 물성 있는 시각 응답.</p>
+        </div>
+        <div>
+          <span class="src-pill">Gemini Live</span><span class="src-pill">ChatGPT Voice</span>
+        </div>
+        <div>
+          <span class="pill" style="border-color:#5b8def;color:#a8c8ff">Surface</span>
+          <span class="pill" style="border-color:#a78bfa;color:#dccfff">Agency</span>
+        </div>
+      </div>
+
+      <div class="row-r">
+        <div class="n">07</div>
+        <div>
+          <h3>Ambient ↔ Active Continuum — 꺼짐과 켜짐 사이의 새로운 상태들</h3>
+          <p>Ambient Mode와 시청 모드 사이의 부드러운 연속체. UI는 호출되지 않을 때 거실 공기로 사라지고, 호출될 때 콘텐츠 위로 떠오른다.</p>
+        </div>
+        <div>
+          <span class="src-pill">visionOS</span><span class="src-pill">Raycast</span><span class="src-pill">Samsung Tizen 9 (참조)</span>
+        </div>
+        <div>
+          <span class="pill" style="border-color:#3ddc97;color:#b8f3d4">Experience</span>
+          <span class="pill" style="border-color:#5b8def;color:#a8c8ff">Surface</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="apply">
+    <div class="section-head">
+      <div>
+        <div class="num">06</div>
+        <h2>삼성 TV One UI 적용 방향</h2>
+      </div>
+      <span class="pill primary">디자인팀 키비주얼 브리프 입력값</span>
+    </div>
+    <p class="lede" style="margin-bottom:18px">7개 인사이트를 <strong style="color:#fff">N+2~3년 후 삼성 TV에서 어떻게 보일지</strong>로 번역. 각 항목은 디자인팀의 <span class="kbd">02_KeyVisual_Brief</span>와 개발팀의 <span class="kbd">03_Tech_Spec</span>의 1차 입력값으로 연결됩니다.</p>
+    <div class="apply">
+      <div class="card">
+        <div class="num">APPLY 01</div>
+        <h3>"오늘의 거실" Generative Home</h3>
+        <p>고정 캐러셀 홈 폐기 → <b>시청 시간/구성원/계절/조도</b>에 따라 매일 다르게 조립되는 "오늘의 거실 보드". 사용자가 수정·고정·해제 가능한 <b>객체 단위 홈</b>.</p>
+        <div class="meta"><span class="pill">Insight 01</span><span class="pill">Insight 05</span></div>
+      </div>
+      <div class="card">
+        <div class="num">APPLY 02</div>
+        <h3>One UI Liquid Surface</h3>
+        <p>홈/검색/설정/볼륨 등 모든 시스템 UI를 <b>유리층 머터리얼</b>로 통일. Ambient Mode → 콘텐츠 → 시스템 UI가 <b>모달 컷 없이 깊이 변화</b>로 전환.</p>
+        <div class="meta"><span class="pill">Insight 02</span><span class="pill">Insight 07</span></div>
+      </div>
+      <div class="card">
+        <div class="num">APPLY 03</div>
+        <h3>One Intent Bar</h3>
+        <p>홈 상단 검색바를 <b>"거실 의도창"</b>으로 격상. 채널 번호도, 자연어도, 음성도 동일 입력. 결과는 단일 답 카드 + 액션 칩 구조.</p>
+        <div class="meta"><span class="pill">Insight 03</span></div>
+      </div>
+      <div class="card">
+        <div class="num">APPLY 04</div>
+        <h3>AI Provenance Layer</h3>
+        <p>AI가 만든 모든 출력(추천 이유, 요약, 번역)에 <b>"AI 제안" 시그니처 시각</b>(점선/오로라 보더/✦ 글리프)를 표준화. 사용자가 ✓/✕로 한 번에 결정.</p>
+        <div class="meta"><span class="pill">Insight 04</span></div>
+      </div>
+      <div class="card">
+        <div class="num">APPLY 05</div>
+        <h3>Distance-aware Density</h3>
+        <p>리모컨/카메라 기반 <b>시청 거리·인원 감지</b>로 동일 화면의 정보 밀도가 자가 조정. 멀면 큰 카드 1개, 가까우면 다중 카드 + 상세.</p>
+        <div class="meta"><span class="pill">Insight 05</span></div>
+      </div>
+      <div class="card">
+        <div class="num">APPLY 06</div>
+        <h3>Voice Orb &amp; Caption Layer</h3>
+        <p>음성 호출 시 화면 하단에 <b>리퀴드 오브 + 반투명 자막 바</b>. 인식된 콘텐츠 카드에는 즉시 <b>점선 하이라이트</b>가 입혀지는 시각적 동의.</p>
+        <div class="meta"><span class="pill">Insight 06</span></div>
+      </div>
+      <div class="card">
+        <div class="num">APPLY 07</div>
+        <h3>Ambient–Active Bridge</h3>
+        <p>Art Mode/Ambient ↔ 시청 ↔ 시스템 UI 사이를 <b>"표면 깊이"의 변화로 연결</b>하는 단일 모션 언어. 거실 공기 → 작품 표면 → 시청 표면 → 의도 표면 4-tier.</p>
+        <div class="meta"><span class="pill">Insight 02</span><span class="pill">Insight 07</span></div>
+      </div>
+      <div class="card" style="background:linear-gradient(135deg,rgba(91,141,239,.12),rgba(0,212,255,.06));border-color:rgba(91,141,239,.35)">
+        <div class="num" style="color:#a8c8ff">DELIVERABLES NEXT</div>
+        <h3>다음 산출물 흐름</h3>
+        <p style="color:#dde7ff">→ <b>기획팀</b>: 7 인사이트 기반 컨셉 키워드 3개 압축<br/>→ <b>디자인팀</b>: 키비주얼 무드보드 + 핵심 스크린 4종 (Home / Intent / Watching / Ambient)<br/>→ <b>개발팀</b>: Glass 머터리얼·Distance Sensing 기술 검토<br/>→ <b>검증팀</b>: 인사이트별 평가 체크리스트</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer">
+    <div>
+      <strong style="color:var(--text)">01_Research_VisualReferences.html</strong> · v1.0 · 2026-05-11<br/>
+      리서치팀 Agent · 검토 대기 (기획·디자인·개발팀과 병렬)
+    </div>
+    <div style="text-align:right">
+      Sources &amp; inspiration:<br/>
+      Apple visionOS · OpenAI Canvas · Anthropic Artifacts · Perplexity · Gemini Live · MS Copilot · Dia · Linear · Raycast · Notion AI · Samsung One UI Tizen 9
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
