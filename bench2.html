@@ -1,0 +1,832 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Three Frames — DD Design System</title>
+<style>
+@font-face {
+  font-family:'Pretendard';
+  font-style:normal; font-weight:100 900; font-display:swap;
+  src:url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.woff2') format('woff2-variations');
+}
+
+/* ── TOKENS ─────────────────────────────────────────────── */
+:root {
+  --bg:         #0A0A0B;
+  --surface:    #111114;
+  --elevated:   #18181D;
+  --violet:     #7C3AED;
+  --vBright:    #8B5CF6;
+  --vGlow:      #A78BFA;
+  --vDim:       #4C1D95;
+  --cyan:       #06B6D4;
+  --cyanDim:    #0E7490;
+  --tp:         #F4F4F5;
+  --ts:         #A1A1AA;
+  --tm:         #52525B;
+  --border:     #27272A;
+  --borderBr:   #3F3F46;
+  --good:       #34D399;
+  --goodDim:    #064E3B;
+  --warn:       #FBBF24;
+  --warnDim:    #451A03;
+  --none:       #52525B;
+  --self:       #A78BFA;
+  --selfDim:    #4C1D95;
+  --font:'Pretendard',-apple-system,'Apple SD Gothic Neo','Noto Sans KR',sans-serif;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#000;font-family:var(--font);-webkit-font-smoothing:antialiased;color:var(--tp)}
+body{padding:28px 16px;display:flex;flex-direction:column;align-items:center;gap:24px}
+
+/* ── SLIDE BASE ─────────────────────────────────────────── */
+.slide{
+  width:1280px; height:720px;
+  position:relative; background:var(--bg);
+  overflow:hidden; isolation:isolate;
+  flex-shrink:0;
+}
+.slide * { font-family:var(--font) !important; }
+
+/* grid texture */
+.slide::before{
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    linear-gradient(rgba(63,63,70,.22) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(63,63,70,.22) 1px,transparent 1px);
+  background-size:64px 64px;
+  mask-image:radial-gradient(ellipse at center,#000 25%,transparent 75%);
+  opacity:.45;
+}
+/* noise */
+.slide::after{
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  opacity:.04;mix-blend-mode:screen;
+}
+.slide>*{position:relative;z-index:2;}
+
+/* ── AMBIENT GLOWS (per-slide) ──────────────────────────── */
+.glow{position:absolute;border-radius:50%;pointer-events:none;z-index:1;}
+
+/* ── FRAME CHROME ───────────────────────────────────────── */
+.frame{position:absolute;inset:0;pointer-events:none;z-index:3;}
+.frame__top{
+  display:grid;grid-template-columns:1fr auto 1fr;
+  align-items:center;padding:26px 36px 0;
+}
+.frame__label{font-weight:700;font-size:13px;letter-spacing:.04em;color:var(--tp);}
+.frame__page{justify-self:end;font-weight:700;font-size:11px;letter-spacing:.12em;color:var(--ts);}
+.frame__edge{
+  position:absolute;top:50%;
+  font-weight:700;font-size:10px;letter-spacing:.4em;
+  text-transform:uppercase;color:var(--tm);white-space:nowrap;
+}
+.frame__edge--l{left:16px;writing-mode:vertical-rl;transform:translateY(-50%) rotate(180deg);}
+.frame__edge--r{right:16px;writing-mode:vertical-rl;transform:translateY(-50%);}
+
+/* ── PAD ────────────────────────────────────────────────── */
+.pad{padding:68px 72px 38px;height:100%;display:flex;flex-direction:column;}
+
+/* ── TYPE ───────────────────────────────────────────────── */
+.eyebrow{font-weight:700;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ts);}
+.h-display{font-weight:700;font-size:40px;line-height:1.06;letter-spacing:-.025em;color:var(--tp);}
+.h-display.lg{font-size:52px;}
+.h-display.sm{font-size:32px;}
+.subline{font-weight:500;font-size:16px;line-height:1.6;color:var(--ts);margin-top:10px;}
+.subline.sm{font-size:13px;}
+
+/* ── DIVIDER ─────────────────────────────────────────────── */
+.rule{height:1px;background:var(--border);width:100%;}
+.rule-v{width:1px;background:var(--border);align-self:stretch;}
+.dash-short{width:48px;height:1px;background:var(--vGlow);opacity:.7;display:block;}
+.dash-short.c{background:var(--cyan);}
+
+/* ── CARDS ───────────────────────────────────────────────── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px;}
+.card.glow{box-shadow:0 0 0 1px rgba(124,58,237,.3),0 0 40px rgba(124,58,237,.10);}
+.card.cyan{box-shadow:0 0 0 1px rgba(6,182,212,.28),0 0 32px rgba(6,182,212,.08);}
+.card.good{border-color:rgba(52,211,153,.3);background:rgba(6,78,59,.15);}
+.card.self{border-color:rgba(167,139,250,.3);background:rgba(76,29,149,.12);}
+.card.warn{border-color:rgba(251,191,36,.25);}
+.card.none{border-color:var(--border);}
+
+/* accent bar on card left */
+.card.aL::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px 0 0 3px;}
+.card{position:relative;}
+.card.aL-v::before{background:var(--vGlow);}
+.card.aL-c::before{background:var(--cyan);}
+.card.aL-g::before{background:var(--good);}
+.card.aL-s::before{background:var(--self);}
+
+/* ── BADGE ───────────────────────────────────────────────── */
+.badge{display:inline-flex;align-items:center;font-weight:700;font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:3px 8px;border-radius:999px;}
+.badge.good{background:rgba(52,211,153,.15);color:var(--good);border:1px solid rgba(52,211,153,.3);}
+.badge.warn{background:rgba(251,191,36,.12);color:var(--warn);border:1px solid rgba(251,191,36,.25);}
+.badge.none{background:rgba(82,82,91,.2);color:var(--tm);border:1px solid var(--border);}
+.badge.self{background:rgba(167,139,250,.18);color:var(--self);border:1px solid rgba(167,139,250,.3);}
+
+/* ── COMPANY STRIP ───────────────────────────────────────── */
+.comp-strip{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:12px;}
+.ccell{padding:7px 4px;border-radius:6px;text-align:center;border:1px solid transparent;}
+.ccell .nm{font-size:9px;font-weight:700;letter-spacing:-.1px;line-height:1.1;}
+.ccell .st{font-size:7.5px;margin-top:2px;line-height:1.2;}
+.cc-good{background:rgba(52,211,153,.12);border-color:rgba(52,211,153,.3);}
+.cc-good .nm{color:var(--good);}
+.cc-good .st{color:#86efac;}
+.cc-warn{background:rgba(251,191,36,.1);border-color:rgba(251,191,36,.25);}
+.cc-warn .nm{color:var(--warn);}
+.cc-warn .st{color:#fde68a;}
+.cc-none{background:rgba(255,255,255,.04);border-color:var(--border);}
+.cc-none .nm{color:var(--tm);}
+.cc-none .st{color:var(--tm);}
+.cc-self{background:rgba(167,139,250,.14);border-color:rgba(167,139,250,.4);}
+.cc-self .nm{color:var(--self);}
+.cc-self .st{color:#c4b5fd;}
+
+/* ── INSIGHT BOX ─────────────────────────────────────────── */
+.insight{padding:12px 16px;background:rgba(167,139,250,.06);border-left:2px solid var(--vGlow);border-radius:0 6px 6px 0;margin-top:14px;}
+.insight .lbl{font-size:8.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--vGlow);margin-bottom:5px;}
+.insight .txt{font-size:12px;line-height:1.55;color:var(--tp);}
+.insight .txt strong{color:var(--vGlow);}
+.insight.c{border-color:var(--cyan);background:rgba(6,182,212,.06);}
+.insight.c .lbl{color:var(--cyan);}
+.insight.c .txt strong{color:var(--cyan);}
+
+/* footer insight */
+.foot-insight{margin-top:auto;padding:13px 18px;background:linear-gradient(90deg,rgba(167,139,250,.1),transparent);border-left:2px solid var(--vGlow);}
+.foot-insight .lbl{font-size:8.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--vGlow);margin-bottom:5px;}
+.foot-insight .txt{font-size:12px;line-height:1.55;color:var(--tp);}
+.foot-insight .txt strong{color:var(--vGlow);}
+
+/* ── SVG MINI-MOCKUP WRAPPER ─────────────────────────────── */
+.mock{border-radius:6px;overflow:hidden;border:1px solid var(--border);background:#080808;}
+.mock svg{width:100%;height:100%;display:block;}
+
+/* ── CAT LABEL ───────────────────────────────────────────── */
+.cat-lbl{display:inline-flex;align-items:center;gap:8px;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ts);margin-bottom:10px;}
+.cat-lbl .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+
+/* ── EX CARD ─────────────────────────────────────────────── */
+.ex{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:11px;display:flex;flex-direction:column;gap:7px;}
+.ex.good{border-color:rgba(52,211,153,.3);background:rgba(6,78,59,.12);}
+.ex.self{border-color:rgba(167,139,250,.3);background:rgba(76,29,149,.1);}
+.ex .name{font-size:11.5px;font-weight:700;color:var(--tp);display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.ex .desc{font-size:9.5px;line-height:1.55;color:var(--ts);}
+.ex .src{font-size:8.5px;color:var(--tm);font-style:italic;}
+
+/* ── FOOTER BAR ──────────────────────────────────────────── */
+.foot-bar{position:absolute;bottom:28px;left:72px;right:72px;display:flex;justify-content:space-between;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--tm);}
+
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════
+  SLIDE 1 · SYNTHESIS  P4 / 30
+════════════════════════════════════════════════════ -->
+<section class="slide">
+  <!-- glows -->
+  <div class="glow" style="left:-180px;top:-180px;width:560px;height:560px;background:radial-gradient(circle,rgba(124,58,237,.18) 0%,transparent 60%);"></div>
+  <div class="glow" style="right:-140px;bottom:-140px;width:460px;height:460px;background:radial-gradient(circle,rgba(6,182,212,.11) 0%,transparent 60%);"></div>
+
+  <div class="frame">
+    <div class="frame__top">
+      <div></div>
+      <div class="frame__label">Insight</div>
+      <div class="frame__page">P4 / 30</div>
+    </div>
+    <div class="frame__edge frame__edge--l">CDO</div>
+    <div class="frame__edge frame__edge--r">UX TEAM</div>
+  </div>
+
+  <div class="pad" style="padding-top:64px;">
+    <!-- title -->
+    <div style="text-align:center;margin-bottom:22px;">
+      <p class="eyebrow" style="color:var(--vGlow);margin-bottom:10px;">Three frames · Three open spaces</p>
+      <h1 class="h-display lg" style="text-align:center;">Three frames, three open spaces</h1>
+      <p class="subline" style="text-align:center;max-width:860px;margin:10px auto 0;">3 프레임을 통해 본 자/타사 핵심 인사이트 — DNA · 기기특화 · AI에서 모두 6사가 비워둔 자리,<br/>셋을 동시에 채울 수 있는 회사는 <strong style="color:var(--self);">Samsung</strong>뿐</p>
+    </div>
+
+    <!-- 3 columns -->
+    <div style="flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start;">
+
+      <!-- Frame 1 -->
+      <div style="display:flex;flex-direction:column;gap:0;border-top:1px solid var(--vGlow);padding-top:14px;">
+        <span class="eyebrow" style="color:var(--vGlow);">FRAME ①</span>
+        <div style="font-size:20px;font-weight:700;color:var(--tp);margin:6px 0 2px;">DNA</div>
+        <div style="font-size:10.5px;color:var(--tm);letter-spacing:.04em;margin-bottom:10px;">전사 비주얼 랭귀지의 TV 확장</div>
+        <div class="comp-strip">
+          <div class="ccell cc-good"><div class="nm">Apple</div><div class="st">Glass ✓</div></div>
+          <div class="ccell cc-warn"><div class="nm">Google</div><div class="st">선언만</div></div>
+          <div class="ccell cc-warn"><div class="nm">Xiaomi</div><div class="st">별개</div></div>
+          <div class="ccell cc-good"><div class="nm">Huawei</div><div class="st">Bound ✓</div></div>
+          <div class="ccell cc-warn"><div class="nm">Amazon</div><div class="st">컬러만</div></div>
+          <div class="ccell cc-none"><div class="nm">LG</div><div class="st">부재</div></div>
+          <div class="ccell cc-self"><div class="nm">Samsung</div><div class="st">+6 기기</div></div>
+        </div>
+        <div class="insight" style="margin-top:12px;">
+          <div class="lbl">★ 기회</div>
+          <div class="txt"><strong>둘만 실행, 넷이 빈자리.</strong> One UI를 폰·워치·차·가전·로봇·TV 6 기기에 일관 확장 가능한 유일 회사.</div>
+        </div>
+      </div>
+
+      <!-- Frame 2 -->
+      <div style="display:flex;flex-direction:column;gap:0;border-top:1px solid var(--vGlow);padding-top:14px;">
+        <span class="eyebrow" style="color:var(--vGlow);">FRAME ②</span>
+        <div style="font-size:20px;font-weight:700;color:var(--tp);margin:6px 0 2px;">기기특화</div>
+        <div style="font-size:10.5px;color:var(--tm);letter-spacing:.04em;margin-bottom:10px;">대화면 전용 비주얼 요소</div>
+        <div class="comp-strip">
+          <div class="ccell cc-good"><div class="nm">Apple</div><div class="st">영화관★</div></div>
+          <div class="ccell cc-none"><div class="nm">Google</div><div class="st">없음</div></div>
+          <div class="ccell cc-warn"><div class="nm">Xiaomi</div><div class="st">행 패턴</div></div>
+          <div class="ccell cc-warn"><div class="nm">Huawei</div><div class="st">Atomic</div></div>
+          <div class="ccell cc-none"><div class="nm">Amazon</div><div class="st">없음</div></div>
+          <div class="ccell cc-warn"><div class="nm">LG</div><div class="st">Magic HW</div></div>
+          <div class="ccell cc-self"><div class="nm">Samsung</div><div class="st">벽/가구★</div></div>
+        </div>
+        <div class="insight" style="margin-top:12px;">
+          <div class="lbl">★ 기회</div>
+          <div class="txt"><strong>Apple(영화관)과 Samsung(벽/가구) 단 둘.</strong> The Frame DNA를 액자 모드 → 시스템 비주얼 언어로 격상하면 카테고리 독점.</div>
+        </div>
+      </div>
+
+      <!-- Frame 3 -->
+      <div style="display:flex;flex-direction:column;gap:0;border-top:1px solid var(--cyan);padding-top:14px;">
+        <span class="eyebrow" style="color:var(--cyan);">FRAME ③</span>
+        <div style="font-size:20px;font-weight:700;color:var(--tp);margin:6px 0 2px;">AI</div>
+        <div style="font-size:10.5px;color:var(--tm);letter-spacing:.04em;margin-bottom:10px;">AI 시대 비주얼 시그니처</div>
+        <div class="comp-strip">
+          <div class="ccell cc-none"><div class="nm">Apple</div><div class="st">숨김</div></div>
+          <div class="ccell cc-warn"><div class="nm">Google</div><div class="st">Sparkle</div></div>
+          <div class="ccell cc-warn"><div class="nm">Xiaomi</div><div class="st">Orb</div></div>
+          <div class="ccell cc-none"><div class="nm">Huawei</div><div class="st">IoT용</div></div>
+          <div class="ccell cc-warn"><div class="nm">Amazon</div><div class="st">Alexa</div></div>
+          <div class="ccell cc-none"><div class="nm">LG</div><div class="st">없음</div></div>
+          <div class="ccell cc-self"><div class="nm">Samsung</div><div class="st">Halo Edge</div></div>
+        </div>
+        <div class="insight c" style="margin-top:12px;">
+          <div class="lbl">★ 기회</div>
+          <div class="txt"><strong>'화면 표면 전체로 흐르는 AI'는 거의 비어있는 영역.</strong> 기기 간 동기 발광까지 묶을 회사는 Galaxy 6 기기의 Samsung뿐.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="foot-bar">
+      <span>Source · MATRIX v2 (4사 매트릭스) + 5사 한눈에 + Amazon Fire TV 보강</span>
+      <span>리서치팀 + 기획팀 합동</span>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════
+  SLIDE 2 · FRAME ① DNA  P5 / 30
+════════════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="glow" style="right:-200px;top:-160px;width:520px;height:520px;background:radial-gradient(circle,rgba(52,211,153,.10) 0%,transparent 60%);"></div>
+
+  <div class="frame">
+    <div class="frame__top">
+      <div></div>
+      <div class="frame__label">Frame ① · DNA</div>
+      <div class="frame__page">P5 / 30</div>
+    </div>
+    <div class="frame__edge frame__edge--l">CDO</div>
+    <div class="frame__edge frame__edge--r">UX TEAM</div>
+  </div>
+
+  <div class="pad">
+    <div style="margin-bottom:16px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+        <span class="dash-short"></span>
+        <span class="eyebrow" style="color:var(--vGlow);">Frame ① · DNA</span>
+      </div>
+      <h1 class="h-display sm">Visual DNA, only two have proved it</h1>
+      <p class="subline sm">전사 비주얼 랭귀지의 TV 확장 — 6사 중 실제 비주얼로 증명한 곳은 Apple과 Huawei 둘뿐.</p>
+    </div>
+
+    <!-- 5-card grid: 3 top + 2 bottom, but we do 2-row: [Apple Huawei Google] [Xiaomi Amazon LG] -->
+    <div style="flex:1;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:1fr 1fr;gap:10px;">
+
+      <!-- Apple -->
+      <div class="ex good">
+        <div class="cat-lbl"><span class="dot" style="background:var(--good)"></span>Apple — Liquid Glass <span class="badge good">실행 ★</span></div>
+        <div class="mock" style="height:96px;">
+          <svg viewBox="0 0 240 96" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="ag" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5b6b95"/><stop offset="1" stop-color="#a3b3d8"/></linearGradient></defs>
+            <rect width="240" height="96" fill="url(#ag)"/>
+            <rect x="10" y="10" width="38" height="76" rx="8" fill="rgba(255,255,255,.18)" stroke="rgba(255,255,255,.4)" stroke-width=".6"/>
+            <rect x="15" y="17" width="28" height="20" rx="3" fill="rgba(255,255,255,.3)"/>
+            <rect x="15" y="41" width="28" height="14" rx="3" fill="rgba(255,255,255,.22)"/>
+            <text x="29" y="90" text-anchor="middle" fill="rgba(255,255,255,.7)" font-size="5" font-family="Helvetica">iOS 26</text>
+            <rect x="56" y="14" width="80" height="60" rx="6" fill="rgba(255,255,255,.18)" stroke="rgba(255,255,255,.4)" stroke-width=".6"/>
+            <rect x="62" y="20" width="68" height="26" rx="3" fill="rgba(255,255,255,.28)"/>
+            <rect x="62" y="50" width="32" height="16" rx="2" fill="rgba(255,255,255,.22)"/>
+            <rect x="98" y="50" width="32" height="16" rx="2" fill="rgba(255,255,255,.22)"/>
+            <text x="96" y="84" text-anchor="middle" fill="rgba(255,255,255,.7)" font-size="5" font-family="Helvetica">tvOS 26</text>
+            <rect x="148" y="14" width="82" height="60" rx="6" fill="rgba(255,255,255,.18)" stroke="rgba(255,255,255,.4)" stroke-width=".6"/>
+            <text x="189" y="48" text-anchor="middle" fill="rgba(255,255,255,.7)" font-size="7" font-family="Helvetica">Liquid Glass</text>
+            <text x="189" y="84" text-anchor="middle" fill="rgba(255,255,255,.6)" font-size="5" font-family="Helvetica">visionOS 26</text>
+          </svg>
+        </div>
+        <div class="desc">iOS 26 · tvOS 26 · visionOS 26가 모두 같은 Glass 머터리얼 공유. visionOS 출발 → 전 기기 통일.</div>
+      </div>
+
+      <!-- Huawei -->
+      <div class="ex good">
+        <div class="cat-lbl"><span class="dot" style="background:var(--good)"></span>Huawei — HarmonyOS Bound <span class="badge good">실행 ✓</span></div>
+        <div class="mock" style="height:96px;">
+          <svg viewBox="0 0 240 96" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="hg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#1a3a5e"/><stop offset=".6" stop-color="#2d6b8e"/><stop offset="1" stop-color="#c69f3d"/></linearGradient></defs>
+            <rect width="240" height="96" fill="url(#hg)"/>
+            <rect x="14" y="12" width="42" height="72" rx="7" fill="#0a1a2a" stroke="rgba(0,217,255,.45)"/>
+            <rect x="19" y="20" width="32" height="16" rx="2" fill="rgba(0,217,255,.24)"/>
+            <rect x="19" y="40" width="14" height="14" rx="2" fill="rgba(0,217,255,.18)"/>
+            <rect x="37" y="40" width="14" height="14" rx="2" fill="rgba(0,217,255,.18)"/>
+            <rect x="19" y="58" width="32" height="20" rx="2" fill="rgba(255,170,40,.18)"/>
+            <text x="35" y="92" text-anchor="middle" fill="rgba(255,255,255,.6)" font-size="5" font-family="Helvetica">HarmonyOS Phone</text>
+            <rect x="68" y="12" width="158" height="72" rx="5" fill="#0a1a2a" stroke="rgba(0,217,255,.4)"/>
+            <rect x="74" y="20" width="60" height="32" rx="3" fill="rgba(0,217,255,.22)"/>
+            <rect x="140" y="20" width="40" height="32" rx="3" fill="rgba(255,170,40,.18)"/>
+            <rect x="186" y="20" width="34" height="32" rx="3" fill="rgba(0,217,255,.14)"/>
+            <text x="147" y="92" text-anchor="middle" fill="rgba(255,255,255,.6)" font-size="5" font-family="Helvetica">HarmonyOS Vision TV</text>
+          </svg>
+        </div>
+        <div class="desc">HarmonyOS NEXT — 폰과 TV(Vision)가 같은 Bound 언어. 컬러·타이포·모션 일관성 검증.</div>
+      </div>
+
+      <!-- Google -->
+      <div class="ex">
+        <div class="cat-lbl"><span class="dot" style="background:var(--warn)"></span>Google — Material 3 <span class="badge warn">선언만, 실행 약함</span></div>
+        <div class="mock" style="height:96px;">
+          <svg viewBox="0 0 240 96" xmlns="http://www.w3.org/2000/svg">
+            <rect width="120" height="96" fill="#3a2a55"/>
+            <rect x="8" y="12" width="104" height="16" rx="8" fill="rgba(180,150,255,.4)"/>
+            <rect x="8" y="34" width="48" height="36" rx="6" fill="rgba(255,200,140,.4)"/>
+            <rect x="62" y="34" width="50" height="36" rx="6" fill="rgba(160,255,180,.4)"/>
+            <text x="60" y="10" text-anchor="middle" fill="rgba(255,255,255,.7)" font-size="5" font-family="Helvetica">Android M3</text>
+            <rect x="120" width="120" height="96" fill="#1a1a1a"/>
+            <rect x="128" y="12" width="104" height="28" rx="2" fill="rgba(255,255,255,.1)"/>
+            <rect x="128" y="46" width="30" height="36" rx="2" fill="rgba(255,255,255,.14)"/>
+            <rect x="162" y="46" width="30" height="36" rx="2" fill="rgba(255,255,255,.14)"/>
+            <rect x="196" y="46" width="28" height="36" rx="2" fill="rgba(255,255,255,.14)"/>
+            <text x="180" y="10" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="5" font-family="Helvetica">Google TV (일관성 약)</text>
+          </svg>
+        </div>
+        <div class="desc">M3는 강하지만 Google TV는 파트너사 커스텀 압도. OS 자체 시각 일관성 부족.</div>
+      </div>
+
+      <!-- Xiaomi -->
+      <div class="ex">
+        <div class="cat-lbl"><span class="dot" style="background:var(--warn)"></span>Xiaomi — HyperOS / PatchWall <span class="badge warn">선언만</span></div>
+        <div class="mock" style="height:88px;">
+          <svg viewBox="0 0 240 88" xmlns="http://www.w3.org/2000/svg">
+            <rect width="120" height="88" fill="#1a1a1a"/>
+            <rect x="18" y="10" width="84" height="68" rx="7" fill="#0a0a0a" stroke="#FF6700" stroke-width=".6"/>
+            <rect x="24" y="18" width="72" height="18" rx="2" fill="rgba(255,103,0,.22)"/>
+            <rect x="24" y="40" width="30" height="20" rx="2" fill="rgba(255,255,255,.1)"/>
+            <rect x="58" y="40" width="38" height="20" rx="2" fill="rgba(0,200,255,.14)"/>
+            <text x="60" y="82" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="5" font-family="Helvetica">HyperOS Phone</text>
+            <rect x="120" width="120" height="88" fill="#0a0a0a"/>
+            <g transform="translate(126,10)">
+              <rect width="108" height="16" rx="2" fill="rgba(255,255,255,.14)"/>
+              <rect y="20" width="32" height="18" rx="2" fill="rgba(255,255,255,.1)"/><rect x="34" y="20" width="32" height="18" rx="2" fill="rgba(255,255,255,.1)"/><rect x="68" y="20" width="32" height="18" rx="2" fill="rgba(255,255,255,.1)"/>
+              <rect y="42" width="32" height="18" rx="2" fill="rgba(255,255,255,.1)"/><rect x="34" y="42" width="32" height="18" rx="2" fill="rgba(255,255,255,.1)"/><rect x="68" y="42" width="32" height="18" rx="2" fill="rgba(255,255,255,.1)"/>
+            </g>
+            <text x="180" y="82" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="5" font-family="Helvetica">PatchWall (별개 시스템)</text>
+          </svg>
+        </div>
+        <div class="desc">HyperOS 통합 표방하지만 TV PatchWall은 사실상 별개 콘텐츠 마켓. DNA 연속성은 Mi Orange 정도.</div>
+      </div>
+
+      <!-- Amazon -->
+      <div class="ex">
+        <div class="cat-lbl"><span class="dot" style="background:var(--warn)"></span>Amazon — Fire TV / Vega OS <span class="badge warn">선언만</span></div>
+        <div class="mock" style="height:88px;">
+          <svg viewBox="0 0 240 88" xmlns="http://www.w3.org/2000/svg">
+            <rect width="120" height="88" fill="#0a1a2a"/>
+            <rect x="10" y="24" width="100" height="56" rx="7" fill="#1a2a3a"/>
+            <circle cx="60" cy="44" r="10" fill="#FF9900"/>
+            <rect x="30" y="60" width="60" height="4" rx="2" fill="rgba(255,255,255,.4)"/>
+            <text x="60" y="82" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="5" font-family="Helvetica">Echo Show</text>
+            <rect x="120" width="120" height="88" fill="#0a0a14"/>
+            <rect x="128" y="8" width="104" height="14" rx="2" fill="rgba(255,153,0,.55)"/>
+            <text x="180" y="18" text-anchor="middle" fill="#000" font-size="6" font-weight="700" font-family="Helvetica">Watch · Find · Live</text>
+            <rect x="128" y="26" width="104" height="32" rx="2" fill="rgba(255,255,255,.12)"/>
+            <rect x="128" y="62" width="22" height="18" rx="2" fill="rgba(255,255,255,.1)"/>
+            <rect x="154" y="62" width="22" height="18" rx="2" fill="rgba(255,255,255,.1)"/>
+            <rect x="180" y="62" width="22" height="18" rx="2" fill="rgba(255,255,255,.1)"/>
+            <rect x="206" y="62" width="22" height="18" rx="2" fill="rgba(255,255,255,.1)"/>
+            <text x="180" y="84" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="5" font-family="Helvetica">Fire TV (마켓 카드 중심)</text>
+          </svg>
+        </div>
+        <div class="desc">Amazon Orange · Echo Blue는 있지만 통합 디자인 시스템 수준 아님. TV는 마켓플레이스 카드 중심.</div>
+      </div>
+
+      <!-- LG -->
+      <div class="ex">
+        <div class="cat-lbl"><span class="dot" style="background:var(--tm)"></span>LG — webOS <span class="badge none">DNA 부재</span></div>
+        <div class="mock" style="height:88px;">
+          <svg viewBox="0 0 240 88" xmlns="http://www.w3.org/2000/svg">
+            <rect width="240" height="88" fill="#111"/>
+            <rect x="10" y="8" width="220" height="14" rx="2" fill="rgba(255,255,255,.07)"/>
+            <text x="120" y="18" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="5" font-family="Helvetica">LG Channels · Apps · AI Concierge</text>
+            <rect x="10" y="27" width="50" height="40" rx="3" fill="rgba(255,255,255,.1)"/>
+            <rect x="64" y="27" width="50" height="40" rx="3" fill="rgba(255,255,255,.1)"/>
+            <rect x="118" y="27" width="50" height="40" rx="3" fill="rgba(255,255,255,.1)"/>
+            <rect x="172" y="27" width="58" height="40" rx="3" fill="rgba(255,255,255,.1)"/>
+            <text x="120" y="80" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="5" font-family="Helvetica">한 줄로 설명할 비주얼 DNA 없음</text>
+          </svg>
+        </div>
+        <div class="desc">기능(AI Concierge, Quick Cards)은 잘 짜여있지만 한 줄로 설명할 비주얼 DNA 자체가 없음.</div>
+      </div>
+
+    </div>
+
+    <div class="foot-insight" style="margin-top:12px;">
+      <div class="lbl">★ FRAME ① INSIGHT</div>
+      <div class="txt"><strong>6사 중 둘만 실행, 넷이 빈자리.</strong> Samsung은 One UI를 폰·워치·차·가전·로봇·TV 6 기기에 일관 확장 가능한 유일한 회사 — 'One Visual Language'를 정식화하면 셋이 비워둔 자리를 선점할 수 있다.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════
+  SLIDE 3 · FRAME ② 기기특화  P6 / 30
+════════════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="glow" style="left:-160px;bottom:-160px;width:500px;height:500px;background:radial-gradient(circle,rgba(52,211,153,.10) 0%,transparent 60%);"></div>
+  <div class="glow" style="right:-120px;top:-120px;width:400px;height:400px;background:radial-gradient(circle,rgba(167,139,250,.10) 0%,transparent 60%);"></div>
+
+  <div class="frame">
+    <div class="frame__top">
+      <div></div>
+      <div class="frame__label">Frame ② · 기기특화</div>
+      <div class="frame__page">P6 / 30</div>
+    </div>
+    <div class="frame__edge frame__edge--l">CDO</div>
+    <div class="frame__edge frame__edge--r">UX TEAM</div>
+  </div>
+
+  <div class="pad">
+    <div style="margin-bottom:14px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+        <span class="dash-short"></span>
+        <span class="eyebrow" style="color:var(--vGlow);">Frame ② · 기기특화</span>
+      </div>
+      <h1 class="h-display sm">Two categories, two players</h1>
+      <p class="subline sm">기기특화 · 대화면 — 모바일에 없는 TV 전용 비주얼을 만든 회사는 Apple(영화관)과 Samsung(벽/가구) 둘뿐, 카테고리도 다르다.</p>
+    </div>
+
+    <!-- Apple row -->
+    <div style="margin-bottom:12px;">
+      <div class="cat-lbl"><span class="dot" style="background:var(--good)"></span>Apple — "영화관" 카테고리 · 대화면을 콘텐츠 몰입 공간으로</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+
+        <div class="ex good">
+          <div class="mock" style="height:82px;">
+            <svg viewBox="0 0 240 82" xmlns="http://www.w3.org/2000/svg">
+              <defs><linearGradient id="ar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a5478"/><stop offset=".6" stop-color="#5a7898"/><stop offset="1" stop-color="#0a1a2a"/></linearGradient></defs>
+              <rect width="240" height="82" fill="url(#ar)"/>
+              <polygon points="0,58 50,40 100,52 160,36 220,48 240,46 240,82 0,82" fill="#0d2438" opacity=".8"/>
+              <polygon points="0,70 60,58 120,64 180,54 240,62 240,82 0,82" fill="#082030" opacity=".9"/>
+              <text x="120" y="75" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="6" font-family="Helvetica" font-style="italic">Aerial Screensaver · 4K HDR</text>
+            </svg>
+          </div>
+          <div class="name">Aerial Screensaver</div>
+          <div class="desc">드론으로 촬영한 4K 풍경 영상이 비시청 시 화면을 채움. 모바일에는 없는 TV 전용.</div>
+        </div>
+
+        <div class="ex good">
+          <div class="mock" style="height:82px;">
+            <svg viewBox="0 0 240 82" xmlns="http://www.w3.org/2000/svg">
+              <rect width="240" height="82" fill="#0a0a0a"/>
+              <rect x="10" y="6" width="220" height="40" rx="5" fill="#1a1a2a" stroke="rgba(255,255,255,.18)"/>
+              <rect x="16" y="10" width="62" height="32" rx="3" fill="rgba(220,80,80,.5)"/>
+              <rect x="84" y="10" width="62" height="32" rx="3" fill="rgba(80,120,220,.5)"/>
+              <rect x="152" y="10" width="72" height="32" rx="3" fill="rgba(220,180,80,.5)"/>
+              <text x="120" y="54" text-anchor="middle" fill="rgba(255,255,255,.35)" font-size="5.5" font-family="Helvetica">Parallax — 포커스 시 3D 깊이</text>
+              <rect x="10" y="58" width="44" height="20" rx="2" fill="rgba(255,255,255,.1)"/>
+              <rect x="58" y="58" width="44" height="20" rx="2" fill="rgba(255,255,255,.1)"/>
+              <rect x="106" y="58" width="44" height="20" rx="2" fill="rgba(255,255,255,.1)"/>
+              <rect x="154" y="58" width="44" height="20" rx="2" fill="rgba(255,255,255,.1)"/>
+              <rect x="202" y="58" width="28" height="20" rx="2" fill="rgba(255,255,255,.1)"/>
+            </svg>
+          </div>
+          <div class="name">Top Shelf · Parallax</div>
+          <div class="desc">홈 상단 풀너비 영역 + 포커스 시 3D 패럴랙스 깊이. 리모컨 거리 인터랙션 전용.</div>
+        </div>
+
+        <div class="ex good">
+          <div class="mock" style="height:82px;">
+            <svg viewBox="0 0 240 82" xmlns="http://www.w3.org/2000/svg">
+              <defs><linearGradient id="cn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a0a0a"/><stop offset=".6" stop-color="#5a2a1a"/><stop offset="1" stop-color="#a05030"/></linearGradient></defs>
+              <rect width="240" height="82" fill="url(#cn)"/>
+              <text x="14" y="26" fill="rgba(255,255,255,.95)" font-size="12" font-weight="700" font-family="Helvetica">Severance</text>
+              <text x="14" y="38" fill="rgba(255,255,255,.7)" font-size="6" font-family="Helvetica">Apple TV+ · S2 ep.6</text>
+              <rect x="14" y="60" width="42" height="14" rx="7" fill="#fff"/>
+              <text x="35" y="70" text-anchor="middle" fill="#000" font-size="6" font-weight="600" font-family="Helvetica">▶ Play</text>
+              <rect x="62" y="60" width="42" height="14" rx="7" fill="rgba(255,255,255,.16)" stroke="rgba(255,255,255,.4)"/>
+              <text x="83" y="70" text-anchor="middle" fill="#fff" font-size="6" font-family="Helvetica">+ My List</text>
+            </svg>
+          </div>
+          <div class="name">Cinematic Hero</div>
+          <div class="desc">풀블리드 포스터 + 자동 트레일러. 영화관 같은 몰입 화면 구성.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Samsung row -->
+    <div>
+      <div class="cat-lbl"><span class="dot" style="background:var(--self)"></span>Samsung — "벽/가구" 카테고리 · 대화면을 거실의 표면으로</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+
+        <div class="ex self">
+          <div class="mock" style="height:82px;">
+            <svg viewBox="0 0 240 82" xmlns="http://www.w3.org/2000/svg">
+              <rect width="240" height="82" fill="#5a4a3a"/>
+              <rect x="10" y="8" width="220" height="66" rx="2" fill="#000" stroke="#a5805a" stroke-width="4"/>
+              <rect x="14" y="12" width="212" height="58" fill="#3a4d6e"/>
+              <circle cx="120" cy="36" r="16" fill="#f5d570"/>
+              <polygon points="40,74 70,56 110,64 150,52 190,60 210,58 210,72" fill="#1a2030"/>
+              <text x="120" y="78" text-anchor="middle" fill="rgba(255,255,255,.35)" font-size="5.5" font-family="Helvetica" font-style="italic">artwork display · 4K</text>
+            </svg>
+          </div>
+          <div class="name">The Frame — Art Mode</div>
+          <div class="desc">비시청 시간에 명화/사진을 액자처럼 전시. 실제로 가구화된 TV의 비주얼 시스템.</div>
+        </div>
+
+        <div class="ex self">
+          <div class="mock" style="height:82px;">
+            <svg viewBox="0 0 240 82" xmlns="http://www.w3.org/2000/svg">
+              <pattern id="brick" patternUnits="userSpaceOnUse" width="40" height="20"><rect width="40" height="20" fill="#aab5c0"/><rect width="40" height=".5" y="10" fill="#8a95a0"/><rect width=".5" height="10" x="20" fill="#8a95a0"/></pattern>
+              <rect width="240" height="82" fill="url(#brick)"/>
+              <rect x="30" y="12" width="180" height="58" rx="2" fill="#aab5c0" stroke="rgba(0,0,0,.12)"/>
+              <text x="120" y="38" text-anchor="middle" fill="rgba(0,0,0,.5)" font-size="9" font-family="Helvetica" font-weight="500">11:42</text>
+              <text x="120" y="50" text-anchor="middle" fill="rgba(0,0,0,.4)" font-size="5.5" font-family="Helvetica">서울 · 21° 흐림</text>
+              <text x="120" y="66" text-anchor="middle" fill="rgba(0,0,0,.3)" font-size="5.5" font-family="Helvetica" font-style="italic">화면이 벽지가 됨</text>
+            </svg>
+          </div>
+          <div class="name">Ambient Mode</div>
+          <div class="desc">TV 뒤 벽 패턴을 카메라로 인식해 스크린이 벽 일부처럼 보이게. 시계/날씨 위젯 미세 표시.</div>
+        </div>
+
+        <div class="ex self">
+          <div class="mock" style="height:82px;">
+            <svg viewBox="0 0 240 82" xmlns="http://www.w3.org/2000/svg">
+              <defs><linearGradient id="gw" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7a4a8e"/><stop offset=".5" stop-color="#3a8eaa"/><stop offset="1" stop-color="#5ec8a0"/></linearGradient></defs>
+              <rect width="240" height="82" fill="url(#gw)"/>
+              <circle cx="60" cy="28" r="30" fill="rgba(255,255,255,.14)"/>
+              <circle cx="180" cy="56" r="36" fill="rgba(255,255,255,.12)"/>
+              <text x="12" y="14" fill="rgba(255,255,255,.7)" font-size="5.5" font-family="Helvetica" font-style="italic">Generative · AI made</text>
+              <rect x="12" y="62" width="70" height="15" rx="2" fill="rgba(0,0,0,.4)" stroke="rgba(255,255,255,.3)"/>
+              <text x="20" y="72" fill="#fff" font-size="5.5" font-family="Helvetica">▶ Multi-View · 4-up</text>
+            </svg>
+          </div>
+          <div class="name">Generative Wallpaper · Multi-View</div>
+          <div class="desc">AI가 만드는 라이브 배경 + 멀티뷰(4분할). TV 대화면을 거실 분위기·다중 사용성으로 활용.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="foot-insight" style="margin-top:10px;">
+      <div class="lbl">★ FRAME ② INSIGHT</div>
+      <div class="txt"><strong>대화면 전용 비주얼 카테고리는 둘만 존재 — 카테고리도 다름.</strong> Samsung이 이미 점유한 '벽/가구' 카테고리를 The Frame 분리 모드 → 시스템 비주얼 언어 전체로 격상하면 카테고리 독점 가능.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════
+  SLIDE 4 · FRAME ③ AI  P7 / 30
+════════════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="glow" style="left:50%;top:50%;transform:translate(-50%,-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(6,182,212,.08) 0%,transparent 60%);"></div>
+
+  <div class="frame">
+    <div class="frame__top">
+      <div></div>
+      <div class="frame__label">Frame ③ · AI</div>
+      <div class="frame__page">P7 / 30</div>
+    </div>
+    <div class="frame__edge frame__edge--l">CDO</div>
+    <div class="frame__edge frame__edge--r">UX TEAM</div>
+  </div>
+
+  <div class="pad">
+    <div style="margin-bottom:14px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+        <span class="dash-short c"></span>
+        <span class="eyebrow" style="color:var(--cyan);">Frame ③ · AI</span>
+      </div>
+      <h1 class="h-display sm">AI as a marker, not a surface</h1>
+      <p class="subline sm">AI 시대 비주얼 시그니처 — 6사 모두 화면 일부의 작은 마커 수준. <strong style="color:var(--cyan);">'화면 표면 전체로 흐르는 AI'는 거의 비어있는 영역.</strong></p>
+    </div>
+
+    <!-- 6사 markers -->
+    <div style="margin-bottom:12px;">
+      <div class="cat-lbl"><span class="dot" style="background:var(--warn)"></span>현재 상태 · 6사 모두 마커 수준</div>
+      <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;">
+
+        <!-- Apple -->
+        <div class="ex">
+          <div class="mock" style="height:68px;">
+            <svg viewBox="0 0 200 68" xmlns="http://www.w3.org/2000/svg">
+              <rect width="200" height="68" fill="#0a0a0a"/>
+              <text x="100" y="36" text-anchor="middle" fill="rgba(255,255,255,.22)" font-size="8" font-family="Helvetica">(no on-screen)</text>
+              <text x="100" y="50" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="6" font-family="Helvetica" font-style="italic">의도적으로 숨김</text>
+            </svg>
+          </div>
+          <div class="name" style="font-size:11px;">Apple <span class="badge none">없음</span></div>
+          <div class="desc">Siri는 화면에 거의 노출 안 함.</div>
+        </div>
+
+        <!-- Google -->
+        <div class="ex">
+          <div class="mock" style="height:68px;">
+            <svg viewBox="0 0 200 68" xmlns="http://www.w3.org/2000/svg">
+              <rect width="200" height="68" fill="#0a0a0a"/>
+              <g transform="translate(100,34)">
+                <polygon points="0,-18 4,-4 18,0 4,4 0,18 -4,4 -18,0 -4,-4" fill="#4285f4"/>
+                <polygon points="0,-10 2.5,-2.5 10,0 2.5,2.5 0,10 -2.5,2.5 -10,0 -2.5,-2.5" fill="#ea4335" transform="translate(12,-12)"/>
+              </g>
+              <text x="100" y="62" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="5.5" font-family="Helvetica">Gemini Sparkle</text>
+            </svg>
+          </div>
+          <div class="name" style="font-size:11px;">Google <span class="badge warn">마커</span></div>
+          <div class="desc">4색 Sparkle 별이 버튼·아이콘에 등장.</div>
+        </div>
+
+        <!-- Xiaomi -->
+        <div class="ex">
+          <div class="mock" style="height:68px;">
+            <svg viewBox="0 0 200 68" xmlns="http://www.w3.org/2000/svg">
+              <rect width="200" height="68" fill="#0a0a0a"/>
+              <defs><radialGradient id="orb" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#5fe5ff"/><stop offset="1" stop-color="#00aacc" stop-opacity="0"/></radialGradient></defs>
+              <circle cx="100" cy="30" r="22" fill="url(#orb)"/>
+              <circle cx="100" cy="30" r="8" fill="#5fe5ff"/>
+              <text x="100" y="60" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="5.5" font-family="Helvetica">XiaoAI Cyan Orb</text>
+            </svg>
+          </div>
+          <div class="name" style="font-size:11px;">Xiaomi <span class="badge warn">마커</span></div>
+          <div class="desc">Cyan Orb가 음성 호출 시 팝업 등장.</div>
+        </div>
+
+        <!-- Huawei -->
+        <div class="ex">
+          <div class="mock" style="height:68px;">
+            <svg viewBox="0 0 200 68" xmlns="http://www.w3.org/2000/svg">
+              <rect width="200" height="68" fill="#0a0a0a"/>
+              <rect x="20" y="12" width="160" height="44" fill="#0a1a2a" stroke="#00d9ff" stroke-width="1.5"/>
+              <text x="100" y="38" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="7" font-family="Helvetica">HarmonyOS Vision</text>
+              <text x="100" y="62" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="5.5" font-family="Helvetica">Rim Light = IoT 표현</text>
+            </svg>
+          </div>
+          <div class="name" style="font-size:11px;">Huawei <span class="badge none">AI 아님</span></div>
+          <div class="desc">가장자리 빛이지만 AI가 아닌 디바이스 일체화 표현.</div>
+        </div>
+
+        <!-- Amazon -->
+        <div class="ex">
+          <div class="mock" style="height:68px;">
+            <svg viewBox="0 0 200 68" xmlns="http://www.w3.org/2000/svg">
+              <rect width="200" height="68" fill="#0a0a0a"/>
+              <rect x="20" y="50" width="160" height="2" fill="#00d8ff"/>
+              <g stroke="#00d8ff" stroke-width="1.5" stroke-linecap="round">
+                <line x1="60" y1="30" x2="60" y2="40"/>
+                <line x1="80" y1="22" x2="80" y2="48"/>
+                <line x1="100" y1="18" x2="100" y2="52"/>
+                <line x1="120" y1="25" x2="120" y2="45"/>
+                <line x1="140" y1="30" x2="140" y2="40"/>
+              </g>
+              <text x="100" y="64" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="5.5" font-family="Helvetica">Alexa Blue Wave</text>
+            </svg>
+          </div>
+          <div class="name" style="font-size:11px;">Amazon <span class="badge warn">마커</span></div>
+          <div class="desc">하단 파란 웨이브 바 + Echo Blue Ring과 일관.</div>
+        </div>
+
+        <!-- LG -->
+        <div class="ex">
+          <div class="mock" style="height:68px;">
+            <svg viewBox="0 0 200 68" xmlns="http://www.w3.org/2000/svg">
+              <rect width="200" height="68" fill="#0a0a0a"/>
+              <rect x="78" y="28" width="44" height="12" rx="6" fill="rgba(255,255,255,.1)"/>
+              <text x="100" y="37" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="5.5" font-family="Helvetica">AI Concierge</text>
+              <text x="100" y="62" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="5.5" font-family="Helvetica">리모컨 버튼만</text>
+            </svg>
+          </div>
+          <div class="name" style="font-size:11px;">LG <span class="badge none">없음</span></div>
+          <div class="desc">리모컨에 AI 버튼만, 화면 시그니처 부재.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Samsung opportunity -->
+    <div>
+      <div class="cat-lbl"><span class="dot" style="background:var(--self)"></span>Samsung 기회 · '화면 표면 전체로 흐르는 AI' — Galaxy Halo Edge</div>
+      <div class="ex self" style="flex-direction:row;gap:14px;align-items:flex-start;">
+        <div class="mock" style="flex:1;height:110px;">
+          <svg viewBox="0 0 600 110" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="hl1" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7C3AED"/><stop offset="1" stop-color="#06B6D4"/></linearGradient>
+              <filter id="bl"><feGaussianBlur stdDeviation="3"/></filter>
+            </defs>
+            <rect width="600" height="110" fill="#000"/>
+            <rect x="16" y="10" width="568" height="88" rx="4" fill="none" stroke="url(#hl1)" stroke-width="6" filter="url(#bl)" opacity=".85"/>
+            <rect x="16" y="10" width="568" height="88" rx="4" fill="none" stroke="url(#hl1)" stroke-width="1.5"/>
+            <rect x="28" y="20" width="175" height="68" rx="4" fill="rgba(255,255,255,.05)"/>
+            <text x="38" y="38" fill="rgba(255,255,255,.65)" font-size="8" font-family="Helvetica">Phone</text>
+            <rect x="214" y="20" width="175" height="68" rx="4" fill="rgba(255,255,255,.05)"/>
+            <text x="224" y="38" fill="rgba(255,255,255,.65)" font-size="8" font-family="Helvetica">Watch</text>
+            <rect x="400" y="20" width="168" height="68" rx="4" fill="rgba(255,255,255,.05)"/>
+            <text x="410" y="38" fill="rgba(255,255,255,.65)" font-size="8" font-family="Helvetica">Robot · Auto · IoT</text>
+            <text x="300" y="76" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="6.5" font-family="Helvetica" font-style="italic">동기 발광 &lt; 80ms · "AI는 한 기기가 아니라 Galaxy 전체에 산다"</text>
+          </svg>
+        </div>
+        <div style="flex:0 0 280px;display:flex;flex-direction:column;gap:6px;">
+          <div class="name">Galaxy Halo Edge — Samsung 전용 시그니처 후보</div>
+          <div class="desc" style="font-size:10.5px;">화면 가장자리 16~24px 동적 광원으로 AI 상태(idle / listening / responding) 표현. 폰·워치·차·로봇과 80ms 이내 동기 발광 → Galaxy 6 기기 폭을 비주얼로 증명.</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;">
+            <span class="badge self">idle</span>
+            <span class="badge self">listening</span>
+            <span class="badge self">responding</span>
+            <span style="font-size:9px;color:var(--ts);align-self:center;">← 80ms sync</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="foot-insight" style="margin-top:10px;background:linear-gradient(90deg,rgba(6,182,212,.1),transparent);border-color:var(--cyan);">
+      <div class="lbl" style="color:var(--cyan);">★ FRAME ③ INSIGHT</div>
+      <div class="txt"><strong>'화면 표면 전체로 흐르는 AI'는 6사 모두 비어있음.</strong> 화면 가장자리 동적 광원으로 기기 간 동기 발광까지 묶을 수 있는 회사는 Galaxy 6 기기의 Samsung뿐 — 거의 비어있는 카테고리를 선점할 위치.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════
+  SLIDE 5 · CONCLUSION  P8 / 30
+════════════════════════════════════════════════════ -->
+<section class="slide">
+  <div class="glow" style="left:50%;top:50%;transform:translate(-50%,-50%);width:720px;height:720px;background:radial-gradient(circle,rgba(124,58,237,.16) 0%,transparent 60%);"></div>
+  <!-- wave decoration -->
+  <svg style="position:absolute;bottom:0;left:0;right:0;width:100%;height:180px;opacity:.14;pointer-events:none;z-index:1;" viewBox="0 0 1280 180" preserveAspectRatio="none">
+    <path d="M0,90 C80,90,100,20,150,20 S220,180,280,180 S350,40,420,40 S490,160,560,160 S630,60,700,60 S770,140,840,140 S910,30,980,30 S1050,150,1120,150 S1200,90,1280,90" fill="none" stroke="#A78BFA" stroke-width="1.5"/>
+  </svg>
+
+  <div class="frame">
+    <div class="frame__top">
+      <div></div>
+      <div class="frame__label">Conclusion</div>
+      <div class="frame__page">P8 / 30</div>
+    </div>
+    <div class="frame__edge frame__edge--l">CDO</div>
+    <div class="frame__edge frame__edge--r">UX TEAM</div>
+  </div>
+
+  <div class="pad" style="align-items:center;justify-content:center;text-align:center;gap:0;padding-top:72px;">
+
+    <!-- star label -->
+    <div style="display:flex;align-items:center;gap:12px;justify-content:center;margin-bottom:18px;">
+      <span class="dash-short"></span>
+      <span class="eyebrow" style="color:var(--vGlow);">★ Samsung's unique position</span>
+      <span class="dash-short"></span>
+    </div>
+
+    <!-- core statement -->
+    <h1 style="font-size:46px;font-weight:700;line-height:1.15;letter-spacing:-.025em;color:var(--tp);max-width:900px;margin-bottom:16px;">
+      세 빈자리를 동시에 채울 수 있는<br/>회사는 <span style="color:var(--vGlow);">Samsung</span>뿐이다.
+    </h1>
+
+    <p class="subline sm" style="max-width:720px;margin-bottom:32px;">
+      DNA · 기기특화 · AI — 세 영역의 빈자리는 Galaxy 6 기기 폭이라는 단 하나의 자산에서 동시에 풀린다. 4사가 따라할 수 없는 이유다.
+    </p>
+
+    <!-- 3 axis cards -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;width:100%;max-width:960px;">
+
+      <div class="card glow" style="text-align:left;padding:22px 24px;">
+        <div class="eyebrow" style="color:var(--vGlow);margin-bottom:10px;">FRAME ① · DNA</div>
+        <div style="font-size:17px;font-weight:700;color:var(--vGlow);margin-bottom:8px;line-height:1.3;">Galaxy 6 기기 폭</div>
+        <div style="font-size:12px;line-height:1.65;color:var(--ts);">One UI를 폰·워치·차·가전·로봇·TV에 일관 확장 — 4사 누구도 못 가진 폭.</div>
+      </div>
+
+      <div class="card" style="text-align:left;padding:22px 24px;border-color:rgba(167,139,250,.25);">
+        <div class="eyebrow" style="color:var(--vGlow);margin-bottom:10px;">FRAME ② · 기기특화</div>
+        <div style="font-size:17px;font-weight:700;color:var(--self);margin-bottom:8px;line-height:1.3;">The Frame DNA</div>
+        <div style="font-size:12px;line-height:1.65;color:var(--ts);">'벽/가구' 카테고리를 액자 모드 → 거실 비주얼 시스템 전체로 격상.</div>
+      </div>
+
+      <div class="card cyan" style="text-align:left;padding:22px 24px;">
+        <div class="eyebrow" style="color:var(--cyan);margin-bottom:10px;">FRAME ③ · AI</div>
+        <div style="font-size:17px;font-weight:700;color:var(--cyan);margin-bottom:8px;line-height:1.3;">Galaxy Halo Edge</div>
+        <div style="font-size:12px;line-height:1.65;color:var(--ts);">화면 가장자리 동적 광원 + 기기 간 동기 발광으로 AI를 표면 전체로.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+</body>
+</html>
