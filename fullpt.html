@@ -1,0 +1,1706 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Samsung One UI Scalability · Interim Report v4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Noto+Sans:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    background: #2A2D36;
+    font-family: 'SamsungOne','Samsung Sharp Sans','Samsung Sans','Pretendard Variable','Noto Sans KR','Noto Sans',-apple-system,sans-serif;
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: -0.005em;
+  }
+  body { padding: 40px 0; }
+  .slide-wrap { width: 1280px; margin: 0 auto 40px auto; }
+  .slide-label {
+    color: #fff; font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    font-family: 'JetBrains Mono', monospace; opacity: 0.7;
+    padding: 8px 16px; background: rgba(255,255,255,0.08); border-radius: 4px;
+    display: inline-block; margin-bottom: 12px;
+  }
+  .slide-label .tag {
+    display: inline-block; padding: 2px 8px; border-radius: 3px;
+    margin-left: 8px; letter-spacing: 0.15em; font-weight: 500;
+    background: #0A0A0A; color: #fff; border: 1px solid #333;
+  }
+  .slide {
+    width: 1280px; height: 720px; position: relative; overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+    background: #0A0A0A; color: #fff;
+  }
+  /* ========== COMMON HEADER (v5 format) ========== */
+  .s-pagenum { position: absolute; top: 28px; right: 36px; font-size: 10px; font-weight: 500; letter-spacing: 0.06em; color: rgba(255,255,255,0.5); font-family: 'JetBrains Mono', monospace; }
+  .s-index { position: absolute; top: 28px; left: 50%; transform: translateX(-50%); font-size: 13px; font-weight: 600; color: #fff; }
+  .s-title-block { position: absolute; top: 70px; left: 0; right: 0; text-align: center; padding: 0 60px; }
+  .s-title { font-size: 50px; font-weight: 800; letter-spacing: -0.025em; line-height: 1.1; color: #fff; white-space: nowrap; }
+  .s-title.smaller { font-size: 42px; }
+  .s-subtitle { font-size: 22px; font-weight: 500; letter-spacing: -0.018em; line-height: 1.35; margin-top: 12px; color: rgba(255,255,255,0.6); white-space: nowrap; }
+  .s-side-left, .s-side-right { position: absolute; top: 50%; font-size: 9.5px; font-weight: 600; letter-spacing: 0.45em; text-transform: uppercase; white-space: nowrap; color: rgba(255,255,255,0.4); }
+  .s-side-left { left: 16px; transform: translateY(-50%) rotate(-90deg); transform-origin: center; }
+  .s-side-right { right: 16px; transform: translateY(-50%) rotate(90deg); transform-origin: center; }
+
+  /* ========== COVER (P01) ========== */
+  .cover-meta { position: absolute; top: 48px; left: 60px; display: flex; gap: 10px; }
+  .cover-pill { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.18em; padding: 5px 12px; border: 1px solid rgba(255,255,255,0.25); border-radius: 100px; color: rgba(255,255,255,0.65); }
+  .cover-en { position: absolute; left: 60px; top: 250px; font-size: 18px; font-weight: 400; letter-spacing: 0.04em; color: rgba(255,255,255,0.55); line-height: 1.4; font-family: 'JetBrains Mono', monospace; }
+  .cover-title { position: absolute; left: 60px; top: 290px; font-size: 100px; font-weight: 800; line-height: 1; letter-spacing: -0.035em; color: #fff; }
+  .cover-tag { position: absolute; left: 60px; bottom: 100px; font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.7; max-width: 720px; }
+  .cover-stamp { position: absolute; right: 60px; bottom: 48px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: rgba(255,255,255,0.45); text-align: right; line-height: 1.8; }
+  .cover-stamp strong { color: #fff; font-weight: 600; }
+  .cover-mark { position: absolute; left: 60px; bottom: 48px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.25em; color: rgba(255,255,255,0.45); }
+  .cover-line { position: absolute; left: 60px; right: 60px; top: 230px; height: 1px; background: rgba(255,255,255,0.15); }
+
+  /* ========== DIVIDER ========== */
+  .div-num { position: absolute; left: 60px; top: 200px; font-size: 280px; font-weight: 800; color: rgba(255,255,255,0.05); line-height: 0.9; letter-spacing: -0.05em; font-family: 'JetBrains Mono', monospace; }
+  .div-label { position: absolute; left: 60px; top: 380px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.3em; color: rgba(255,255,255,0.5); }
+  .div-title { position: absolute; left: 60px; top: 410px; font-size: 64px; font-weight: 800; line-height: 1.1; letter-spacing: -0.03em; color: #fff; max-width: 900px; }
+  .div-desc { position: absolute; left: 60px; bottom: 70px; right: 60px; font-size: 16px; line-height: 1.6; color: rgba(255,255,255,0.55); max-width: 760px; }
+
+  /* ========== CONTENTS GRID (P02) ========== */
+  .p2-grid { position: absolute; left: 60px; right: 60px; top: 250px; bottom: 50px; display: grid; grid-template-columns: repeat(3,1fr); grid-template-rows: repeat(2,1fr); gap: 14px; }
+  .p2-item { border-radius: 14px; padding: 22px 24px 24px; display: flex; flex-direction: column; position: relative; background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.12); }
+  .p2-item.now { background: #FFFFFF; border-color: #FFFFFF; color: #0A0A0A; }
+  .p2-item-header { display: flex; align-items: center; gap: 10px; }
+  .p2-item .num { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; color: rgba(255,255,255,0.5); }
+  .p2-item.now .num { color: rgba(10,10,10,0.55); }
+  .p2-item .now-tag { font-size: 9px; font-weight: 700; letter-spacing: 0.2em; padding: 3px 8px; border-radius: 4px; background: #0A0A0A; color: #fff; }
+  .p2-item .name-en { font-size: 15px; font-weight: 700; margin-top: 16px; letter-spacing: -0.018em; line-height: 1.2; }
+  .p2-item .name-kr { font-size: 15px; font-weight: 700; margin-top: 4px; letter-spacing: -0.018em; line-height: 1.25; }
+  .p2-item .desc { font-size: 12px; margin-top: auto; padding-top: 16px; line-height: 1.5; color: rgba(255,255,255,0.55); }
+  .p2-item.now .desc { color: rgba(10,10,10,0.6); }
+  .p2-item .item-arrow { position: absolute; bottom: 20px; right: 24px; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.7); }
+  .p2-item.now .item-arrow { background: #0A0A0A; color: #fff; }
+
+  /* ========== BODY container ========== */
+  .body-wrap { position: absolute; left: 60px; right: 60px; top: 230px; bottom: 50px; }
+  .body-wrap.with-callout { bottom: 110px; }
+
+  /* ========== Card (generic) ========== */
+  .card { background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 20px 22px; display: flex; flex-direction: column; position: relative; }
+  .card.emphasis { background: #FFFFFF; color: #0A0A0A; border-color: #FFFFFF; }
+  .card-num { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 600; letter-spacing: 0.2em; color: rgba(255,255,255,0.45); }
+  .card.emphasis .card-num { color: rgba(10,10,10,0.5); }
+  .card-title { font-size: 18px; font-weight: 800; letter-spacing: -0.02em; margin-top: 10px; }
+  .card-sub { font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 4px; }
+  .card.emphasis .card-sub { color: rgba(10,10,10,0.55); }
+  .card-desc { font-size: 12px; line-height: 1.6; color: rgba(255,255,255,0.65); margin-top: 12px; }
+  .card.emphasis .card-desc { color: rgba(10,10,10,0.65); }
+  .card-tail { margin-top: auto; padding-top: 14px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: rgba(255,255,255,0.35); }
+  .card.emphasis .card-tail { color: rgba(10,10,10,0.45); }
+
+  /* ========== Callout (bottom strip) ========== */
+  .callout { position: absolute; left: 60px; right: 60px; bottom: 30px; padding: 16px 22px; background: linear-gradient(95deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)); border: 1px solid rgba(255,255,255,0.18); border-radius: 10px; display: flex; align-items: center; gap: 22px; }
+  .callout-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.22em; color: #fff; background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 4px; white-space: nowrap; }
+  .callout-text { font-size: 12.5px; color: rgba(255,255,255,0.85); line-height: 1.55; letter-spacing: -0.01em; flex: 1; }
+  .callout-text b { color: #fff; }
+
+  /* ========== Work Process (P05) ========== */
+  .wp-flow { display: grid; grid-template-columns: repeat(6,1fr); gap: 12px; position: relative; }
+  .wp-phase { background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 18px 16px 20px; height: 240px; display: flex; flex-direction: column; position: relative; }
+  .wp-phase.now { background: #FFFFFF; border-color: #FFFFFF; color: #0A0A0A; }
+  .wp-phase-num { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 600; letter-spacing: 0.18em; color: rgba(255,255,255,0.4); }
+  .wp-phase.now .wp-phase-num { color: rgba(10,10,10,0.5); }
+  .wp-phase-circle { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-top: 10px; font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700; border: 1px solid rgba(255,255,255,0.25); color: #fff; }
+  .wp-phase.now .wp-phase-circle { border-color: #0A0A0A; color: #0A0A0A; }
+  .wp-phase-title { font-size: 17px; font-weight: 800; letter-spacing: -0.02em; margin-top: 14px; }
+  .wp-phase-sub { font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 4px; }
+  .wp-phase.now .wp-phase-sub { color: rgba(10,10,10,0.55); }
+  .wp-phase-items { margin-top: 14px; display: flex; flex-direction: column; gap: 4px; font-size: 10.5px; color: rgba(255,255,255,0.7); line-height: 1.45; }
+  .wp-phase.now .wp-phase-items { color: rgba(10,10,10,0.65); }
+  .wp-phase-items span::before { content: "·  "; color: rgba(255,255,255,0.3); }
+  .wp-phase.now .wp-phase-items span::before { color: rgba(10,10,10,0.3); }
+  .wp-phase-tail { margin-top: auto; padding-top: 12px; font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.1em; color: rgba(255,255,255,0.35); }
+  .wp-phase.now .wp-phase-tail { color: rgba(10,10,10,0.5); }
+  .wp-now-tag { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: #0A0A0A; color: #fff; font-size: 9px; font-weight: 700; letter-spacing: 0.25em; padding: 4px 10px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.3); }
+  .wp-loop { margin-top: 22px; display: flex; align-items: center; justify-content: space-between; padding: 14px 22px; border-radius: 10px; border: 1px dashed rgba(255,255,255,0.22); background: rgba(255,255,255,0.02); }
+  .wp-loop-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 600; letter-spacing: 0.25em; color: rgba(255,255,255,0.55); }
+  .wp-loop-text { font-size: 12px; color: rgba(255,255,255,0.7); flex: 1; margin: 0 24px; }
+  .wp-loop-text b { color: #fff; }
+  .wp-loop-arrow { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: rgba(255,255,255,0.55); letter-spacing: 0.18em; }
+
+  /* ========== Three Pillars (P07) ========== */
+  .three-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; height: 100%; }
+  .three-card { background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; padding: 26px 28px 30px; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+  .three-card.emphasis { background: #FFFFFF; color: #0A0A0A; border-color: #FFFFFF; }
+  .three-card .pn { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; letter-spacing: 0.22em; color: rgba(255,255,255,0.5); }
+  .three-card.emphasis .pn { color: rgba(10,10,10,0.5); }
+  .three-card .pcircle { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-top: 24px; font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 700; border: 1px solid rgba(255,255,255,0.3); }
+  .three-card.emphasis .pcircle { border-color: #0A0A0A; }
+  .three-card .plabel { margin-top: 30px; font-size: 11px; font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase; color: rgba(255,255,255,0.55); }
+  .three-card.emphasis .plabel { color: rgba(10,10,10,0.55); }
+  .three-card .ptitle { font-size: 24px; font-weight: 800; letter-spacing: -0.025em; line-height: 1.2; margin-top: 8px; }
+  .three-card .pdesc { font-size: 13px; line-height: 1.6; margin-top: 14px; color: rgba(255,255,255,0.65); }
+  .three-card.emphasis .pdesc { color: rgba(10,10,10,0.65); }
+  .three-card .ptail { margin-top: auto; padding-top: 22px; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.1em; color: rgba(255,255,255,0.35); }
+  .three-card.emphasis .ptail { color: rgba(10,10,10,0.4); }
+
+  /* ========== Pillar 01 Legacy (P08) ========== */
+  .leg-section-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.22em; color: rgba(255,255,255,0.55); margin-bottom: 10px; }
+  .leg-prin-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .leg-prin { padding: 14px 16px; background: rgba(255,255,255,0.04); border-radius: 10px; border-left: 2px solid rgba(255,255,255,0.45); }
+  .leg-prin-en { font-size: 13px; font-weight: 800; letter-spacing: -0.012em; color: #fff; }
+  .leg-prin-kr { font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 4px; line-height: 1.5; }
+  .leg-elem-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 18px; }
+  .leg-elem { background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 16px; height: 200px; display: flex; flex-direction: column; }
+  .leg-elem-label { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; font-weight: 700; letter-spacing: 0.2em; color: rgba(255,255,255,0.45); }
+  .leg-elem-title { font-size: 13px; font-weight: 800; letter-spacing: -0.012em; line-height: 1.3; margin-top: 6px; }
+  .leg-elem-shape { margin-top: auto; padding-top: 12px; }
+
+  /* ========== TV Environment (P10) ========== */
+  .tv-grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); gap: 14px; height: 100%; }
+  .tv-card { background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 20px 22px; display: flex; flex-direction: column; }
+  .tv-card-icon { width: 32px; height: 32px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.4); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.8); }
+  .tv-card-title { font-size: 16px; font-weight: 800; letter-spacing: -0.018em; margin-top: 12px; }
+  .tv-card-sub { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 0.15em; color: rgba(255,255,255,0.45); margin-top: 4px; }
+  .tv-card-desc { font-size: 11.5px; color: rgba(255,255,255,0.6); margin-top: 12px; line-height: 1.6; }
+
+  /* ========== AI Interaction (P09) ========== */
+  .ai-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 22px; height: 100%; }
+  .ai-q-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.18); border-radius: 14px; padding: 30px 32px; display: flex; flex-direction: column; position: relative; }
+  .ai-q-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.25em; color: rgba(255,255,255,0.65); }
+  .ai-q-text { font-size: 24px; font-weight: 700; line-height: 1.5; margin-top: 18px; letter-spacing: -0.018em; color: #fff; }
+  .ai-q-text .accent { color: #fff; padding: 0 4px; border-bottom: 2px solid rgba(255,255,255,0.4); }
+  .ai-q-divider { height: 1px; background: rgba(255,255,255,0.15); margin: 24px 0; }
+  .ai-q-foot { font-size: 12.5px; color: rgba(255,255,255,0.6); line-height: 1.65; }
+  .ai-items { display: flex; flex-direction: column; gap: 10px; }
+  .ai-items-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.22em; color: rgba(255,255,255,0.55); margin-bottom: 4px; }
+  .ai-item { padding: 14px 16px; border: 1px dashed rgba(255,255,255,0.25); border-radius: 8px; background: rgba(255,255,255,0.015); }
+  .ai-item-h { display: flex; gap: 10px; align-items: center; }
+  .ai-item-tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.15em; padding: 3px 8px; border-radius: 4px; background: rgba(255,255,255,0.1); color: #fff; }
+  .ai-item-t { font-size: 13px; font-weight: 700; letter-spacing: -0.012em; }
+  .ai-item-d { font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 4px; line-height: 1.55; }
+
+  /* ========== Strategy Framework (P11) ========== */
+  .sf-flow { display: flex; flex-direction: column; gap: 14px; height: 100%; }
+  .sf-row { display: grid; gap: 12px; }
+  .sf-row.l1 { grid-template-columns: repeat(3, 1fr); }
+  .sf-box { background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.18); border-radius: 12px; padding: 16px 20px; }
+  .sf-box.l1 { padding: 14px 18px; }
+  .sf-box.l2 { padding: 20px 26px; border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.04); }
+  .sf-box.l3 { padding: 18px 22px; }
+  .sf-box-num { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.2em; color: rgba(255,255,255,0.5); }
+  .sf-box-title { font-size: 16px; font-weight: 800; letter-spacing: -0.018em; margin-top: 4px; }
+  .sf-box-desc { font-size: 11.5px; color: rgba(255,255,255,0.55); margin-top: 4px; line-height: 1.5; }
+  .sf-l2-row { display: flex; align-items: center; justify-content: space-between; }
+  .sf-arrow { text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: rgba(255,255,255,0.35); padding: 4px 0; }
+  .sf-l3-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 12px; }
+  .sf-l3-item { padding: 12px 14px; background: rgba(255,255,255,0.025); border-radius: 8px; border: 1px solid rgba(255,255,255,0.12); }
+  .sf-l3-item-num { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 0.15em; color: rgba(255,255,255,0.45); }
+  .sf-l3-item-t { font-size: 13px; font-weight: 700; margin-top: 4px; letter-spacing: -0.01em; }
+  .sf-l3-item-s { font-size: 10.5px; color: rgba(255,255,255,0.5); margin-top: 3px; }
+
+  /* ========== Self Audit (P13) ========== */
+  .sa-body { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; height: 100%; }
+  .sa-col { background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 24px 26px; display: flex; flex-direction: column; overflow: hidden; }
+  .sa-col-num { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 600; letter-spacing: 0.22em; color: rgba(255,255,255,0.45); }
+  .sa-col-title { font-size: 22px; font-weight: 800; letter-spacing: -0.022em; margin-top: 8px; }
+  .sa-col-tag { margin-top: 10px; font-size: 11px; color: rgba(255,255,255,0.5); line-height: 1.5; }
+  .sa-col-tag b { color: #fff; }
+  .sa-list { margin-top: 18px; display: flex; flex-direction: column; gap: 10px; }
+  .sa-item { display: flex; gap: 14px; padding: 12px 14px; background: rgba(255,255,255,0.035); border-radius: 8px; border-left: 2px solid rgba(255,255,255,0.45); }
+  .sa-col.gaps .sa-item { border-left-color: rgba(255,180,180,0.5); }
+  .sa-item .idx { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.45); flex-shrink: 0; width: 28px; padding-top: 2px; }
+  .sa-item .ttl { font-size: 13px; font-weight: 700; letter-spacing: -0.012em; line-height: 1.3; }
+  .sa-item .dsc { font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 4px; line-height: 1.55; }
+
+  /* ========== Competitor Summary (P14) ========== */
+  .comp-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .comp-card { background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 18px 18px 20px; display: flex; flex-direction: column; height: 200px; }
+  .comp-brand { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.18em; font-weight: 700; color: rgba(255,255,255,0.55); }
+  .comp-title { font-size: 14px; font-weight: 800; letter-spacing: -0.012em; margin-top: 10px; line-height: 1.3; }
+  .comp-desc { font-size: 11.5px; color: rgba(255,255,255,0.55); margin-top: 10px; line-height: 1.6; }
+  .comp-tag { margin-top: auto; padding-top: 12px; font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 0.15em; color: rgba(255,255,255,0.4); }
+  .cross-block { margin-top: 22px; padding: 20px 24px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.18); border-radius: 12px; }
+  .cross-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.22em; color: #fff; }
+  .cross-grid { margin-top: 14px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .cross-item .ct { font-size: 12.5px; font-weight: 700; letter-spacing: -0.01em; color: #fff; }
+  .cross-item .cd { font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 4px; line-height: 1.55; }
+
+  /* ========== Competitor Detail (P15-P18) ========== */
+  .comp-hdr { display: flex; align-items: center; gap: 16px; margin-top: 14px; }
+  .comp-hdr-circle { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-weight: 800; color: #fff; }
+  .comp-hdr-en { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; color: rgba(255,255,255,0.55); }
+  .comp-hdr-title { font-size: 22px; font-weight: 800; letter-spacing: -0.022em; margin-top: 2px; }
+  .comp-3col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 28px; }
+  .comp-3 { background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 18px 20px; display: flex; flex-direction: column; height: 320px; }
+  .comp-3-tag { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 0.22em; padding: 3px 8px; border-radius: 4px; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); align-self: flex-start; font-weight: 700; }
+  .comp-3-title { font-size: 14px; font-weight: 800; margin-top: 12px; letter-spacing: -0.012em; }
+  .comp-3-desc { font-size: 11.5px; color: rgba(255,255,255,0.6); margin-top: 8px; line-height: 1.65; }
+  .comp-3-desc b { color: #fff; }
+  .comp-3-vis { margin-top: auto; padding-top: 16px; }
+  .comp-3-placeholder { border: 1px dashed rgba(255,255,255,0.22); border-radius: 6px; padding: 12px; font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 0.1em; color: rgba(255,255,255,0.4); line-height: 1.55; }
+
+  /* simple shapes container */
+  .shape-row { display: flex; gap: 8px; align-items: center; }
+  .sq { width: 36px; height: 36px; border-radius: 8px; background: rgba(255,255,255,0.85); }
+  .sq.o6 { opacity: 0.6; }
+  .sq.o3 { opacity: 0.3; }
+  .sq.r2 { border-radius: 4px; }
+  .sq.r4 { border-radius: 8px; }
+  .sq.r8 { border-radius: 14px; }
+  .sq.r12 { border-radius: 18px; }
+  .bar { height: 8px; border-radius: 4px; background: rgba(255,255,255,0.85); }
+  .bar.thin { height: 4px; }
+  .bar.dim { background: rgba(255,255,255,0.3); }
+  .bar.dim2 { background: rgba(255,255,255,0.5); }
+  .ring { border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.4); }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.85); }
+
+  @media print {
+    body { background: #fff; padding: 0; }
+    .slide-wrap { margin: 0; }
+    .slide-label { display: none; }
+    .slide { margin: 0; box-shadow: none; page-break-after: always; }
+    @page { size: 1280px 720px; margin: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- =================================================
+     P01 · COVER
+     ================================================= -->
+<div class="slide-wrap">
+  <span class="slide-label">P01 · COVER <span class="tag">DARK</span></span>
+  <div class="slide">
+    <div class="cover-meta">
+      <span class="cover-pill">INTERIM REPORT</span>
+      <span class="cover-pill">SAMSUNG VISUAL DISPLAY</span>
+      <span class="cover-pill">ONE UI · TV</span>
+    </div>
+    <div class="s-side-left">CDO</div>
+    <div class="s-side-right">UX TEAM</div>
+    <div class="cover-line"></div>
+    <div class="cover-en">DEVICE-OPTIMIZED VISUAL FOR<br>THE AI ERA · TV AS PRIMARY</div>
+    <h1 class="cover-title">One UI<br>Scalability</h1>
+    <div class="cover-tag">
+      AI 시프트와 기기별 특성을 반영한 One UI 비주얼의 확장.<br>
+      이번 과제는 TV를 메인 타깃으로 진행되는 첫 적용 사례.
+    </div>
+    <div class="cover-mark">// 2026 · INTERIM</div>
+    <div class="cover-stamp">
+      <strong>2026.05</strong><br>
+      INTERIM REPORT<br>
+      VISUAL CONCEPT TEAM
+    </div>
+  </div>
+</div>
+
+<!-- =================================================
+     P02 · CONTENTS
+     ================================================= -->
+<div class="slide-wrap">
+  <span class="slide-label">P02 · CONTENTS <span class="tag">DARK</span></span>
+  <div class="slide">
+    <div class="s-pagenum">P02 / 24</div>
+    <div class="s-index">Contents</div>
+    <div class="s-title-block">
+      <h1 class="s-title">Six Chapters Ahead</h1>
+      <p class="s-subtitle">목표 · 프레임 · 분석 · 가설 · 일정의 정렬</p>
+    </div>
+    <div class="s-side-left">CDO</div>
+    <div class="s-side-right">UX TEAM</div>
+    <div class="p2-grid">
+      <div class="p2-item">
+        <div class="p2-item-header"><span class="num">CHAPTER 01</span></div>
+        <div class="name-en">Project Frame</div>
+        <div class="name-kr">프로젝트 정의 &amp; 작업 프로세스</div>
+        <div class="desc">Why Now · TV 메인 타깃 · 6-Phase Iteration</div>
+        <span class="item-arrow">↗</span>
+      </div>
+      <div class="p2-item">
+        <div class="p2-item-header"><span class="num">CHAPTER 02</span></div>
+        <div class="name-en">Three Pillars</div>
+        <div class="name-kr">탐색의 3대 관점</div>
+        <div class="desc">One UI Legacy · AI Interaction · TV Medium</div>
+        <span class="item-arrow">↗</span>
+      </div>
+      <div class="p2-item">
+        <div class="p2-item-header"><span class="num">CHAPTER 03</span></div>
+        <div class="name-en">Visual Strategy Framework</div>
+        <div class="name-kr">비주얼 전략 프레임워크</div>
+        <div class="desc">L1 Pillars → L2 Language → L3 Application</div>
+        <span class="item-arrow">↗</span>
+      </div>
+      <div class="p2-item">
+        <div class="p2-item-header"><span class="num">CHAPTER 04</span></div>
+        <div class="name-en">Self &amp; Competitor</div>
+        <div class="name-kr">자사 진단 · 경쟁 4사 · White Space</div>
+        <div class="desc">LG · Apple · Google · Amazon — 빈 진영의 위치</div>
+        <span class="item-arrow">↗</span>
+      </div>
+      <div class="p2-item now">
+        <div class="p2-item-header"><span class="num">CHAPTER 05</span><span class="now-tag">NOW READING</span></div>
+        <div class="name-en">10 Visual Hypotheses</div>
+        <div class="name-kr">비주얼 변화 가설 10</div>
+        <div class="desc">구조 해체 · 개인화 심화 · 능동성 이전</div>
+        <span class="item-arrow">↗</span>
+      </div>
+      <div class="p2-item">
+        <div class="p2-item-header"><span class="num">CHAPTER 06</span></div>
+        <div class="name-en">Project Timeline</div>
+        <div class="name-kr">프로젝트 일정 &amp; Next Steps</div>
+        <div class="desc">6 Phase Roadmap · Final Delivery 2026 Q3</div>
+        <span class="item-arrow">↗</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =================================================
+     P03 · DIVIDER 01 · PROJECT FRAME
+     ================================================= -->
+<div class="slide-wrap">
+  <span class="slide-label">P03 · DIVIDER · PROJECT FRAME <span class="tag">DARK</span></span>
+  <div class="slide">
+    <div class="s-pagenum">P03 / 24</div>
+    <div class="s-index">Chapter 01</div>
+    <div class="s-side-left">CDO</div>
+    <div class="s-side-right">UX TEAM</div>
+    <div class="div-num">01</div>
+    <div class="div-label">PROJECT FRAME</div>
+    <h1 class="div-title">What We Build,<br>How We Build It</h1>
+    <p class="div-desc">우리가 만들 것이 무엇인지가 아니라, 어떤 변화에 응답하는 프로젝트인지부터 정렬한다. 그 다음 도달 방식 — 6-Phase 워크플로 — 을 정의한다.</p>
+  </div>
+</div>
+
+<!-- =================================================
+     P04 · PROJECT GOAL
+     ================================================= -->
+<div class="slide-wrap">
+  <span class="slide-label">P04 · PROJECT GOAL <span class="tag">DARK</span></span>
+  <div class="slide">
+    <div class="s-pagenum">P04 / 24</div>
+    <div class="s-index">Project Goal</div>
+    <div class="s-title-block">
+      <h1 class="s-title">A Visual Approach for the AI Era</h1>
+      <p class="s-subtitle">AI 시프트와 기기 최적화의 통합 — TV 메인 타깃의 적용</p>
+    </div>
+    <div class="s-side-left">CDO</div>
+    <div class="s-side-right">UX TEAM</div>
+
+    <div class="body-wrap">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 22px; height: 100%;">
+
+        <!-- LEFT: Mission Statement -->
+        <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.18); border-radius: 14px; padding: 30px 32px; display: flex; flex-direction: column;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.25em; color: rgba(255,255,255,0.6);">// MISSION STATEMENT</div>
+          <div style="font-size: 22px; font-weight: 700; line-height: 1.55; margin-top: 22px; letter-spacing: -0.018em; color: #fff;">
+            이번 과제의 목표는<br>
+            <span style="border-bottom: 2px solid rgba(255,255,255,0.5); padding-bottom: 2px;">AI 시프트와 기기 최적화를 통합한 One UI 비주얼의 확장</span>이며,<br>
+            첫 적용 매체는 <b style="border-bottom: 2px solid rgba(255,255,255,0.5);">TV</b>다.
+          </div>
+          <div style="margin-top: auto; padding-top: 22px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 12px; color: rgba(255,255,255,0.55); line-height: 1.65;">
+            One UI는 더 이상 화면의 디자인 시스템이 아니라 디바이스 군 전체를 가로지르는 비주얼 약속이다. 그 약속을 TV의 매체 조건과 AI의 새로운 행위에 맞춰 최초로 확장한다.
+          </div>
+        </div>
+
+        <!-- RIGHT: 2 Axes + Scalability Map -->
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div style="padding: 18px 20px; background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px;">
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.22em; color: rgba(255,255,255,0.55);">AXIS 01</div>
+              <div style="font-size: 16px; font-weight: 800; margin-top: 8px; letter-spacing: -0.015em;">AI 시프트</div>
+              <div style="font-size: 11.5px; color: rgba(255,255,255,0.55); margin-top: 6px; line-height: 1.55;">지능형 반응의 시각적 체감</div>
+            </div>
+            <div style="padding: 18px 20px; background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px;">
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.22em; color: rgba(255,255,255,0.55);">AXIS 02</div>
+              <div style="font-size: 16px; font-weight: 800; margin-top: 8px; letter-spacing: -0.015em;">기기 최적화</div>
+              <div style="font-size: 11.5px; color: rgba(255,255,255,0.55); margin-top: 6px; line-height: 1.55;">디바이스별 매체 조건의 반영</div>
+            </div>
+          </div>
+
+          <!-- Scalability Map: simple 2D positions -->
+          <div style="flex: 1; background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 22px 24px; position: relative;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.22em; color: rgba(255,255,255,0.55);">// SCALABILITY MAP</div>
+            <div style="position: relative; margin-top: 18px; height: 180px;">
+              <!-- axes -->
+              <div style="position: absolute; left: 30px; top: 10px; bottom: 30px; width: 1px; background: rgba(255,255,255,0.25);"></div>
+              <div style="position: absolute; left: 30px; right: 10px; bottom: 30px; height: 1px; background: rgba(255,255,255,0.25);"></div>
+              <div style="position: absolute; left: 38px; top: 2px; font-size: 9.5px; color: rgba(255,255,255,0.55); letter-spacing: 0.05em;">기기 다양성 ▲</div>
+              <div style="position: absolute; right: 10px; bottom: 12px; font-size: 9.5px; color: rgba(255,255,255,0.55); letter-spacing: 0.05em;">AI 패러다임 ▶</div>
+              <!-- existing devices (small dots) -->
+              <div class="dot" style="position: absolute; left: 70px; top: 110px; background: rgba(255,255,255,0.5);"></div>
+              <div style="position: absolute; left: 84px; top: 106px; font-size: 9.5px; color: rgba(255,255,255,0.5);">Phone</div>
+              <div class="dot" style="position: absolute; left: 130px; top: 90px; background: rgba(255,255,255,0.4);"></div>
+              <div style="position: absolute; left: 144px; top: 86px; font-size: 9.5px; color: rgba(255,255,255,0.4);">Tablet</div>
+              <div class="dot" style="position: absolute; left: 100px; top: 130px; background: rgba(255,255,255,0.35);"></div>
+              <div style="position: absolute; left: 114px; top: 126px; font-size: 9.5px; color: rgba(255,255,255,0.35);">Watch</div>
+              <!-- TV target zone (rectangle) -->
+              <div style="position: absolute; right: 30px; top: 30px; width: 180px; height: 110px; background: rgba(255,255,255,0.08); border: 1px dashed rgba(255,255,255,0.4); border-radius: 6px;"></div>
+              <div style="position: absolute; right: 56px; top: 50px; font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.18em; color: rgba(255,255,255,0.55);">SCALABILITY ZONE</div>
+              <!-- TV node -->
+              <div style="position: absolute; right: 100px; top: 78px; width: 36px; height: 36px; border-radius: 50%; background: #FFFFFF; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 800; color: #0A0A0A;">TV</div>
+              <div style="position: absolute; right: 70px; top: 122px; font-size: 10px; color: #fff; font-weight: 700;">이번 과제 메인 타깃</div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =================================================
+     P05 · WORK PROCESS
+     ================================================= -->
+<div class="slide-wrap">
+  <span class="slide-label">P05 · WORK PROCESS <span class="tag">DARK</span></span>
+  <div class="slide">
+    <div class="s-pagenum">P05 / 24</div>
+    <div class="s-index">Work Process</div>
+    <div class="s-title-block">
+      <h1 class="s-title">Six-Phase Workflow with Iteration</h1>
+      <p class="s-subtitle">단계별 산출물 적층과 상시 검증의 순환</p>
+    </div>
+    <div class="s-side-left">CDO</div>
+    <div class="s-side-right">UX TEAM</div>
+    <div class="body-wrap">
+      <div class="wp-flow">
+        <div class="wp-phase">
+          <div class="wp-phase-num">PHASE 01</div>
+          <div class="wp-phase-circle">01</div>
+          <div class="wp-phase-title">Discover</div>
+          <div class="wp-phase-sub">리서치</div>
+          <div class="wp-phase-items"><span>자사 진단</span><span>경쟁사 분석</span><span>트렌드 리서치</span><span>사용자 행동</span></div>
+          <div class="wp-phase-tail">// DONE</div>
+        </div>
+        <div class="wp-phase">
+          <div class="wp-phase-num">PHASE 02</div>
+          <div class="wp-phase-circle">02</div>
+          <div class="wp-phase-title">Synthesize</div>
+          <div class="wp-phase-sub">인사이트 정합</div>
+          <div class="wp-phase-items"><span>패턴 추출</span><span>Pain · Gap</span><span>기회 매핑</span><span>시나리오 정의</span></div>
+          <div class="wp-phase-tail">// DONE</div>
+        </div>
+        <div class="wp-phase now">
+          <div class="wp-now-tag">NOW</div>
+          <div class="wp-phase-num">PHASE 03</div>
+          <div class="wp-phase-circle">03</div>
+          <div class="wp-phase-title">Hypothesize</div>
+          <div class="wp-phase-sub">가설 정렬</div>
+          <div class="wp-phase-items"><span>3 Pillar 정렬</span><span>10 GUI 가설</span><span>검증 기준</span><span>우선순위</span></div>
+          <div class="wp-phase-tail">// IN PROGRESS</div>
+        </div>
+        <div class="wp-phase">
+          <div class="wp-phase-num">PHASE 04</div>
+          <div class="wp-phase-circle">04</div>
+          <div class="wp-phase-title">Concept</div>
+          <div class="wp-phase-sub">Theme 도출</div>
+          <div class="wp-phase-items"><span>Theme 3안</span><span>AI Visual Cue</span><span>컬러 · 소재 · 모션</span><span>무드보드</span></div>
+          <div class="wp-phase-tail">// NEXT</div>
+        </div>
+        <div class="wp-phase">
+          <div class="wp-phase-num">PHASE 05</div>
+          <div class="wp-phase-circle">05</div>
+          <div class="wp-phase-title">Design</div>
+          <div class="wp-phase-sub">키비주얼 · 스크린</div>
+          <div class="wp-phase-items"><span>Key Visual</span><span>핵심 스크린 5</span><span>컴포넌트</span><span>모션 프로토</span></div>
+          <div class="wp-phase-tail">// PLAN</div>
+        </div>
+        <div class="wp-phase">
+          <div class="wp-phase-num">PHASE 06</div>
+          <div class="wp-phase-circle">06</div>
+          <div class="wp-phase-title">Validate</div>
+          <div class="wp-phase-sub">검증 · 반복</div>
+          <div class="wp-phase-items"><span>내부 리뷰</span><span>가설 검증</span><span>자매팀 정합</span><span>반복 라운드</span></div>
+          <div class="wp-phase-tail">// PLAN</div>
+        </div>
+      </div>
+      <div class="wp-loop">
+        <div class="wp-loop-label">// ITERATION LOOP</div>
+        <div class="wp-loop-text">Validate(06)에서 도출된 인사이트는 Hypothesize(03) 또는 Concept(04)로 되돌아가 가설을 재구성한다. 페이즈는 선형이 아닌 <b>상시 순환 구조</b>로 운영된다.</div>
+        <div class="wp-loop-arrow">06 ↺ 03 / 04</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =================================================
+     P06 · DIVIDER 02 · THREE PILLARS
+     ================================================= -->
+<div class="slide-wrap">
+  <span class="slide-label">P06 · DIVIDER · THREE PILLARS <span class="tag">DARK</span></span>
+  <div class="slide">
+    <div class="s-pagenum">P06 / 24</div>
+    <div class="s-index">Chapter 02</div>
+    <div class="s-side-left">CDO</div>
+    <div class="s-side-right">UX TEAM</div>
+    <div class="div-num">02</div>
+    <div class="div-label">THREE PILLARS</div>
+    <h1 class="div-title">Three Lenses<br>for Visual Direction</h1>
+    <p class="div-desc">One UI Visual Legacy · AI Interaction · TV Environment. 세 관점이 만나는 지점에서 비주얼 방향이 도출되며, 이 세 관점은 이후 모든 결정의 필터가 된다.</p>
+  </div>
+</div>
+
+<!-- =================================================
+     P07 · THREE PILLARS OVERVIEW
+     ================================================= -->
+<div class="slide-wrap">
+  <span class="slide-label">P07 · THREE PILLARS OVERVIEW <span class="tag">DARK</span></span>
+  <div class="slide">
+    <div class="s-pagenum">P07 / 24</div>
+    <div class="s-index">Three Pillars</div>
+    <div class="s-title-block">
+      <h1 class="s-title">Lens 01 · 02 · 03</h1>
+      <p class="s-subtitle">비주얼 방향을 결정하는 세 시선의 정의</p>
+    </div>
+    <div class="s-side-left">CDO</div>
+    <div class="s-side-right">UX TEAM</div>
+    <div class="body-wrap">
+      <div class="three-grid">
+
+        <div class="three-card">
+          <div class="pn">PILLAR 01</div>
+          <div class="pcircle">01</div>
+          <div class="plabel">Legacy</div>
+          <div class="ptitle">One UI Visual<br>Legacy</div>
+          <div class="pdesc">One UI 아이덴티티를 계승하는 비주얼의 필수불가결한 요소. 원칙 3과 시각요소 4축(Shape · Color · Layout · Interaction)으로 정제하여 사용한다.</div>
+          <div class="ptail">// INHERIT</div>
+        </div>
+
+        <div class="three-card emphasis">
+          <div class="pn">PILLAR 02</div>
+          <div class="pcircle">02</div>
+          <div class="plabel">AI Interaction</div>
+          <div class="ptitle">Visual of<br>Hidden Reasoning</div>
+          <div class="pdesc">호출 · 듣기 · 사고 · 생성 · 응답의 5단계 행위를 거실용 시각 언어로 번역. 자매팀 디바이스 공통 Cue와 정합 후 TV 매체 조건에 맞춰 적용한다.</div>
+          <div class="ptail">// TRANSLATE</div>
+        </div>
+
+        <div class="three-card">
+          <div class="pn">PILLAR 03</div>
+          <div class="pcircle">03</div>
+          <div class="plabel">TV Medium</div>
+          <div class="ptitle">TV as Medium<br>Six Conditions</div>
+          <div class="pdesc">10ft · 다인 · 라지 · 음성+리모컨 · 린백 · 거실. 대화면 · 시청 환경의 매체 조건이 모든 비주얼 결정의 필터가 된다.</div>
+          <div class="ptail">// FILTER</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =================================================
+     P08 · PILLAR 01 · ONE UI VISUAL LEGACY
+     ================================================= -->
+<div class="slide-wrap">
+  <span class="slide-label">P08 · PILLAR 01 · ONE UI LEGACY <span class="tag">DARK</span></span>
+  <div class="slide">
+    <div class="s-pagenum">P08 / 24</div>
+    <div class="s-index">Pillar 01 · Legacy</div>
+    <div class="s-title-block">
+      <h1 class="s-title">Inheriting One UI Visual DNA</h1>
+      <p class="s-subtitle">원칙 3과 시각요소 4축의 계승</p>
+    </div>
+    <div class="s-side-left">CDO</div>
+    <div class="s-side-right">UX TEAM</div>
+
+    <div class="body-wrap">
+      <!-- Section A: 3 Principles -->
+      <div class="leg-section-label">// A · ONE UI PRINCIPLES</div>
+      <div class="leg-prin-row">
+        <div class="leg-prin">
+          <div class="leg-prin-en">Visual Consistency</div>
+          <div class="leg-prin-kr">디바이스 전반의 일관된 시각 언어</div>
+        </div>
+        <div class="leg-prin">
+          <div class="leg-prin-en">Intuitive &amp; Seamless UX</div>
+          <div class="leg-prin-kr">직관적이고 끊김 없는 사용 경험</div>
+        </div>
+        <div class="leg-prin">
+          <div class="leg-prin-en">Harmony of Emotion &amp; Function</div>
+          <div class="leg-prin-kr">감성과 기능의 균형</div>
+        </div>
+      </div>
+
+      <!-- Section B: 4 Visual Elements -->
+      <div class="leg-section-label" style="margin-top: 22px;">// B · ONE UI VISUAL ELEMENTS</div>
+      <div class="leg-elem-row">
+
+        <div class="leg-elem">
+          <div class="leg-elem-label">SHAPE</div>
+          <div class="leg-elem-title">간결한 형태와<br>정제된 곡률</div>
+          <div class="leg-elem-shape">
+            <div class="shape-row">
+              <div class="sq r2"></div>
+              <div class="sq r4 o6"></div>
+              <div class="sq r8 o3"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="leg-elem">
+          <div class="leg-elem-label">COLOR</div>
+          <div class="leg-elem-title">중성 톤 기반의<br>확장 그라데이션</div>
+          <div class="leg-elem-shape">
+            <div style="height: 36px; background: linear-gradient(90deg, rgba(255,255,255,0.95), rgba(255,255,255,0.4), rgba(255,255,255,0.15)); border-radius: 8px;"></div>
+          </div>
+        </div>
+
+        <div class="leg-elem">
+          <div class="leg-elem-label">LAYOUT</div>
+          <div class="leg-elem-title">정돈된 레이아웃과<br>시각적 우선순위</div>
+          <div class="leg-elem-shape">
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+              <div class="bar" style="width: 60%;"></div>
+              <div class="bar thin dim2" style="width: 40%;"></div>
+              <div class="bar thin dim" style="width: 50%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="leg-elem">
+          <div class="leg-elem-label">INTERACTION</div>
+          <div class="leg-elem-title">맥락에 맞는 피드백과<br>감성적인 움직임</div>
+          <div class="leg-elem-shape">
+            <div style="display: flex; justify-content: center; align-items: center; height: 36px; position: relative;">
+              <div style="width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.25); position: absolute;"></div>
+              <div style="width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.55); position: absolute;"></div>
+              <div style="width: 12px; height: 12px; border-radius: 50%; background: #fff; position: absolute;"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =================================================
+     P09 · PILLAR 02 · AI INTERACTION
+     ================================================= -->
+<div class="slide-wrap">
+  <span class="slide-label">P09 · PILLAR 02 · AI INTERACTION <span class="tag">DARK</span></span>
+  <div class="slide">
+    <div class="s-pagenum">P09 / 24</div>
+    <div class="s-index">Pillar 02 · AI</div>
+    <div class="s-title-block">
+      <h1 class="s-title">Visual Translation of Hidden Reasoning</h1>
+      <p class="s-subtitle">보이지 않는 AI 행위의 시각화</p>
+    </div>
+    <div class="s-side-left">CDO</div>
+    <div class="s-side-right">UX TEAM</div>
+
+    <div class="body-wrap with-callout">
+      <div class="ai-grid">
+
+        <div class="ai-q-card">
+          <div class="ai-q-label">// WORKING QUESTION</div>
+          <div class="ai-q-text">
+            AI가 보이지 않는 추론을 하고 있을 때, 화면은 <span class="accent">무엇을 보여주어야 하는가</span>?
+          </div>
+          <div class="ai-q-divider"></div>
+          <div class="ai-q-foot">
+            AI의 호출 · 듣기 · 사고 · 생성 · 응답이라는 보이지 않는 행위를 거실의 시각 언어로 번역하는 작업이다. 자매팀의 디바이스 공통 큐와 정합한 후, TV의 매체 조건에 맞게 적용한다.
+          </div>
+        </div>
+
+        <div>
+          <div class="ai-items-label">// ITEMS FOR NEXT ROUND</div>
+          <div class="ai-items">
+            <div class="ai-item">
+              <div class="ai-item-h"><span class="ai-item-tag">A</span><div class="ai-item-t">AI 상태의 시각화</div></div>
+              <div class="ai-item-d">호출 · 듣기 · 사고 · 생성 · 응답 5단계의 시각 시그너처 정의</div>
+            </div>
+            <div class="ai-item">
+              <div class="ai-item-h"><span class="ai-item-tag">B</span><div class="ai-item-t">AI 생성 콘텐츠의 표식</div></div>
+              <div class="ai-item-d">추천 근거 · 생성물 출처 · Provenance 시각 규칙</div>
+            </div>
+            <div class="ai-item">
+              <div class="ai-item-h"><span class="ai-item-tag">C</span><div class="ai-item-t">맥락 적응 시각</div></div>
+              <div class="ai-item-d">시간 · 환경광 · 재실 인원에 따른 톤과 밀도의 변화</div>
+            </div>
+            <div class="ai-item">
+              <div class="ai-item-h"><span class="ai-item-tag">D</span><div class="ai-item-t">자매팀 핸드오프 정합</div></div>
+              <div class="ai-item-d">디바이스 공통 AI Visual Cue의 TV 적용 규칙</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-label">// STATUS</div>
+      <div class="callout-text">본 페이지는 다음 보고 라운드에서 본격 채워질 영역으로, 현재는 <b>질문의 정렬</b>과 <b>다룰 항목의 스코프</b>만 표시.</div>
+    </div>
+  </div>
+</div>
+
+<!-- =================================================
+     P10 · PILLAR 03 · TV ENVIRONMENT
+     ================================================= -->
+<div class="slide-wrap">
+  <span class="slide-label">P10 · PILLAR 03 · TV ENVIRONMENT <span class="tag">DARK</span></span>
+  <div class="slide">
+    <div class="s-pagenum">P10 / 24</div>
+    <div class="s-index">Pillar 03 · TV</div>
+    <div class="s-title-block">
+      <h1 class="s-title">TV as Medium: Six Conditions</h1>
+      <p class="s-subtitle">기기 특성 · 조작 방식 · 환경의 매체 조건</p>
+    </div>
+    <div class="s-side-left">CDO</div>
+    <div class="s-side-right">UX TEAM</div>
+
+    <div class="body-wrap">
+      <div class="tv-grid">
+
+        <div class="tv-card">
+          <div class="tv-card-icon">10ft</div>
+          <div class="tv-card-title">먼 거리 · 10-foot UI</div>
+          <div class="tv-card-sub">DISTANCE · 3M</div>
+          <div class="tv-card-desc">약 3m 거리에서도 한눈에 인지 가능한 타이포 · 아이콘 · 콘트라스트의 설계.</div>
+        </div>
+
+        <div class="tv-card">
+          <div class="tv-card-icon">M</div>
+          <div class="tv-card-title">다인 시청</div>
+          <div class="tv-card-sub">MULTI-USER</div>
+          <div class="tv-card-desc">여러 사용자가 동시에 보는 화면 — 개인 정보 노출의 절제와 공용 모드의 시각 언어.</div>
+        </div>
+
+        <div class="tv-card">
+          <div class="tv-card-icon">▭</div>
+          <div class="tv-card-title">라지 디스플레이</div>
+          <div class="tv-card-sub">55–85 INCH</div>
+          <div class="tv-card-desc">55"~85" 캔버스 — 화이트 스페이스의 가치, 정보 밀도와 호흡의 균형.</div>
+        </div>
+
+        <div class="tv-card">
+          <div class="tv-card-icon">V+R</div>
+          <div class="tv-card-title">음성 · 리모컨 혼합</div>
+          <div class="tv-card-sub">DUAL INPUT</div>
+          <div class="tv-card-desc">방향키 포커스와 음성 명령의 공존 — 포커스 시각화와 음성 상태 표현의 동시 운영.</div>
+        </div>
+
+        <div class="tv-card">
+          <div class="tv-card-icon">↰</div>
+          <div class="tv-card-title">린백 자세</div>
+          <div class="tv-card-sub">LEAN-BACK</div>
+          <div class="tv-card-desc">기댄 자세와 낮은 능동성 — 조작 비용의 최소화, 짧은 의사결정 경로의 설계.</div>
+        </div>
+
+        <div class="tv-card">
+          <div class="tv-card-icon">⌂</div>
+          <div class="tv-card-title">거실 · 공간 배치</div>
+          <div class="tv-card-sub">LIVING ROOM</div>
+          <div class="tv-card-desc">가구로서의 TV — 조도 적응 · 앰비언트 톤 · 공간 조화의 시각 운영.</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =================================================
+     P11 · VISUAL STRATEGY FRAMEWORK
+     ================================================= -->
+<div class="slide-wrap">
+  <span class="slide-label">P11 · VISUAL STRATEGY FRAMEWORK <span class="tag">DARK</span></span>
+  <div class="slide">
+    <div class="s-pagenum">P11 / 24</div>
+    <div class="s-index">Strategy Framework</div>
+    <div class="s-title-block">
+      <h1 class="s-title smaller">Three Lenses · One Language · Four Domains</h1>
+      <p class="s-subtitle">L1 Pillars → L2 Visual Language → L3 Application Domains의 수렴</p>
+    </div>
+    <div class="s-side-left">CDO</div>
+    <div class="s-side-right">UX TEAM</div>
+
+    <div class="body-wrap with-callout">
+      <div class="sf-flow">
+
+        <!-- L1: 3 Pillars -->
+        <div class="sf-row l1">
+          <div class="sf-box l1">
+            <div class="sf-box-num">L1 · PILLAR 01 — LEGACY</div>
+            <div class="sf-box-title">One UI Visual Legacy</div>
+            <div class="sf-box-desc">원칙 3 + 시각요소 4축</div>
+          </div>
+          <div class="sf-box l1">
+            <div class="sf-box-num">L1 · PILLAR 02 — AI</div>
+            <div class="sf-box-title">AI Interaction</div>
+            <div class="sf-box-desc">지능형 반응의 시각적 체감 (TBD)</div>
+          </div>
+          <div class="sf-box l1">
+            <div class="sf-box-num">L1 · PILLAR 03 — TV</div>
+            <div class="sf-box-title">TV Medium</div>
+            <div class="sf-box-desc">10ft · 다인 · 라지 · 음성+리모컨 · 린백 · 거실</div>
+          </div>
+        </div>
+
+        <div class="sf-arrow">↓ ↓ ↓</div>
+
+        <!-- L2: Visual Language -->
+        <div class="sf-box l2">
+          <div class="sf-l2-row">
+            <div>
+              <div class="sf-box-num">L2 · VISUAL LANGUAGE</div>
+              <div class="sf-box-title" style="font-size: 22px; margin-top: 6px;">한 줄의 비주얼 약속 + 표현 시스템</div>
+            </div>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: rgba(255,255,255,0.5);">PILLAR ∩ ∩</div>
+          </div>
+          <div class="sf-box-desc" style="margin-top: 8px; font-size: 12px; color: rgba(255,255,255,0.65);">3 Pillars의 교차점에서 도출되는 단일 비주얼 언어 — 컬러 · 소재 · 라이트 · 모션 · 타이포의 통합 시스템화</div>
+        </div>
+
+        <div class="sf-arrow">↓</div>
+
+        <!-- L3: Application Domains -->
+        <div class="sf-box l3" style="border: 1px solid rgba(255,255,255,0.18);">
+          <div class="sf-box-num">L3 · APPLICATION DOMAIN — TV 4 개 적용 영역</div>
+          <div class="sf-l3-row">
+            <div class="sf-l3-item">
+              <div class="sf-l3-item-num">DOMAIN 01</div>
+              <div class="sf-l3-item-t">가변형 레이아웃</div>
+              <div class="sf-l3-item-s">Living Grid</div>
+            </div>
+            <div class="sf-l3-item">
+              <div class="sf-l3-item-num">DOMAIN 02</div>
+              <div class="sf-l3-item-t">AI 생성 콘텐츠 카드</div>
+              <div class="sf-l3-item-s">개인화 · Provenance</div>
+            </div>
+            <div class="sf-l3-item">
+              <div class="sf-l3-item-num">DOMAIN 03</div>
+              <div class="sf-l3-item-t">TV 컨텍스트 응답</div>
+              <div class="sf-l3-item-s">시간 · 환경광 · 재실 적응</div>
+            </div>
+            <div class="sf-l3-item">
+              <div class="sf-l3-item-num">DOMAIN 04</div>
+              <div class="sf-l3-item-t">AI Visual Cue 통합</div>
+              <div class="sf-l3-item-s">자매팀 큐의 TV 적용</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-label">// READING GUIDE</div>
+      <div class="callout-text">상단 L1의 3 Pillar가 L2 비주얼 언어로 수렴되고, 그 언어가 L3의 4개 적용 영역으로 펼쳐진다. 다음 라운드에서 L2의 한 줄 약속(예: <b>"Quiet Intelligence"</b>)이 본격적으로 정의된다.</div>
+    </div>
+  </div>
+</div>
+
+<!-- =================================================
+     P12 · DIVIDER 03 · SELF & COMPETITOR
+     ================================================= -->
+<div class="slide-wrap">
+  <span class="slide-label">P12 · DIVIDER · SELF &amp; COMPETITOR <span class="tag">DARK</span></span>
+  <div class="slide">
+    <div class="s-pagenum">P12 / 24</div>
+    <div class="s-index">Chapter 04</div>
+    <div class="s-side-left">CDO</div>
+    <div class="s-side-right">UX TEAM</div>
+    <div class="div-num">03</div>
+    <div class="div-label">SELF &amp; COMPETITOR</div>
+    <h1 class="div-title">The Ground<br>We Stand On</h1>
+    <p class="div-desc">현재 삼성 TV가 가진 것과 못 가진 것, 글로벌 4개 OS가 만드는 시각 언어의 지형, 그 사이에서 우리가 차지할 수 있는 White Space의 정렬.</p>
+  </div>
+</div>
+
+<!-- =================================================
+     P13 · SELF AUDIT
+     ================================================= -->
+<div class="slide-wrap">
+  <span class="slide-label">P13 · SELF AUDIT <span class="tag">DARK</span></span>
+  <div class="slide">
+    <div class="s-pagenum">P13 / 24</div>
+    <div class="s-index">Self Audit</div>
+    <div class="s-title-block">
+      <h1 class="s-title">Strengths We Own, Gaps We Carry</h1>
+      <p class="s-subtitle">보유 자산과 비어있는 AI 시각 언어의 병존</p>
+    </div>
+    <div class="s-side-left">CDO</div>
+    <div class="s-side-right">UX TEAM</div>
+
+    <div class="body-wrap with-callout">
+      <div class="sa-body">
+        <div class="sa-col">
+          <div class="sa-col-num">01 · STRENGTHS</div>
+          <div class="sa-col-title">경쟁사가 가지지 못한 3대 자산</div>
+          <div class="sa-col-tag">검증된 자산을 흔들지 않고 그 위에 새 언어를 얹는 방식이 우리의 출발점.</div>
+          <div class="sa-list">
+            <div class="sa-item">
+              <div class="idx">01</div>
+              <div>
+                <div class="ttl">10-foot 가독성 디자인 시스템</div>
+                <div class="dsc">Lean-back · 3m 시청 거리에 검증된 타이포 · 콘트라스트 · 포커스 체계. 모바일 OS가 따라올 수 없는 거리 자산.</div>
+              </div>
+            </div>
+            <div class="sa-item">
+              <div class="idx">02</div>
+              <div>
+                <div class="ttl">Ambient · Art Mode · Frame TV</div>
+                <div class="dsc">Generative Wallpaper와 가구화된 TV의 첫 시도. "거실 공기"를 만든 유일한 사업자.</div>
+              </div>
+            </div>
+            <div class="sa-item">
+              <div class="idx">03</div>
+              <div>
+                <div class="ttl">하드웨어 ↔ SW 수직 통합</div>
+                <div class="dsc">NPU · 카메라 · 마이크 · 패널 · SmartThings를 단일 사업자가 운영 — AI 시대의 가장 강력한 구조적 우위.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sa-col gaps">
+          <div class="sa-col-num">02 · GAPS</div>
+          <div class="sa-col-title">시각 언어의 4대 공백</div>
+          <div class="sa-col-tag">기능이 부재한 것이 아니라 <b>언어가 일관되지 않은 것</b>. 일관성이 다음 라운드의 핵심 과제.</div>
+          <div class="sa-list" style="gap: 8px;">
+            <div class="sa-item">
+              <div class="idx">G1</div>
+              <div>
+                <div class="ttl">진입점이 분산된 평행 허브 구조</div>
+                <div class="dsc">Media · Game · Art · Ambient가 동격으로 펼쳐져 사용자 의도가 분기된다.</div>
+              </div>
+            </div>
+            <div class="sa-item">
+              <div class="idx">G2</div>
+              <div>
+                <div class="ttl">솔리드 표면 · Glass 톤 부재</div>
+                <div class="dsc">배경 콘텐츠와 UI가 단절 — 거실 공기를 깨뜨리는 즉시 모달.</div>
+              </div>
+            </div>
+            <div class="sa-item">
+              <div class="idx">G3</div>
+              <div>
+                <div class="ttl">AI Provenance · 추천 근거 미시각</div>
+                <div class="dsc">왜 추천되었는지가 보이지 않아 AI의 사고 과정이 침묵한다.</div>
+              </div>
+            </div>
+            <div class="sa-item">
+              <div class="idx">G4</div>
+              <div>
+                <div class="ttl">고정 격자 · 깊은 Settings 트리</div>
+                <div class="dsc">4~5단 위계와 정적 카드 그리드 — 수동 설정 전제 모델의 잔재.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-label">// CORE CONTRADICTION</div>
+      <div class="callout-text">Generative Wallpaper에서는 <b>"거실 공기"</b>를 추구하면서, Home · Quick Settings · Bixby에서는 즉시 솔리드 모달로 그 공기를 깨뜨린다. 자산은 있으나 <b>시각 언어가 일관되지 않은 것</b>이 가장 큰 문제.</div>
+    </div>
+  </div>
+</div>
+
+<!-- =================================================
+     P14 · COMPETITOR SUMMARY
+     ================================================= -->
+<div class="slide-wrap">
+  <span class="slide-label">P14 · COMPETITOR · SUMMARY <span class="tag">DARK</span></span>
+  <div class="slide">
+    <div class="s-pagenum">P14 / 24</div>
+    <div class="s-index">Competitor · Summary</div>
+    <div class="s-title-block">
+      <h1 class="s-title">Global TV OS Landscape</h1>
+      <p class="s-subtitle">AI 사고를 거실용 시각 언어로 번역한 사업자의 부재</p>
+    </div>
+    <div class="s-side-left">CDO</div>
+    <div class="s-side-right">UX TEAM</div>
+
+    <div class="body-wrap">
+      <div class="comp-grid">
+        <div class="comp-card">
+          <div class="comp-brand">LG · WEBOS</div>
+          <div class="comp-title">완성도 높은<br>카드 시스템</div>
+          <div class="comp-desc">정돈된 카드 그리드 · Quick Card 진입점. AI 통합과 앰비언트 자산은 미약.</div>
+          <div class="comp-tag">// VIS 우수 · AI 약</div>
+        </div>
+        <div class="comp-card">
+          <div class="comp-brand">APPLE · TVOS</div>
+          <div class="comp-title">Liquid Glass<br>· 영화적 톤</div>
+          <div class="comp-desc">시각 완성도 시장 최강. AI는 콘텐츠 추천 수준, 시각 시그너처는 시작 단계.</div>
+          <div class="comp-tag">// VIS 최강 · AI 보수</div>
+        </div>
+        <div class="comp-card">
+          <div class="comp-brand">GOOGLE · TV</div>
+          <div class="comp-title">Gemini 결합<br>가속</div>
+          <div class="comp-desc">AI 추천과 자연어 검색은 강함. 거실용 시각 절제도는 부족 · 모바일틱.</div>
+          <div class="comp-tag">// AI 강 · VIS 보통</div>
+        </div>
+        <div class="comp-card">
+          <div class="comp-brand">AMAZON · FIRE TV</div>
+          <div class="comp-title">Alexa+ &amp;<br>Ambient Hub</div>
+          <div class="comp-desc">Alexa 시각 표현 + 위젯 앰비언트. 광고형 카드 · 거실 톤 절제는 약함.</div>
+          <div class="comp-tag">// AI 중 · 광고 우세</div>
+        </div>
+      </div>
+
+      <div class="cross-block">
+        <div class="cross-label">// CROSS-PLAYER INSIGHT · 3</div>
+        <div class="cross-grid">
+          <div class="cross-item">
+            <div class="ct">① 시각 완성도 ↔ AI 통합의 양립 부재</div>
+            <div class="cd">Apple · LG는 시각 강 · AI 약, Google · Amazon은 AI 강 · 시각 약.</div>
+          </div>
+          <div class="cross-item">
+            <div class="ct">② AI 사고의 시각화 부재</div>
+            <div class="cd">어떤 OS도 듣기 · 사고 · 응답의 시각 시그너처를 구축하지 못함.</div>
+          </div>
+          <div class="cross-item">
+            <div class="ct">③ Ambient의 정보화 미달</div>
+            <div class="cd">앰비언트를 능동 정보 표면으로 활용한 사업자의 부재.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =================================================
+     P15 · LG WEBOS
+     ================================================= -->
+<div class="slide-wrap">
+  <span class="slide-label">P15 · COMPETITOR · LG WEBOS <span class="tag">DARK</span></span>
+  <div class="slide">
+    <div class="s-pagenum">P15 / 24</div>
+    <div class="s-index">Competitor · LG webOS</div>
+    <div class="s-title-block">
+      <h1 class="s-title">LG webOS · Refined Card System</h1>
+      <p class="s-subtitle">완성된 카드 시스템과 AI 시그너처 부재의 공존</p>
+    </div>
+    <div class="s-side-left">CDO</div>
+    <div class="s-side-right">UX TEAM</div>
+
+    <div class="body-wrap with-callout">
+      <div class="comp-3col">
+        <div class="comp-3">
+          <div class="comp-3-tag">VISUAL LANGUAGE</div>
+          <div class="comp-3-title">비주얼 랭귀지</div>
+          <div class="comp-3-desc">화이트 베이스 + 깊은 채도 액센트 · 명료한 카드 borders · 균일 라운드 · 미니멀 미디어 톤.</div>
+          <div class="comp-3-vis">
+            <div class="comp-3-placeholder">[ IMG · LG 카드 시스템<br>화이트 베이스 + 카드 3개 그리드 ]</div>
+          </div>
+        </div>
+        <div class="comp-3">
+          <div class="comp-3-tag">TV VISUAL CONCEPT</div>
+          <div class="comp-3-title">TV 비주얼 컨셉</div>
+          <div class="comp-3-desc">Quick Cards 진입 · 4×n 카드 그리드 · Home Hub 콘텐츠 중심 큐레이션 · 보수적 모션.</div>
+          <div class="comp-3-vis">
+            <div class="comp-3-placeholder">[ IMG · webOS Home<br>4×n 카드 그리드 스크린샷 ]</div>
+          </div>
+        </div>
+        <div class="comp-3">
+          <div class="comp-3-tag">AI VISUAL</div>
+          <div class="comp-3-title">AI 비주얼 특화 요소</div>
+          <div class="comp-3-desc">α11 AI Processor · 화질/사운드 자동. AI Concierge — 카드형 추천. <b>시각 시그너처 부재</b> · 결과만 노출.</div>
+          <div class="comp-3-vis">
+            <div class="comp-3-placeholder">[ IMG · AI Concierge<br>추천 카드 캡처 ]</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-label">// IMPLICATION</div>
+      <div class="callout-text">시각 완성도와 카드 일관성은 참조할 가치 있음. 그러나 <b>AI 가치를 시각으로 전달하는 시그너처가 비어있는 것</b>이 명확한 기회 영역.</div>
+    </div>
+  </div>
+</div>
+
+<!-- =================================================
+     P16 · APPLE TVOS
+     ================================================= -->
+<div class="slide-wrap">
+  <span class="slide-label">P16 · COMPETITOR · APPLE TVOS <span class="tag">DARK</span></span>
+  <div class="slide">
+    <div class="s-pagenum">P16 / 24</div>
+    <div class="s-index">Competitor · Apple tvOS</div>
+    <div class="s-title-block">
+      <h1 class="s-title">Apple tvOS · Liquid Glass Excellence</h1>
+      <p class="s-subtitle">시각 완성도의 정점과 AI 거실 행위 통합의 지연</p>
+    </div>
+    <div class="s-side-left">CDO</div>
+    <div class="s-side-right">UX TEAM</div>
+
+    <div class="body-wrap with-callout">
+      <div class="comp-3col">
+        <div class="comp-3">
+          <div class="comp-3-tag">VISUAL LANGUAGE</div>
+          <div class="comp-3-title">비주얼 랭귀지</div>
+          <div class="comp-3-desc"><b>Liquid Glass</b> · 영화적 다크 톤 · SF Pro 옵티컬 사이즈 정교 · 깊은 블러와 절제된 그라데이션.</div>
+          <div class="comp-3-vis">
+            <div class="comp-3-placeholder">[ IMG · tvOS Home<br>Liquid Glass 패널 + 다크 배경 ]</div>
+          </div>
+        </div>
+        <div class="comp-3">
+          <div class="comp-3-tag">TV VISUAL CONCEPT</div>
+          <div class="comp-3-title">TV 비주얼 컨셉</div>
+          <div class="comp-3-desc">풀블리드 히어로 · 영화 포스터 톤 · Focus Ring 미세 글로우 모션 · 콘텐츠 우선, UI는 빠르게 사라짐.</div>
+          <div class="comp-3-vis">
+            <div class="comp-3-placeholder">[ IMG · 풀블리드 히어로 캡처<br>Focus Ring 효과 ]</div>
+          </div>
+        </div>
+        <div class="comp-3">
+          <div class="comp-3-tag">AI VISUAL</div>
+          <div class="comp-3-title">AI 비주얼 특화 요소</div>
+          <div class="comp-3-desc">Apple Intelligence · 색의 흐름. Siri Ribbon · 화면 가장자리 광선. <b>전용 시그너처 보유 시작</b>.</div>
+          <div class="comp-3-vis">
+            <div class="comp-3-placeholder">[ IMG · Siri Ribbon<br>가장자리 글로우 광선 캡처 ]</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-label">// IMPLICATION</div>
+      <div class="callout-text">시각 절제 · 영화적 톤 · 가장자리 광 시그너처는 강력한 참조점. 다만 Apple은 <b>AI가 거실의 행위로 통합되는 단계까지는 진입하지 못함</b>. 우리는 거실 행위까지 통합한 다음 단계를 노릴 수 있음.</div>
+    </div>
+  </div>
+</div>
+
+<!-- =================================================
+     P17 · GOOGLE TV
+     ================================================= -->
+<div class="slide-wrap">
+  <span class="slide-label">P17 · COMPETITOR · GOOGLE TV <span class="tag">DARK</span></span>
+  <div class="slide">
+    <div class="s-pagenum">P17 / 24</div>
+    <div class="s-index">Competitor · Google TV</div>
+    <div class="s-title-block">
+      <h1 class="s-title">Google TV · Gemini-Powered Discovery</h1>
+      <p class="s-subtitle">대화형 진보와 거실용 시각 절제 미흡의 병존</p>
+    </div>
+    <div class="s-side-left">CDO</div>
+    <div class="s-side-right">UX TEAM</div>
+
+    <div class="body-wrap with-callout">
+      <div class="comp-3col">
+        <div class="comp-3">
+          <div class="comp-3-tag">VISUAL LANGUAGE</div>
+          <div class="comp-3-title">비주얼 랭귀지</div>
+          <div class="comp-3-desc">Material You · 다이내믹 컬러 · 라운드 큰 카드 · 모바일 톤 강함 · 컬러풀하고 다소 화려한 톤.</div>
+          <div class="comp-3-vis">
+            <div class="comp-3-placeholder">[ IMG · Material You 컬러 팔레트<br>큰 라운드 카드 그리드 ]</div>
+          </div>
+        </div>
+        <div class="comp-3">
+          <div class="comp-3-tag">TV VISUAL CONCEPT</div>
+          <div class="comp-3-title">TV 비주얼 컨셉</div>
+          <div class="comp-3-desc">For You 행 · 콘텐츠 큐레이션 중심 · 검색바 상시 노출로 OS 진입 강함 · Hero Carousel + 카테고리 행.</div>
+          <div class="comp-3-vis">
+            <div class="comp-3-placeholder">[ IMG · Google TV Home<br>Hero + For You 행 스크린샷 ]</div>
+          </div>
+        </div>
+        <div class="comp-3">
+          <div class="comp-3-tag">AI VISUAL</div>
+          <div class="comp-3-title">AI 비주얼 특화 요소</div>
+          <div class="comp-3-desc">Gemini Live · 음성 자연어 · 추천 근거 캡션 · 텍스트 의존. <b>대화형은 강 · 시각 시그너처 약</b>.</div>
+          <div class="comp-3-vis">
+            <div class="comp-3-placeholder">[ IMG · Gemini Live<br>대화 인터페이스 캡처 ]</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-label">// IMPLICATION</div>
+      <div class="callout-text">AI 추천 · 자연어 검색의 사용자 학습이 가장 진전된 시장. 그러나 <b>거실용 시각 절제와 한 톤의 미감은 미약</b>. 우리는 AI 진보 + 거실 톤 절제를 동시에 충족하는 진영을 차지할 수 있음.</div>
+    </div>
+  </div>
+</div>
+
+<!-- =================================================
+     P18 · AMAZON FIRE TV
+     ================================================= -->
+<div class="slide-wrap">
+  <span class="slide-label">P18 · COMPETITOR · AMAZON FIRE TV <span class="tag">DARK</span></span>
+  <div class="slide">
+    <div class="s-pagenum">P18 / 24</div>
+    <div class="s-index">Competitor · Amazon Fire TV</div>
+    <div class="s-title-block">
+      <h1 class="s-title">Amazon Fire TV · Alexa + Ambient</h1>
+      <p class="s-subtitle">앰비언트 위젯 시도와 광고형 톤 한계의 공존</p>
+    </div>
+    <div class="s-side-left">CDO</div>
+    <div class="s-side-right">UX TEAM</div>
+
+    <div class="body-wrap with-callout">
+      <div class="comp-3col">
+        <div class="comp-3">
+          <div class="comp-3-tag">VISUAL LANGUAGE</div>
+          <div class="comp-3-title">비주얼 랭귀지</div>
+          <div class="comp-3-desc">다크 베이스 + 오렌지 액센트 · 큰 히어로와 광고형 카드의 혼재 · 정보 밀도 높음 · 절제는 약함.</div>
+          <div class="comp-3-vis">
+            <div class="comp-3-placeholder">[ IMG · Fire TV Home<br>다크 + 오렌지 액센트 ]</div>
+          </div>
+        </div>
+        <div class="comp-3">
+          <div class="comp-3-tag">TV VISUAL CONCEPT</div>
+          <div class="comp-3-title">TV 비주얼 컨셉</div>
+          <div class="comp-3-desc"><b>Ambient Experience</b> · 위젯 표면 · 시계 · 일정 · 사진 · 노트 위젯 · Find · For You 추천 행.</div>
+          <div class="comp-3-vis">
+            <div class="comp-3-placeholder">[ IMG · Ambient 위젯 화면<br>시계/일정/노트 위젯 ]</div>
+          </div>
+        </div>
+        <div class="comp-3">
+          <div class="comp-3-tag">AI VISUAL</div>
+          <div class="comp-3-title">AI 비주얼 특화 요소</div>
+          <div class="comp-3-desc">Alexa+ 화면 하단 청록 라이트바 · 음성 인디케이터 통합. <b>위젯 + 보이스의 하이브리드</b>.</div>
+          <div class="comp-3-vis">
+            <div class="comp-3-placeholder">[ IMG · Alexa+ 라이트바<br>하단 음성 인디케이터 ]</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-label">// IMPLICATION</div>
+      <div class="callout-text">앰비언트를 위젯 정보 표면으로 활용한 첫 시도. <b>방향은 옳지만 톤은 광고형</b>. 우리는 같은 방향에 거실의 미감 · 절제를 더해 차별화할 수 있음.</div>
+    </div>
+  </div>
+</div>
+
+<!-- =================================================
+     P19 · WHITE SPACE & APPROACH
+     ================================================= -->
+<div class="slide-wrap">
+  <span class="slide-label">P19 · WHITE SPACE &amp; APPROACH <span class="tag">DARK</span></span>
+  <div class="slide">
+    <div class="s-pagenum">P19 / 24</div>
+    <div class="s-index">White Space</div>
+    <div class="s-title-block">
+      <h1 class="s-title">Where Our Territory Lies</h1>
+      <p class="s-subtitle">시각 절제 + AI 깊이 + 거실 톤 진영의 점유</p>
+    </div>
+    <div class="s-side-left">CDO</div>
+    <div class="s-side-right">UX TEAM</div>
+
+    <div class="body-wrap">
+      <div style="display: grid; grid-template-columns: 1.1fr 1fr; gap: 22px; height: 100%;">
+
+        <!-- LEFT: 2D Map (simple shapes) -->
+        <div style="background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 24px 26px; position: relative;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.22em; color: rgba(255,255,255,0.55);">// COMPETITIVE MAP</div>
+
+          <div style="position: relative; height: 340px; margin-top: 18px;">
+            <!-- Y axis -->
+            <div style="position: absolute; left: 30px; top: 10px; bottom: 30px; width: 1px; background: rgba(255,255,255,0.3);"></div>
+            <!-- X axis -->
+            <div style="position: absolute; left: 30px; right: 10px; bottom: 30px; height: 1px; background: rgba(255,255,255,0.3);"></div>
+            <!-- Y label -->
+            <div style="position: absolute; left: 38px; top: 2px; font-size: 10px; color: rgba(255,255,255,0.6); letter-spacing: 0.05em;">시각 절제 · 거실 톤 ▲</div>
+            <!-- X label -->
+            <div style="position: absolute; right: 10px; bottom: 12px; font-size: 10px; color: rgba(255,255,255,0.6); letter-spacing: 0.05em;">AI 통합 깊이 ▶</div>
+
+            <!-- White space zone -->
+            <div style="position: absolute; right: 30px; top: 30px; width: 200px; height: 130px; background: rgba(255,255,255,0.06); border: 1px dashed rgba(255,255,255,0.5); border-radius: 8px;"></div>
+            <div style="position: absolute; right: 60px; top: 50px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: #fff;">WHITE SPACE</div>
+            <div style="position: absolute; right: 56px; top: 72px; font-size: 11px; color: rgba(255,255,255,0.7); line-height: 1.5; max-width: 160px;">우리의 목표 진영<br>시각 절제 + AI 깊이 + 거실 톤</div>
+
+            <!-- Target node N+3 -->
+            <div style="position: absolute; right: 110px; top: 88px; width: 24px; height: 24px; border: 2px dashed #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #fff; font-weight: 700; background: rgba(255,255,255,0.15);">N+3</div>
+
+            <!-- Competitor nodes -->
+            <div style="position: absolute; left: 90px; top: 60px;">
+              <div class="dot" style="background: rgba(255,255,255,0.85);"></div>
+              <div style="position: absolute; left: 14px; top: -3px; font-size: 10.5px; color: rgba(255,255,255,0.85); font-weight: 600; white-space: nowrap;">Apple tvOS</div>
+            </div>
+            <div style="position: absolute; left: 130px; top: 110px;">
+              <div class="dot" style="background: rgba(255,255,255,0.7);"></div>
+              <div style="position: absolute; left: 14px; top: -3px; font-size: 10.5px; color: rgba(255,255,255,0.7); font-weight: 600; white-space: nowrap;">LG webOS</div>
+            </div>
+            <div style="position: absolute; left: 250px; top: 200px;">
+              <div class="dot" style="background: rgba(255,255,255,0.55);"></div>
+              <div style="position: absolute; left: 14px; top: -3px; font-size: 10.5px; color: rgba(255,255,255,0.55); font-weight: 600; white-space: nowrap;">Google TV</div>
+            </div>
+            <div style="position: absolute; left: 220px; top: 240px;">
+              <div class="dot" style="background: rgba(255,255,255,0.45);"></div>
+              <div style="position: absolute; left: 14px; top: -3px; font-size: 10.5px; color: rgba(255,255,255,0.45); font-weight: 600; white-space: nowrap;">Fire TV</div>
+            </div>
+            <div style="position: absolute; left: 110px; top: 180px;">
+              <div style="width: 10px; height: 10px; border-radius: 50%; background: #fff; border: 2px solid rgba(255,255,255,0.4);"></div>
+              <div style="position: absolute; left: 16px; top: -3px; font-size: 10.5px; color: #fff; font-weight: 700; white-space: nowrap;">Samsung NOW</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Our 4 Approaches -->
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.22em; color: rgba(255,255,255,0.55);">// OUR APPROACH · 4</div>
+
+          <div style="padding: 14px 16px; background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px;">
+            <div style="display: flex; gap: 12px; align-items: baseline;">
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.5);">01</span>
+              <div style="font-size: 14px; font-weight: 700; letter-spacing: -0.012em;">계승과 재정의의 병행</div>
+            </div>
+            <div style="font-size: 11.5px; color: rgba(255,255,255,0.55); margin-top: 6px; line-height: 1.55; padding-left: 22px;">One UI 정체성 유지 + AI 시대 가치 5종의 추가.</div>
+          </div>
+
+          <div style="padding: 14px 16px; background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px;">
+            <div style="display: flex; gap: 12px; align-items: baseline;">
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.5);">02</span>
+              <div style="font-size: 14px; font-weight: 700; letter-spacing: -0.012em;">매체 조건이 모든 결정의 필터</div>
+            </div>
+            <div style="font-size: 11.5px; color: rgba(255,255,255,0.55); margin-top: 6px; line-height: 1.55; padding-left: 22px;">10ft · 리모컨 · 거실 조도 — TV Medium Lens의 상시 적용.</div>
+          </div>
+
+          <div style="padding: 14px 16px; background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px;">
+            <div style="display: flex; gap: 12px; align-items: baseline;">
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.5);">03</span>
+              <div style="font-size: 14px; font-weight: 700; letter-spacing: -0.012em;">가설 → 검증의 순환</div>
+            </div>
+            <div style="font-size: 11.5px; color: rgba(255,255,255,0.55); margin-top: 6px; line-height: 1.55; padding-left: 22px;">10개 GUI 가설로의 분해 · 라운드마다 채택과 기각의 반복.</div>
+          </div>
+
+          <div style="padding: 14px 16px; background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px;">
+            <div style="display: flex; gap: 12px; align-items: baseline;">
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.5);">04</span>
+              <div style="font-size: 14px; font-weight: 700; letter-spacing: -0.012em;">자매팀 핸드오프 사전 정합</div>
+            </div>
+            <div style="font-size: 11.5px; color: rgba(255,255,255,0.55); margin-top: 6px; line-height: 1.55; padding-left: 22px;">AI Visual Cue의 컨셉 단계 합류 · 충돌의 사전 차단.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =================================================
+     P20 · DIVIDER 04 · VISUAL HYPOTHESES
+     ================================================= -->
+<div class="slide-wrap">
+  <span class="slide-label">P20 · DIVIDER · VISUAL HYPOTHESES <span class="tag">DARK</span></span>
+  <div class="slide">
+    <div class="s-pagenum">P20 / 24</div>
+    <div class="s-index">Chapter 05</div>
+    <div class="s-side-left">CDO</div>
+    <div class="s-side-right">UX TEAM</div>
+    <div class="div-num">04</div>
+    <div class="div-label">VISUAL HYPOTHESES</div>
+    <h1 class="div-title">Ten Hypotheses<br>to Test</h1>
+    <p class="div-desc">AI 도입에 따른 기존 GUI 변화의 가설. 각 가설은 다음 라운드 디자인의 출발점이자 검증의 대상이며, 채택과 기각의 결정 단위가 된다.</p>
+  </div>
+</div>
+
+<!-- =================================================
+     P21 · HYPOTHESES INDEX (3 Clusters)
+     ================================================= -->
+<div class="slide-wrap">
+  <span class="slide-label">P21 · HYPOTHESES · INDEX <span class="tag">DARK</span></span>
+  <div class="slide">
+    <div class="s-pagenum">P21 / 24</div>
+    <div class="s-index">10 Hypotheses · Index</div>
+    <div class="s-title-block">
+      <h1 class="s-title">Three Clusters of Change</h1>
+      <p class="s-subtitle">구조의 해체 · 개인화의 심화 · 능동성의 이전</p>
+    </div>
+    <div class="s-side-left">CDO</div>
+    <div class="s-side-right">UX TEAM</div>
+
+    <div class="body-wrap with-callout">
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; height: 100%;">
+
+        <div style="background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 22px 24px; display: flex; flex-direction: column;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.22em; color: rgba(255,255,255,0.55);">CLUSTER A</div>
+          <div style="font-size: 22px; font-weight: 800; margin-top: 8px; letter-spacing: -0.022em;">구조의 해체</div>
+          <div style="font-size: 11.5px; color: rgba(255,255,255,0.55); margin-top: 8px; line-height: 1.55;">평면 구조 · 평행 허브 · 깊은 위계가 AI에 의해 압축 · 통합</div>
+          <div style="margin-top: 18px; display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; gap: 10px; font-size: 12px;"><span style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #fff; min-width: 24px;">H1</span><span>카드 그리드의 해체</span></div>
+            <div style="display: flex; gap: 10px; font-size: 12px;"><span style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #fff; min-width: 24px;">H2</span><span>평행 허브의 소멸</span></div>
+            <div style="display: flex; gap: 10px; font-size: 12px;"><span style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #fff; min-width: 24px;">H5</span><span>메뉴 위계의 압축</span></div>
+            <div style="display: flex; gap: 10px; font-size: 12px;"><span style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #fff; min-width: 24px;">H8</span><span>SmartThings 리스트의 종말</span></div>
+          </div>
+          <div style="margin-top: auto; padding-top: 22px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: rgba(255,255,255,0.35);">// 4 HYPOTHESES</div>
+        </div>
+
+        <div style="background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 22px 24px; display: flex; flex-direction: column;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.22em; color: rgba(255,255,255,0.55);">CLUSTER B</div>
+          <div style="font-size: 22px; font-weight: 800; margin-top: 8px; letter-spacing: -0.022em;">개인화의 심화</div>
+          <div style="font-size: 11.5px; color: rgba(255,255,255,0.55); margin-top: 8px; line-height: 1.55;">동일 컴포넌트가 사용자별로 다른 표현을 갖게 되는 변화</div>
+          <div style="margin-top: 18px; display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; gap: 10px; font-size: 12px;"><span style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #fff; min-width: 24px;">H3</span><span>검색창의 폐기 · 대화형 탐색</span></div>
+            <div style="display: flex; gap: 10px; font-size: 12px;"><span style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #fff; min-width: 24px;">H4</span><span>표준 썸네일의 종말</span></div>
+            <div style="display: flex; gap: 10px; font-size: 12px;"><span style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #fff; min-width: 24px;">H7</span><span>갤러리에서 캔버스로의 이행</span></div>
+          </div>
+          <div style="margin-top: auto; padding-top: 22px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: rgba(255,255,255,0.35);">// 3 HYPOTHESES</div>
+        </div>
+
+        <div style="background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 22px 24px; display: flex; flex-direction: column;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.22em; color: rgba(255,255,255,0.55);">CLUSTER C</div>
+          <div style="font-size: 22px; font-weight: 800; margin-top: 8px; letter-spacing: -0.022em;">능동성의 이전</div>
+          <div style="font-size: 11.5px; color: rgba(255,255,255,0.55); margin-top: 8px; line-height: 1.55;">사용자 조작이 AI의 능동적 작동으로 옮겨가는 변화</div>
+          <div style="margin-top: 18px; display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; gap: 10px; font-size: 12px;"><span style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #fff; min-width: 24px;">H6</span><span>Bixby 호출 모델의 전환</span></div>
+            <div style="display: flex; gap: 10px; font-size: 12px;"><span style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #fff; min-width: 24px;">H9</span><span>단일 토스트의 분화</span></div>
+            <div style="display: flex; gap: 10px; font-size: 12px;"><span style="font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #fff; min-width: 24px;">H10</span><span>수동 설정의 잔존화</span></div>
+          </div>
+          <div style="margin-top: auto; padding-top: 22px; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: rgba(255,255,255,0.35);">// 3 HYPOTHESES</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-label">// READING GUIDE</div>
+      <div class="callout-text">다음 페이지부터 각 가설을 <b>현재 상태 → 변화의 인과 → 비주얼 적용 방향 + 대표 레퍼런스</b> 한 묶음으로 정리. 이 가설들이 Phase 04 컨셉 단계의 출발점이 됨.</div>
+    </div>
+  </div>
+</div>
+
+<!-- =================================================
+     P22 · HYPOTHESES · H1 — H5
+     ================================================= -->
+<div class="slide-wrap">
+  <span class="slide-label">P22 · HYPOTHESES · H1—H5 <span class="tag">DARK</span></span>
+  <div class="slide">
+    <div class="s-pagenum">P22 / 24</div>
+    <div class="s-index">Hypotheses · Detail 1/2</div>
+    <div class="s-title-block">
+      <h1 class="s-title smaller">Structural Dissolution &amp; Personalization · 1</h1>
+      <p class="s-subtitle">그리드 · 허브 · 검색 · 썸네일 · 위계의 재구성</p>
+    </div>
+    <div class="s-side-left">CDO</div>
+    <div class="s-side-right">UX TEAM</div>
+
+    <div class="body-wrap">
+      <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; height: 100%;">
+
+        <div style="background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 14px; display: flex; flex-direction: column;">
+          <div style="display: flex; align-items: center; gap: 6px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; padding: 3px 7px; background: rgba(255,255,255,0.1); border-radius: 3px; color: #fff;">H1</span><span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.15em; color: rgba(255,255,255,0.45);">LAYOUT</span></div>
+          <div style="font-size: 14px; font-weight: 800; margin-top: 10px; letter-spacing: -0.012em; line-height: 1.3;">카드 그리드의 해체</div>
+          <div style="font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 8px; line-height: 1.55;">고정 그리드 → 정보 중요도에 따라 카드 크기·위치가 동적으로 재배치되는 <b style="color:#fff;">Living Grid</b>.</div>
+          <div style="margin-top: 12px; border: 1px dashed rgba(255,255,255,0.22); border-radius: 6px; padding: 10px; min-height: 70px; font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.05em; color: rgba(255,255,255,0.45); line-height: 1.5;">[ IMG · Bento Grid 예시<br>큰 카드 1 + 작은 카드 4 동적 배치 ]</div>
+          <div style="margin-top: auto; padding-top: 10px; font-size: 9.5px; color: rgba(255,255,255,0.4); line-height: 1.5;">REF · <b style="color: rgba(255,255,255,0.7);">Bento Grid · iPadOS Stage Mgr · Notion 캔버스</b></div>
+        </div>
+
+        <div style="background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 14px; display: flex; flex-direction: column;">
+          <div style="display: flex; align-items: center; gap: 6px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; padding: 3px 7px; background: rgba(255,255,255,0.1); border-radius: 3px; color: #fff;">H2</span><span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.15em; color: rgba(255,255,255,0.45);">HUB</span></div>
+          <div style="font-size: 14px; font-weight: 800; margin-top: 10px; letter-spacing: -0.012em; line-height: 1.3;">평행 허브의 소멸</div>
+          <div style="font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 8px; line-height: 1.55;">Media · Game · Art · Ambient 평행 구조 → <b style="color:#fff;">단일 진입점 + AI 자동 모드 전환</b>.</div>
+          <div style="margin-top: 12px; border: 1px dashed rgba(255,255,255,0.22); border-radius: 6px; padding: 10px; min-height: 70px; display: flex; align-items: center; justify-content: center; position: relative;">
+            <div style="width: 40px; height: 40px; border: 1.5px solid rgba(255,255,255,0.45); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #fff; font-weight: 700;">ONE</div>
+          </div>
+          <div style="margin-top: auto; padding-top: 10px; font-size: 9.5px; color: rgba(255,255,255,0.4); line-height: 1.5;">REF · <b style="color: rgba(255,255,255,0.7);">Apple Spotlight · Raycast · Arc Search</b></div>
+        </div>
+
+        <div style="background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 14px; display: flex; flex-direction: column;">
+          <div style="display: flex; align-items: center; gap: 6px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; padding: 3px 7px; background: rgba(255,255,255,0.1); border-radius: 3px; color: #fff;">H3</span><span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.15em; color: rgba(255,255,255,0.45);">SEARCH</span></div>
+          <div style="font-size: 14px; font-weight: 800; margin-top: 10px; letter-spacing: -0.012em; line-height: 1.3;">대화형 탐색</div>
+          <div style="font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 8px; line-height: 1.55;">단일 검색창 → <b style="color:#fff;">음성·텍스트 혼합 대화형 탐색</b>의 다단계 의도 좁힘.</div>
+          <div style="margin-top: 12px; border: 1px dashed rgba(255,255,255,0.22); border-radius: 6px; padding: 10px; min-height: 70px; display: flex; flex-direction: column; gap: 4px; justify-content: center;">
+            <div style="height: 14px; background: rgba(255,255,255,0.15); border-radius: 7px;"></div>
+            <div style="display: flex; gap: 4px;"><div style="flex: 1; height: 10px; background: rgba(255,255,255,0.08); border-radius: 5px;"></div><div style="flex: 1; height: 10px; background: rgba(255,255,255,0.08); border-radius: 5px;"></div></div>
+          </div>
+          <div style="margin-top: auto; padding-top: 10px; font-size: 9.5px; color: rgba(255,255,255,0.4); line-height: 1.5;">REF · <b style="color: rgba(255,255,255,0.7);">Perplexity · ChatGPT · Arc Search</b></div>
+        </div>
+
+        <div style="background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 14px; display: flex; flex-direction: column;">
+          <div style="display: flex; align-items: center; gap: 6px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; padding: 3px 7px; background: rgba(255,255,255,0.1); border-radius: 3px; color: #fff;">H4</span><span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.15em; color: rgba(255,255,255,0.45);">CARD</span></div>
+          <div style="font-size: 14px; font-weight: 800; margin-top: 10px; letter-spacing: -0.012em; line-height: 1.3;">표준 썸네일의 종말</div>
+          <div style="font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 8px; line-height: 1.55;">동일 콘텐츠라도 <b style="color:#fff;">개인별 다른 하이라이트 · 미리보기 · 추천 근거</b>의 동적 렌더링.</div>
+          <div style="margin-top: 12px; border: 1px dashed rgba(255,255,255,0.22); border-radius: 6px; padding: 10px; min-height: 70px; font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.05em; color: rgba(255,255,255,0.45); line-height: 1.5;">[ IMG · 동일 영화 썸네일이<br>유저 A · B에 다르게 표시 ]</div>
+          <div style="margin-top: auto; padding-top: 10px; font-size: 9.5px; color: rgba(255,255,255,0.4); line-height: 1.5;">REF · <b style="color: rgba(255,255,255,0.7);">Spotify DJ · Netflix Personalized Art</b></div>
+        </div>
+
+        <div style="background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 14px; display: flex; flex-direction: column;">
+          <div style="display: flex; align-items: center; gap: 6px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; padding: 3px 7px; background: rgba(255,255,255,0.1); border-radius: 3px; color: #fff;">H5</span><span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.15em; color: rgba(255,255,255,0.45);">DEPTH</span></div>
+          <div style="font-size: 14px; font-weight: 800; margin-top: 10px; letter-spacing: -0.012em; line-height: 1.3;">메뉴 위계의 압축</div>
+          <div style="font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 8px; line-height: 1.55;">4~5단 위계 → AI가 목적을 사전 추론 → 평균 진입 깊이 <b style="color:#fff;">1~2단계로 단축</b>.</div>
+          <div style="margin-top: 12px; border: 1px dashed rgba(255,255,255,0.22); border-radius: 6px; padding: 10px; min-height: 70px; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: rgba(255,255,255,0.6); letter-spacing: 0.1em;">4-5 → 1-2</div>
+          <div style="margin-top: auto; padding-top: 10px; font-size: 9.5px; color: rgba(255,255,255,0.4); line-height: 1.5;">REF · <b style="color: rgba(255,255,255,0.7);">macOS Spotlight · Things 3 · Linear</b></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =================================================
+     P23 · HYPOTHESES · H6 — H10
+     ================================================= -->
+<div class="slide-wrap">
+  <span class="slide-label">P23 · HYPOTHESES · H6—H10 <span class="tag">DARK</span></span>
+  <div class="slide">
+    <div class="s-pagenum">P23 / 24</div>
+    <div class="s-index">Hypotheses · Detail 2/2</div>
+    <div class="s-title-block">
+      <h1 class="s-title smaller">Personalization &amp; Agency Transfer · 2</h1>
+      <p class="s-subtitle">음성 · 앰비언트 · 공간 · 알림 · 설정의 재편</p>
+    </div>
+    <div class="s-side-left">CDO</div>
+    <div class="s-side-right">UX TEAM</div>
+
+    <div class="body-wrap">
+      <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; height: 100%;">
+
+        <div style="background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 14px; display: flex; flex-direction: column;">
+          <div style="display: flex; align-items: center; gap: 6px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; padding: 3px 7px; background: rgba(255,255,255,0.1); border-radius: 3px; color: #fff;">H6</span><span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.15em; color: rgba(255,255,255,0.45);">VOICE</span></div>
+          <div style="font-size: 14px; font-weight: 800; margin-top: 10px; letter-spacing: -0.012em; line-height: 1.3;">Bixby 호출 전환</div>
+          <div style="font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 8px; line-height: 1.55;">활성화 후 사용 모델 → <b style="color:#fff;">암묵 상황 인식 + Aurora Ring 항시 응답</b>.</div>
+          <div style="margin-top: 12px; border: 1px dashed rgba(255,255,255,0.22); border-radius: 6px; padding: 10px; min-height: 70px; position: relative; display: flex; align-items: center; justify-content: center;">
+            <div style="position: absolute; inset: 4px; border: 2px solid rgba(255,255,255,0.4); border-radius: 4px;"></div>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: rgba(255,255,255,0.6); letter-spacing: 0.18em;">LISTENING</div>
+          </div>
+          <div style="margin-top: auto; padding-top: 10px; font-size: 9.5px; color: rgba(255,255,255,0.4); line-height: 1.5;">REF · <b style="color: rgba(255,255,255,0.7);">Siri Ribbon · Pixel Ambient · Ray-Ban Aura</b></div>
+        </div>
+
+        <div style="background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 14px; display: flex; flex-direction: column;">
+          <div style="display: flex; align-items: center; gap: 6px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; padding: 3px 7px; background: rgba(255,255,255,0.1); border-radius: 3px; color: #fff;">H7</span><span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.15em; color: rgba(255,255,255,0.45);">AMBIENT</span></div>
+          <div style="font-size: 14px; font-weight: 800; margin-top: 10px; letter-spacing: -0.012em; line-height: 1.3;">갤러리에서 캔버스로</div>
+          <div style="font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 8px; line-height: 1.55;">정적 슬라이드쇼 → <b style="color:#fff;">능동 정보 표면(Intelligent Canvas)</b>의 시간 · 환경광 · 재실 적응.</div>
+          <div style="margin-top: 12px; border: 1px dashed rgba(255,255,255,0.22); border-radius: 6px; padding: 10px; min-height: 70px; font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.05em; color: rgba(255,255,255,0.45); line-height: 1.5;">[ IMG · Ambient 화면<br>시계 + 일정 + 사진 위젯 ]</div>
+          <div style="margin-top: auto; padding-top: 10px; font-size: 9.5px; color: rgba(255,255,255,0.4); line-height: 1.5;">REF · <b style="color: rgba(255,255,255,0.7);">Fire TV Ambient · Nest Hub · Standby</b></div>
+        </div>
+
+        <div style="background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 14px; display: flex; flex-direction: column;">
+          <div style="display: flex; align-items: center; gap: 6px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; padding: 3px 7px; background: rgba(255,255,255,0.1); border-radius: 3px; color: #fff;">H8</span><span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.15em; color: rgba(255,255,255,0.45);">SPATIAL</span></div>
+          <div style="font-size: 14px; font-weight: 800; margin-top: 10px; letter-spacing: -0.012em; line-height: 1.3;">리스트 뷰의 종말</div>
+          <div style="font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 8px; line-height: 1.55;">SmartThings 아이콘 리스트 → <b style="color:#fff;">거실 평면도 기반 공간 뷰 + 자동 그룹 제어</b>.</div>
+          <div style="margin-top: 12px; border: 1px dashed rgba(255,255,255,0.22); border-radius: 6px; padding: 10px; min-height: 70px; position: relative;">
+            <div style="position: absolute; inset: 8px; border: 1px solid rgba(255,255,255,0.25); border-radius: 3px;"></div>
+            <div style="position: absolute; left: 50%; top: 8px; bottom: 8px; width: 1px; background: rgba(255,255,255,0.18);"></div>
+            <div class="dot" style="position: absolute; left: 22%; top: 28%;"></div>
+            <div class="dot" style="position: absolute; left: 32%; top: 60%;"></div>
+            <div class="dot" style="position: absolute; left: 70%; top: 30%;"></div>
+            <div class="dot" style="position: absolute; left: 78%; top: 64%;"></div>
+          </div>
+          <div style="margin-top: auto; padding-top: 10px; font-size: 9.5px; color: rgba(255,255,255,0.4); line-height: 1.5;">REF · <b style="color: rgba(255,255,255,0.7);">Apple Home · Aqara · Loona Floor</b></div>
+        </div>
+
+        <div style="background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 14px; display: flex; flex-direction: column;">
+          <div style="display: flex; align-items: center; gap: 6px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; padding: 3px 7px; background: rgba(255,255,255,0.1); border-radius: 3px; color: #fff;">H9</span><span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.15em; color: rgba(255,255,255,0.45);">NOTIFY</span></div>
+          <div style="font-size: 14px; font-weight: 800; margin-top: 10px; letter-spacing: -0.012em; line-height: 1.3;">단일 토스트의 분화</div>
+          <div style="font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 8px; line-height: 1.55;">단일 토스트 → 시간 민감도별 <b style="color:#fff;">Whisper · Notify · Interrupt</b> 3단계.</div>
+          <div style="margin-top: 12px; border: 1px dashed rgba(255,255,255,0.22); border-radius: 6px; padding: 10px; min-height: 70px; display: flex; flex-direction: column; gap: 6px; justify-content: center;">
+            <div style="height: 6px; background: rgba(255,255,255,0.15); border-radius: 3px;"></div>
+            <div style="height: 8px; background: rgba(255,255,255,0.4); border-radius: 4px;"></div>
+            <div style="height: 12px; background: rgba(255,255,255,0.85); border-radius: 6px;"></div>
+          </div>
+          <div style="margin-top: auto; padding-top: 10px; font-size: 9.5px; color: rgba(255,255,255,0.4); line-height: 1.5;">REF · <b style="color: rgba(255,255,255,0.7);">iOS Live Activity · Now Bar · DND</b></div>
+        </div>
+
+        <div style="background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 14px; display: flex; flex-direction: column;">
+          <div style="display: flex; align-items: center; gap: 6px;"><span style="font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; padding: 3px 7px; background: rgba(255,255,255,0.1); border-radius: 3px; color: #fff;">H10</span><span style="font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.15em; color: rgba(255,255,255,0.45);">SETTINGS</span></div>
+          <div style="font-size: 14px; font-weight: 800; margin-top: 10px; letter-spacing: -0.012em; line-height: 1.3;">수동 설정의 잔존화</div>
+          <div style="font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 8px; line-height: 1.55;">깊은 설정 트리 → AI 자동 최적화가 기본 + <b style="color:#fff;">예외 수동 조정만 잔존</b>.</div>
+          <div style="margin-top: 12px; border: 1px dashed rgba(255,255,255,0.22); border-radius: 6px; padding: 10px; min-height: 70px; display: flex; flex-direction: column; gap: 5px; justify-content: center;">
+            <div style="height: 10px; background: rgba(255,255,255,0.5); border-radius: 3px; border: 1px solid rgba(255,255,255,0.4); padding: 0 6px; font-family: 'JetBrains Mono', monospace; font-size: 7px; color: #0A0A0A; font-weight: 700; line-height: 8px;">AUTO</div>
+            <div style="height: 8px; background: rgba(255,255,255,0.1); border-radius: 3px;"></div>
+            <div style="height: 8px; background: rgba(255,255,255,0.1); border-radius: 3px;"></div>
+          </div>
+          <div style="margin-top: auto; padding-top: 10px; font-size: 9.5px; color: rgba(255,255,255,0.4); line-height: 1.5;">REF · <b style="color: rgba(255,255,255,0.7);">macOS Accessibility · Smart HDR</b></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =================================================
+     P24 · PROJECT TIMELINE
+     ================================================= -->
+<div class="slide-wrap">
+  <span class="slide-label">P24 · PROJECT TIMELINE <span class="tag">DARK</span></span>
+  <div class="slide">
+    <div class="s-pagenum">P24 / 24</div>
+    <div class="s-index">Project Timeline</div>
+    <div class="s-title-block">
+      <h1 class="s-title">Six-Phase Roadmap to Q3 Delivery</h1>
+      <p class="s-subtitle">Phase 03 진행 중 · Final Delivery 2026 Q3</p>
+    </div>
+    <div class="s-side-left">CDO</div>
+    <div class="s-side-right">UX TEAM</div>
+
+    <div class="body-wrap with-callout">
+
+      <!-- Timeline track -->
+      <div style="position: relative; padding: 40px 20px 20px;">
+
+        <!-- baseline -->
+        <div style="position: absolute; left: 40px; right: 40px; top: 80px; height: 1px; background: rgba(255,255,255,0.15);"></div>
+        <!-- progress -->
+        <div style="position: absolute; left: 40px; width: calc((100% - 80px) * 0.42); top: 79px; height: 2px; background: rgba(255,255,255,0.85);"></div>
+
+        <!-- nodes -->
+        <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 0; padding: 0 20px;">
+          <div style="text-align: center; position: relative;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.5);">Apr W1—W3</div>
+            <div style="font-size: 13px; font-weight: 800; margin-top: 6px;">Discover</div>
+            <div style="font-size: 10.5px; color: rgba(255,255,255,0.5); margin-top: 2px;">리서치</div>
+            <div style="margin: 18px auto 0; width: 18px; height: 18px; border-radius: 50%; background: #fff;"></div>
+            <div style="margin-top: 14px; font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.15em; color: rgba(255,255,255,0.4);">// DONE</div>
+            <div style="margin-top: 4px; font-size: 10.5px; color: rgba(255,255,255,0.55);">자사·경쟁사 정리</div>
+          </div>
+          <div style="text-align: center; position: relative;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.5);">Apr W4—May W1</div>
+            <div style="font-size: 13px; font-weight: 800; margin-top: 6px;">Synthesize</div>
+            <div style="font-size: 10.5px; color: rgba(255,255,255,0.5); margin-top: 2px;">인사이트</div>
+            <div style="margin: 18px auto 0; width: 18px; height: 18px; border-radius: 50%; background: #fff;"></div>
+            <div style="margin-top: 14px; font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.15em; color: rgba(255,255,255,0.4);">// DONE</div>
+            <div style="margin-top: 4px; font-size: 10.5px; color: rgba(255,255,255,0.55);">화이트 스페이스 정렬</div>
+          </div>
+          <div style="text-align: center; position: relative;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; color: #fff;">May W2—W3</div>
+            <div style="font-size: 13px; font-weight: 800; margin-top: 6px; color: #fff;">Hypothesize</div>
+            <div style="font-size: 10.5px; color: rgba(255,255,255,0.7); margin-top: 2px;">가설 정렬</div>
+            <div style="margin: 14px auto 0; width: 26px; height: 26px; border-radius: 50%; background: #fff; border: 4px solid rgba(255,255,255,0.25); position: relative;">
+              <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 800; color: #0A0A0A;">NOW</div>
+            </div>
+            <div style="margin-top: 12px; font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.15em; color: #fff; font-weight: 700;">// IN PROGRESS</div>
+            <div style="margin-top: 4px; font-size: 10.5px; color: rgba(255,255,255,0.85);">10 가설 컨펌</div>
+          </div>
+          <div style="text-align: center; position: relative;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.5);">May W4—Jun W2</div>
+            <div style="font-size: 13px; font-weight: 800; margin-top: 6px;">Concept</div>
+            <div style="font-size: 10.5px; color: rgba(255,255,255,0.5); margin-top: 2px;">Theme 도출</div>
+            <div style="margin: 18px auto 0; width: 18px; height: 18px; border-radius: 50%; background: transparent; border: 1.5px solid rgba(255,255,255,0.4);"></div>
+            <div style="margin-top: 14px; font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.15em; color: rgba(255,255,255,0.4);">// PLANNED</div>
+            <div style="margin-top: 4px; font-size: 10.5px; color: rgba(255,255,255,0.55);">Theme 3안 + 무드보드</div>
+          </div>
+          <div style="text-align: center; position: relative;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.5);">Jun W3—Aug W2</div>
+            <div style="font-size: 13px; font-weight: 800; margin-top: 6px;">Design</div>
+            <div style="font-size: 10.5px; color: rgba(255,255,255,0.5); margin-top: 2px;">키비주얼·스크린</div>
+            <div style="margin: 18px auto 0; width: 18px; height: 18px; border-radius: 50%; background: transparent; border: 1.5px solid rgba(255,255,255,0.4);"></div>
+            <div style="margin-top: 14px; font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.15em; color: rgba(255,255,255,0.4);">// PLANNED</div>
+            <div style="margin-top: 4px; font-size: 10.5px; color: rgba(255,255,255,0.55);">Key Visual + 5 스크린</div>
+          </div>
+          <div style="text-align: center; position: relative;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.5);">Aug W3—Sep W2</div>
+            <div style="font-size: 13px; font-weight: 800; margin-top: 6px;">Validate</div>
+            <div style="font-size: 10.5px; color: rgba(255,255,255,0.5); margin-top: 2px;">검증 · 반복</div>
+            <div style="margin: 18px auto 0; width: 18px; height: 18px; border-radius: 50%; background: transparent; border: 1.5px solid rgba(255,255,255,0.4);"></div>
+            <div style="margin-top: 14px; font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.15em; color: rgba(255,255,255,0.4);">// PLANNED</div>
+            <div style="margin-top: 4px; font-size: 10.5px; color: rgba(255,255,255,0.55);">가설 vs 산출물 검증</div>
+          </div>
+        </div>
+
+        <!-- Final delivery tag -->
+        <div style="margin-top: 26px; display: flex; justify-content: flex-end;">
+          <div style="padding: 12px 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; display: flex; align-items: center; gap: 18px;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.25em; color: rgba(255,255,255,0.65); font-weight: 700;">// FINAL DELIVERY</div>
+            <div style="font-size: 14px; font-weight: 800;">Sep 2026 · Q3</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="callout">
+      <div class="callout-label">// NEXT STEPS</div>
+      <div class="callout-text">본 보고 직후 — <b>① 10개 가설의 채택·기각·합성 결정</b> · <b>② AI-Era Values 워크숍 (3 Pillar 정렬 + 자매팀 정합)</b> · <b>③ Phase 04 진입 (Theme 3안 + 무드보드 착수)</b></div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
