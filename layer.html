@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Samsung TV One UI · Page 08 (Redesign v4)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #1A1F2E;
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: -0.01em;
+  }
+  body { padding: 40px 0; }
+  .slide {
+    width: 1280px;
+    height: 720px;
+    margin: 0 auto;
+    background: #050608;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.35);
+    color: #fff;
+  }
+
+  /* Top header */
+  .brand-mark {
+    position: absolute; left: 36px; top: 28px;
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    color: #64748B; font-weight: 600;
+  }
+  .section-index {
+    position: absolute; right: 36px; top: 28px;
+    font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+    color: #4ECDC4; font-weight: 600;
+  }
+
+  /* Title block */
+  .title-block {
+    position: absolute; top: 60px; left: 50px; right: 50px;
+  }
+  .title-en {
+    font-size: 14px;
+    letter-spacing: 0.18em;
+    color: #4ECDC4;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  .title-en .sep { color: rgba(255,255,255,0.3); margin: 0 8px; font-weight: 400; }
+  .title-en .accent { color: #FFB86B; }
+  .title-divider {
+    margin-top: 12px;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 80%);
+  }
+  .title-ko {
+    margin-top: 14px;
+    font-size: 14px;
+    color: rgba(255,255,255,0.7);
+    font-weight: 400;
+    line-height: 1.6;
+    letter-spacing: -0.005em;
+  }
+  .title-ko b { color: #fff; font-weight: 600; }
+
+  /* Page number / footer */
+  .page-num {
+    position: absolute; right: 36px; bottom: 20px;
+    font-size: 11px; letter-spacing: 2px;
+    color: rgba(255,255,255,0.4);
+    font-variant-numeric: tabular-nums;
+  }
+  .footer-mark {
+    position: absolute; left: 36px; bottom: 20px;
+    font-size: 11px; letter-spacing: 3px;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+
+<div class="slide">
+  <div class="brand-mark">SAMSUNG TV ONE UI · AI ERA</div>
+  <div class="section-index">02 · VISUAL STRATEGY</div>
+
+  <!-- TITLE BLOCK -->
+  <div class="title-block">
+    <div class="title-en">
+      ONE UI TV <span class="sep">·</span> VISUAL STRATEGY FRAMEWORK <span class="accent">v3</span> <span class="sep">·</span> with TV MEDIUM LENS
+    </div>
+    <div class="title-divider"></div>
+    <div class="title-ko">
+      <b>3-Layer 비주얼 전략</b>을 <b>TV Medium Lens</b>로 통과시켜, 거실 환경에 정렬된 적용 영역으로 펼친다.<br>
+      L1의 두 원칙군이 합쳐져 L2 비주얼 언어가 되고, L2가 다시 L3의 4개 적용 영역으로 흐른다.
+    </div>
+  </div>
+
+  <!-- ============================================
+       LENS · TV Medium Optimization (grey pillar)
+       ============================================ -->
+  <div style="position:absolute; left:50px; top:188px; width:232px; height:472px;
+              background:#5B6573; border-radius:4px; padding:18px 16px 14px; color:#fff;
+              display:flex; flex-direction:column;">
+    <div style="font-size:9.5px; letter-spacing:2.5px; font-weight:700; color:rgba(255,255,255,0.7); text-transform:uppercase;">LENS · 매체 렌즈</div>
+    <div style="font-size:20px; font-weight:700; line-height:1.2; margin-top:6px;">TV Medium<br>Optimization</div>
+    <div style="font-size:10.5px; line-height:1.55; color:rgba(255,255,255,0.65); margin-top:10px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.15); margin-bottom:10px;">
+      매체의 주어진 조건<br>— 가치가 아니라 현실
+    </div>
+    <div style="display:flex; flex-direction:column; gap:7px; flex:1;">
+      <div style="background:rgba(255,255,255,0.12); border-radius:5px; padding:8px 11px; flex:1; display:flex; flex-direction:column; justify-content:center;">
+        <div style="font-size:10px; letter-spacing:1.8px; color:#fff; font-weight:700;">LARGE DISPLAY</div>
+        <div style="font-size:9.5px; color:rgba(255,255,255,0.6); margin-top:2px;">2.5–4m · 4K+ · 저밀도</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.12); border-radius:5px; padding:8px 11px; flex:1; display:flex; flex-direction:column; justify-content:center;">
+        <div style="font-size:10px; letter-spacing:1.8px; color:#fff; font-weight:700;">CONTROLLER</div>
+        <div style="font-size:9.5px; color:rgba(255,255,255,0.6); margin-top:2px;">리모컨 · 음성 · 제스처</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.12); border-radius:5px; padding:8px 11px; flex:1; display:flex; flex-direction:column; justify-content:center;">
+        <div style="font-size:10px; letter-spacing:1.8px; color:#fff; font-weight:700;">LEAN-BACK</div>
+        <div style="font-size:9.5px; color:rgba(255,255,255,0.6); margin-top:2px;">수동적 · 장시간 시청</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.12); border-radius:5px; padding:8px 11px; flex:1; display:flex; flex-direction:column; justify-content:center;">
+        <div style="font-size:10px; letter-spacing:1.8px; color:#fff; font-weight:700;">SHARED SCREEN</div>
+        <div style="font-size:9.5px; color:rgba(255,255,255,0.6); margin-top:2px;">멀티 유저 · 가족</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.12); border-radius:5px; padding:8px 11px; flex:1; display:flex; flex-direction:column; justify-content:center;">
+        <div style="font-size:10px; letter-spacing:1.8px; color:#fff; font-weight:700;">AMBIENT CONTEXT</div>
+        <div style="font-size:9.5px; color:rgba(255,255,255,0.6); margin-top:2px;">거실 조도 · 공간</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================
+       L3 · OUR APPLICATION DOMAIN (top, cyan→blue gradient — like Trustworthy box)
+       ============================================ -->
+  <div style="position:absolute; left:308px; top:188px; width:922px; height:144px;
+              background:linear-gradient(135deg, #4ECDC4 0%, #2185D5 100%); border-radius:4px;
+              padding:16px 22px; color:#fff;">
+    <div style="font-size:9.5px; letter-spacing:2.5px; font-weight:700; color:rgba(255,255,255,0.88); text-transform:uppercase;">L3 · OUR APPLICATION DOMAIN</div>
+    <div style="font-size:19px; font-weight:700; line-height:1.25; margin-top:6px; letter-spacing:-0.01em;">TV-Specific AI Application — 우리가 책임지는 영역</div>
+    <div style="margin-top:10px; display:grid; grid-template-columns:repeat(4, 1fr); gap:8px;">
+      <div style="background:#fff; border-radius:4px; padding:9px 8px; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+        <div style="font-size:13px; font-weight:800; color:#2185D5;">①</div>
+        <div style="font-size:11px; font-weight:700; color:#0B1426; text-align:center; line-height:1.3; margin-top:2px;">가변형 레이아웃<br><span style="font-size:9.5px; color:#64748B; font-weight:400;">Adaptive Layout</span></div>
+      </div>
+      <div style="background:#fff; border-radius:4px; padding:9px 8px; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+        <div style="font-size:13px; font-weight:800; color:#2185D5;">②</div>
+        <div style="font-size:11px; font-weight:700; color:#0B1426; text-align:center; line-height:1.3; margin-top:2px;">AI 생성 콘텐츠 카드<br><span style="font-size:9.5px; color:#64748B; font-weight:400;">Generated Card Pattern</span></div>
+      </div>
+      <div style="background:#fff; border-radius:4px; padding:9px 8px; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+        <div style="font-size:13px; font-weight:800; color:#2185D5;">③</div>
+        <div style="font-size:11px; font-weight:700; color:#0B1426; text-align:center; line-height:1.3; margin-top:2px;">TV 컨텍스트 응답<br><span style="font-size:9.5px; color:#64748B; font-weight:400;">거리·조도·공유</span></div>
+      </div>
+      <div style="background:#fff; border-radius:4px; padding:9px 8px; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+        <div style="font-size:13px; font-weight:800; color:#2185D5;">④</div>
+        <div style="font-size:11px; font-weight:700; color:#0B1426; text-align:center; line-height:1.3; margin-top:2px;">AI Visual Cue 통합<br><span style="font-size:9.5px; color:#64748B; font-weight:400;">받아서 적용</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================
+       L2 · VISUAL LANGUAGE (middle, green — like Fact Verification Model)
+       ============================================ -->
+  <div style="position:absolute; left:308px; top:348px; width:922px; height:114px;
+              background:#1DD3A0; border-radius:4px; padding:16px 22px; color:#062B22;">
+    <div style="font-size:9.5px; letter-spacing:2.5px; font-weight:700; color:rgba(6,43,34,0.65); text-transform:uppercase;">L2 · VISUAL LANGUAGE</div>
+    <div style="font-size:19px; font-weight:700; line-height:1.25; margin-top:5px; letter-spacing:-0.01em;">Theme · Tone · Material · Motion</div>
+    <div style="font-size:11.5px; line-height:1.55; color:rgba(6,43,34,0.78); margin-top:8px;">
+      L1의 두 원칙군이 합쳐져 만들어지는 한 줄의 비주얼 약속과 표현 시스템<br>
+      — <b style="color:#062B22;">"Quiet Intelligence"</b> 같은 컨셉이 컬러·소재·라이트·모션 어휘를 통제
+    </div>
+  </div>
+
+  <!-- ============================================
+       L1A · LEGACY (bottom-left, purple→teal gradient — like RLH2F)
+       ============================================ -->
+  <div style="position:absolute; left:308px; top:478px; width:451px; height:144px;
+              background:linear-gradient(110deg, #7B61FF 0%, #4ECDC4 100%); border-radius:4px;
+              padding:16px 22px; color:#fff;">
+    <div style="font-size:9.5px; letter-spacing:2.5px; font-weight:700; color:rgba(255,255,255,0.88); text-transform:uppercase;">L1A · LEGACY 계승</div>
+    <div style="font-size:19px; font-weight:700; line-height:1.25; margin-top:5px; letter-spacing:-0.01em;">One UI Visual Principles</div>
+    <div style="font-size:11.5px; line-height:1.6; color:rgba(255,255,255,0.95); margin-top:8px;">
+      Focus · Hierarchy · Calm<br>
+      Continuity · Consistency<br>
+      <span style="color:rgba(255,255,255,0.75); font-size:11px;">One UI 브랜드 일관성 시각 원칙</span>
+    </div>
+  </div>
+  <div style="position:absolute; left:308px; top:632px; width:451px; text-align:center;
+              font-size:11px; letter-spacing:3px; font-weight:700; color:#7B61FF;">
+    + &nbsp;INHERIT
+  </div>
+
+  <!-- ============================================
+       L1B · AI-ERA (bottom-right, amber→orange gradient — contrasting pair)
+       ============================================ -->
+  <div style="position:absolute; left:779px; top:478px; width:451px; height:144px;
+              background:linear-gradient(110deg, #FFB86B 0%, #FF7E5F 100%); border-radius:4px;
+              padding:16px 22px; color:#3D1A0A;">
+    <div style="font-size:9.5px; letter-spacing:2.5px; font-weight:700; color:rgba(61,26,10,0.7); text-transform:uppercase;">L1B · AI-ERA 재정의</div>
+    <div style="font-size:19px; font-weight:700; line-height:1.25; margin-top:5px; letter-spacing:-0.01em; color:#3D1A0A;">AI-Era Design Values</div>
+    <div style="font-size:11.5px; line-height:1.6; color:rgba(61,26,10,0.85); margin-top:8px;">
+      Ambience · Adaptivity · Conversation<br>
+      Trust · Co-creation<br>
+      <span style="color:rgba(61,26,10,0.65); font-size:11px;">AI 시대에 새로 더해지는 가치</span>
+    </div>
+  </div>
+  <div style="position:absolute; left:779px; top:632px; width:451px; text-align:center;
+              font-size:11px; letter-spacing:3px; font-weight:700; color:#FFB86B;">
+    + &nbsp;REDEFINE
+  </div>
+
+  <!-- ============================================
+       Connector arrows (white, like reference)
+       ============================================ -->
+  <!-- LENS → L3 -->
+  <svg style="position:absolute; left:282px; top:253px; width:30px; height:14px;" viewBox="0 0 30 14">
+    <line x1="0" y1="7" x2="22" y2="7" stroke="rgba(255,255,255,0.85)" stroke-width="1.5"/>
+    <polygon points="22,3 30,7 22,11" fill="rgba(255,255,255,0.85)"/>
+  </svg>
+  <!-- LENS → L2 -->
+  <svg style="position:absolute; left:282px; top:398px; width:30px; height:14px;" viewBox="0 0 30 14">
+    <line x1="0" y1="7" x2="22" y2="7" stroke="rgba(255,255,255,0.85)" stroke-width="1.5"/>
+    <polygon points="22,3 30,7 22,11" fill="rgba(255,255,255,0.85)"/>
+  </svg>
+  <!-- LENS → L1A -->
+  <svg style="position:absolute; left:282px; top:543px; width:30px; height:14px;" viewBox="0 0 30 14">
+    <line x1="0" y1="7" x2="22" y2="7" stroke="rgba(255,255,255,0.85)" stroke-width="1.5"/>
+    <polygon points="22,3 30,7 22,11" fill="rgba(255,255,255,0.85)"/>
+  </svg>
+
+  <!-- L1A → L2 (upward) -->
+  <svg style="position:absolute; left:527px; top:458px; width:14px; height:22px;" viewBox="0 0 14 22">
+    <line x1="7" y1="22" x2="7" y2="8" stroke="rgba(255,255,255,0.85)" stroke-width="1.5"/>
+    <polygon points="3,8 7,0 11,8" fill="rgba(255,255,255,0.85)"/>
+  </svg>
+  <!-- L1B → L2 (upward) -->
+  <svg style="position:absolute; left:998px; top:458px; width:14px; height:22px;" viewBox="0 0 14 22">
+    <line x1="7" y1="22" x2="7" y2="8" stroke="rgba(255,255,255,0.85)" stroke-width="1.5"/>
+    <polygon points="3,8 7,0 11,8" fill="rgba(255,255,255,0.85)"/>
+  </svg>
+
+  <!-- L2 → L3 (upward, on the right side) -->
+  <svg style="position:absolute; left:769px; top:328px; width:14px; height:22px;" viewBox="0 0 14 22">
+    <line x1="7" y1="22" x2="7" y2="8" stroke="rgba(255,255,255,0.55)" stroke-width="1.4" stroke-dasharray="4,3"/>
+    <polygon points="3,8 7,0 11,8" fill="rgba(255,255,255,0.7)"/>
+  </svg>
+
+  <div class="footer-mark">INTERIM REPORT · 01</div>
+  <div class="page-num">08 / 22</div>
+</div>
+
+</body>
+</html>
