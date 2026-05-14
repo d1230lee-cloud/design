@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Visual Trend Map · Established AI and Emerging TV</title>
+<style>
+:root {
+  --bg: #000000;
+  --text: #FFFFFF;
+  --text-2: #B6BDCC;
+  --text-3: #7A8194;
+  --text-4: #4E5466;
+  --text-5: #2E3340;
+
+  /* Two point colors */
+  --blue: #5B9CFF;
+  --blue-on: #5B9CFF;
+  --blue-off: rgba(91, 156, 255, 0.20);
+
+  --lime: #D4FF6B;
+  --lime-on: #D4FF6B;
+  --lime-off: rgba(212, 255, 107, 0.18);
+}
+* { box-sizing: border-box; margin: 0; padding: 0;}
+html, body {
+  background: var(--bg); color: var(--text);
+  font-family: 'Pretendard','Inter','Segoe UI',-apple-system,system-ui,sans-serif;
+  -webkit-font-smoothing: antialiased; line-height: 1.5;
+}
+.deck { padding: 32px 0 60px; display: flex; flex-direction: column; align-items: center;}
+
+.slide {
+  width: 1280px; height: 720px;
+  background: var(--bg);
+  padding: 52px 64px 44px;
+  position: relative; overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.slide .s-num {
+  position: absolute; top: 32px; right: 40px;
+  color: var(--text-4); font-size: 11px; letter-spacing: 0.18em; font-weight: 700;
+}
+.slide .s-tag {
+  display: inline-block;
+  font-size: 10px; font-weight: 800; letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 14px;
+}
+.slide h1 {
+  font-size: 36px; line-height: 1.15; letter-spacing: -0.022em; font-weight: 800;
+}
+.slide h1 .blue-em { color: var(--blue);}
+.slide h1 .lime-em { color: var(--lime);}
+.slide h1 .dot-sep { color: var(--text-4); margin: 0 8px; font-weight: 400;}
+.slide .sub {
+  font-size: 15px; color: var(--text-2); margin-top: 12px; line-height: 1.55; font-weight: 500;
+}
+.slide .sub .blue-em { color: var(--blue); font-weight: 700;}
+.slide .sub .lime-em { color: var(--lime); font-weight: 700;}
+
+.s-head { margin-bottom: 28px; flex-shrink: 0;}
+.s-body { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 26px;}
+
+/* Caption — no box */
+.caption {
+  display: flex; align-items: center; gap: 14px;
+  font-size: 12px; color: var(--text-2);
+  flex-shrink: 0;
+}
+.caption .cap-tag {
+  font-size: 9.5px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase;
+  padding: 4px 11px; border-radius: 4px;
+  background: var(--blue); color: #000;
+}
+.caption .cap-msg { font-weight: 600; color: var(--text);}
+.caption .cap-spacer { flex: 1;}
+.caption .cap-right {
+  display: inline-flex; align-items: center; gap: 14px;
+  font-size: 10.5px; color: var(--text-3);
+}
+.caption .cap-right .cr-label {
+  font-size: 9px; color: var(--text-4); font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase;
+}
+.caption .cap-right .cr-item {
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.caption .cap-right .cr-item .cr-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+}
+.caption .cap-right .cr-item .cr-dot.blue { background: var(--blue);}
+.caption .cap-right .cr-item .cr-dot.lime { background: var(--lime);}
+.caption .cap-right .cr-sep { color: var(--text-5);}
+
+/* Matrix — pure grid, no boxes */
+.matrix {
+  flex: 1; min-height: 0;
+  display: grid;
+  grid-template-columns: 130px 1fr 1fr 1fr;
+  grid-template-rows: auto 1fr 1fr;
+  column-gap: 28px;
+  row-gap: 24px;
+}
+
+.cell-empty { /* corner */ }
+
+.col-h {
+  padding-bottom: 4px;
+}
+.col-h .name {
+  font-size: 13px; font-weight: 800; letter-spacing: 0.24em;
+  color: var(--text);
+}
+.col-h .period {
+  font-size: 10px; color: var(--text-3); margin-top: 5px;
+  letter-spacing: 0.04em;
+}
+
+.row-label {
+  display: flex; flex-direction: column; justify-content: flex-start;
+  padding-top: 4px;
+}
+.row-label .name {
+  font-size: 14px; font-weight: 800; letter-spacing: -0.005em;
+}
+.row-label.ai .name { color: var(--blue);}
+.row-label.tv .name { color: var(--lime);}
+.row-label .count {
+  font-size: 10px; color: var(--text-3); margin-top: 4px;
+  letter-spacing: 0.05em;
+}
+
+.cell {
+  display: flex; flex-direction: column; gap: 9px;
+}
+
+.cell .e-label {
+  font-size: 10px; letter-spacing: 0.14em; font-weight: 800; text-transform: uppercase;
+  margin-bottom: 0;
+}
+.cell .e-label.blue { color: var(--blue);}
+.cell .e-label.lime { color: var(--lime);}
+
+.cell .chips {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  align-content: flex-start;
+}
+
+/* Chips — solid only */
+.chip {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 6px 11px;
+  border-radius: 6px;
+  font-size: 11.5px; font-weight: 700;
+  letter-spacing: -0.005em;
+}
+.chip.blue-on { background: var(--blue-on); color: #000;}
+.chip.blue-off { background: var(--blue-off); color: rgba(255, 255, 255, 0.88);}
+.chip.lime-on { background: var(--lime-on); color: #000;}
+.chip.lime-off { background: var(--lime-off); color: rgba(255, 255, 255, 0.88);}
+
+.chip .w {
+  font-size: 9px; font-weight: 700;
+  letter-spacing: 0.05em; text-transform: uppercase;
+}
+.chip.blue-on .w, .chip.lime-on .w { color: rgba(0, 0, 0, 0.55);}
+.chip.blue-off .w, .chip.lime-off .w { color: rgba(255, 255, 255, 0.48);}
+
+/* Key insight — no boxes */
+.insights {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 36px;
+  flex-shrink: 0;
+}
+.insight {
+  display: flex; gap: 14px; align-items: flex-start;
+}
+.insight .icon {
+  width: 34px; height: 34px; border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 800; flex-shrink: 0;
+}
+.insight.blue .icon { background: var(--blue); color: #000;}
+.insight.lime .icon { background: var(--lime); color: #000;}
+
+.insight .body { flex: 1; min-width: 0;}
+.insight .tag {
+  font-size: 9px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.insight.blue .tag { color: var(--blue);}
+.insight.lime .tag { color: var(--lime);}
+.insight h4 {
+  font-size: 14px; font-weight: 800; color: var(--text);
+  margin-bottom: 4px; letter-spacing: -0.01em;
+}
+.insight p {
+  font-size: 11.5px; line-height: 1.55; color: var(--text-2);
+}
+.insight p strong { color: var(--text); font-weight: 700;}
+.insight.blue p strong.em { color: var(--blue);}
+.insight.lime p strong.em { color: var(--lime);}
+
+.slide .s-foot {
+  position: absolute; bottom: 22px; left: 64px; right: 64px;
+  padding-top: 12px;
+  font-size: 10px; color: var(--text-5);
+  display: flex; justify-content: space-between;
+  letter-spacing: 0.06em;
+}
+.slide .s-foot .brand { letter-spacing: 0.18em; color: var(--text-4);}
+
+@media print { body { background: #fff;} .deck { padding: 0;} .slide { page-break-after: always;}}
+</style>
+</head>
+<body>
+<div class="deck">
+
+  <section class="slide">
+    <div class="s-num">02 · final</div>
+
+    <div class="s-head">
+      <span class="s-tag">Research Frame</span>
+      <h1>Visual Trend Map<span class="dot-sep">·</span><span class="blue-em">Established AI</span> and <span class="lime-em">Emerging TV</span></h1>
+      <p class="sub">
+        AI는 <strong class="blue-em">자리 잡은 비주얼</strong>, TV는 <strong class="lime-em">이제 등장하는 비주얼</strong>
+      </p>
+    </div>
+
+    <div class="s-body">
+
+      <div class="caption">
+        <span class="cap-tag">Frame</span>
+        <span class="cap-msg">WHERE × WHAT × WHEN — 3축 기반 트렌드 도출</span>
+        <span class="cap-spacer"></span>
+        <span class="cap-right">
+          <span class="cr-label">읽는 법</span>
+          <span class="cr-item"><span class="cr-dot blue"></span>AI Visual</span>
+          <span class="cr-item"><span class="cr-dot lime"></span>TV · 대화면</span>
+          <span class="cr-sep">|</span>
+          <span style="font-size: 10px; color: var(--text-4);">SaaS · OS · App · Gen · HW = WHERE</span>
+        </span>
+      </div>
+
+      <div class="matrix">
+
+        <div class="cell-empty"></div>
+        <div class="col-h">
+          <div class="name">NOW</div>
+          <div class="period">이미 표준</div>
+        </div>
+        <div class="col-h">
+          <div class="name">NEXT</div>
+          <div class="period">1~2y 부상</div>
+        </div>
+        <div class="col-h">
+          <div class="name">FAR</div>
+          <div class="period">3~5y 등장</div>
+        </div>
+
+        <!-- AI row -->
+        <div class="row-label ai">
+          <div class="name">AI Visual</div>
+          <div class="count">14 patterns</div>
+        </div>
+        <div class="cell">
+          <div class="e-label blue">✦ Established · 자리 잡은 비주얼</div>
+          <div class="chips">
+            <span class="chip blue-on"><span class="n">Star Mark</span><span class="w">SaaS</span></span>
+            <span class="chip blue-on"><span class="n">Aurora</span><span class="w">OS</span></span>
+            <span class="chip blue-on"><span class="n">Thinking</span><span class="w">SaaS</span></span>
+            <span class="chip blue-on"><span class="n">Chat</span><span class="w">SaaS</span></span>
+            <span class="chip blue-on"><span class="n">Sidepanel</span><span class="w">OS</span></span>
+            <span class="chip blue-on"><span class="n">Inline AI</span><span class="w">App</span></span>
+            <span class="chip blue-on"><span class="n">Source</span><span class="w">SaaS</span></span>
+            <span class="chip blue-on"><span class="n">Multimodal Input</span><span class="w">SaaS</span></span>
+          </div>
+        </div>
+        <div class="cell">
+          <div class="chips" style="margin-top: 18px;">
+            <span class="chip blue-off"><span class="n">Artifact</span><span class="w">SaaS</span></span>
+            <span class="chip blue-off"><span class="n">Generative Grid</span><span class="w">Gen</span></span>
+            <span class="chip blue-off"><span class="n">Agent Process</span><span class="w">SaaS</span></span>
+            <span class="chip blue-off"><span class="n">Liquid Glass</span><span class="w">OS</span></span>
+            <span class="chip blue-off"><span class="n">Edge Glow</span><span class="w">OS</span></span>
+          </div>
+        </div>
+        <div class="cell">
+          <div class="chips" style="margin-top: 18px;">
+            <span class="chip blue-off"><span class="n">Computer Use</span><span class="w">SaaS</span></span>
+          </div>
+        </div>
+
+        <!-- TV row -->
+        <div class="row-label tv">
+          <div class="name">TV · 대화면</div>
+          <div class="count">7 patterns</div>
+        </div>
+        <div class="cell">
+          <div class="chips" style="margin-top: 18px;">
+            <span class="chip lime-off"><span class="n">10ft Hierarchy</span><span class="w">HW</span></span>
+            <span class="chip lime-off"><span class="n">Cinematic Hero</span><span class="w">HW</span></span>
+          </div>
+        </div>
+        <div class="cell">
+          <div class="chips" style="margin-top: 18px;">
+            <span class="chip lime-off"><span class="n">Spatial · Floating</span><span class="w">HW</span></span>
+            <span class="chip lime-off"><span class="n">Ambient · Living Wall</span><span class="w">HW</span></span>
+          </div>
+        </div>
+        <div class="cell">
+          <div class="e-label lime">★ Emerging · 이제 등장하는 비주얼</div>
+          <div class="chips">
+            <span class="chip lime-on"><span class="n">GenVideo Live</span><span class="w">Gen</span></span>
+            <span class="chip lime-on"><span class="n">Agentic OS Shell</span><span class="w">HW</span></span>
+            <span class="chip lime-on"><span class="n">Vertical × Horizontal</span><span class="w">Gen</span></span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Key insights — no boxes -->
+      <div class="insights">
+        <div class="insight blue">
+          <div class="icon">✦</div>
+          <div class="body">
+            <div class="tag">NOW × AI · Established</div>
+            <h4>자리 잡은 비주얼의 영역</h4>
+            <p><strong>8개 패턴</strong>이 산업 공통 시각 언어로 정착. ChatGPT·Claude·Gemini·Apple Intelligence가 같은 비주얼 문법으로 수렴 — Samsung은 <strong class="em">합류 · 변형 · 거부의 의사결정</strong>이 시급한 영역.</p>
+          </div>
+        </div>
+        <div class="insight lime">
+          <div class="icon">★</div>
+          <div class="body">
+            <div class="tag">FAR × TV · Emerging</div>
+            <h4>이제 등장하는 비주얼의 영역</h4>
+            <p><strong>3개 비주얼</strong>이 표면화되기 시작(GenVideo Live · Agentic OS Shell · Vert×Horz) — Samsung이 지금 정의하면 <strong class="em">N+2~3년 시점의 시각 언어를 선점</strong> 가능한 영역.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="s-foot">
+      <span class="brand">SAMSUNG TV · ONE UI NEXT</span>
+      <span>Visual Trend Map · 21 patterns</span>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>
