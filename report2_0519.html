@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Living Light v8 · AI-Native Visual Strategy (Curated Cases)</title>
+<style>
+  :root{
+    --bg:#050810;--bg-2:#0A1024;--bg-3:#0F1830;
+    --line:rgba(255,255,255,.07);--line-strong:rgba(255,255,255,.16);
+    --text:#E8ECF3;--text-mute:#8C96AC;--text-soft:#C0C7D6;
+    --blue:#2D6AFF;--blue-bright:#7AAFFF;--blue-pale:#BFD9FF;
+    --green:#7FFFB6;--orange:#FF8A5C;
+    --light-grad: linear-gradient(120deg, #2D6AFF 0%, #7AAFFF 100%);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--text);font-family:'Inter','Pretendard','SamsungOne',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased;letter-spacing:-.005em}
+  body{overflow-x:hidden}
+  ::selection{background:rgba(45,106,255,.45)}
+
+  .light-bg{position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:radial-gradient(ellipse 1200px 600px at 15% -10%, rgba(45,106,255,.22), transparent 60%),
+               radial-gradient(ellipse 1000px 500px at 90% 110%, rgba(45,106,255,.12), transparent 60%);
+    filter:blur(40px)}
+  .grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.035;mix-blend-mode:overlay;
+    background-image:radial-gradient(rgba(255,255,255,.6) 1px, transparent 1px);background-size:3px 3px}
+
+  main{position:relative;z-index:2}
+  section.slide{min-height:100vh;padding:64px 5vw;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+  section.slide::before{content:attr(data-index);position:absolute;top:24px;right:5vw;font-size:11px;letter-spacing:.3em;color:var(--text-mute);font-weight:500}
+  section.slide::after{content:attr(data-section);position:absolute;top:24px;left:5vw;font-size:11px;letter-spacing:.3em;color:var(--text-mute);font-weight:500}
+
+  .eyebrow{display:inline-block;font-size:11px;letter-spacing:.32em;color:var(--text-mute);text-transform:uppercase;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--line-strong)}
+  h1{font-size:clamp(40px,5vw,72px);line-height:1.04;font-weight:700;letter-spacing:-.025em;margin-bottom:18px}
+  h2{font-size:clamp(26px,2.8vw,38px);line-height:1.12;font-weight:600;letter-spacing:-.02em;margin-bottom:12px}
+  h3{font-size:17px;line-height:1.2;font-weight:600;letter-spacing:-.015em;margin-bottom:8px}
+  p{font-size:14px;color:var(--text-soft)}
+  .lead{font-size:clamp(13.5px,1.15vw,16px);color:var(--text-soft);max-width:1020px;line-height:1.55}
+  .small{font-size:11.5px;color:var(--text-mute);line-height:1.55}
+  .mono{font-family:'JetBrains Mono','SF Mono',ui-monospace,monospace;font-size:11px;color:var(--text-mute);letter-spacing:.04em}
+  .accent{color:var(--blue-bright)}
+  .blue-text{background:var(--light-grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+
+  .pill{display:inline-block;padding:5px 12px;border-radius:99px;border:1px solid var(--line-strong);font-size:11px;letter-spacing:.15em;color:var(--text-soft);text-transform:uppercase}
+  .pill.solid{background:var(--blue);border:none;color:#fff;font-weight:600}
+  .pill.kw{background:rgba(45,106,255,.1);border:1px solid rgba(45,106,255,.35);color:var(--blue-bright);font-weight:500;margin-right:5px;margin-bottom:5px;font-size:10px}
+
+  .part-opener{text-align:center;margin:auto;max-width:780px}
+
+  /* Axes */
+  .axes{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:28px}
+  @media (max-width:920px){.axes{grid-template-columns:1fr}}
+  .axis{padding:22px 18px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.012);display:flex;flex-direction:column;position:relative;overflow:hidden}
+  .axis::before{content:"";position:absolute;left:0;top:0;width:100%;height:3px;background:var(--blue);opacity:.9}
+  .axis .ax-tag{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--blue-bright);letter-spacing:.15em;margin-bottom:6px}
+  .axis .ax-title{font-size:19px;font-weight:600;color:var(--text);letter-spacing:-.01em;margin-bottom:8px}
+  .axis .ax-cond{font-size:12px;color:var(--text-mute);letter-spacing:.04em;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--line);line-height:1.55}
+  .axis .ax-label{font-size:9.5px;letter-spacing:.2em;color:var(--text-mute);text-transform:uppercase;margin-bottom:8px}
+  .axis .ax-cases{font-size:11px;color:var(--text-soft);font-family:'JetBrains Mono',monospace;letter-spacing:.05em;line-height:1.7}
+  .axis .ax-arrow{margin-top:auto;padding-top:12px;border-top:1px solid var(--line);font-size:9.5px;color:var(--blue-bright);letter-spacing:.15em;text-align:center;font-weight:600}
+
+  /* Detail axis header */
+  .axis-header{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;padding-bottom:18px;border-bottom:1px solid var(--line-strong);margin-bottom:24px;margin-top:14px}
+  .axis-header-left{flex:1;min-width:280px}
+  .axis-num{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.3em;color:var(--blue-bright);margin-bottom:8px;text-transform:uppercase}
+  .axis-cond{font-size:13px;color:var(--text-mute);letter-spacing:.02em;line-height:1.5}
+
+  .case-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+  @media (max-width:1100px){.case-grid{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:600px){.case-grid{grid-template-columns:1fr}}
+  .case-detail{background:rgba(255,255,255,.02);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;transition:border-color .3s}
+  .case-detail:hover{border-color:rgba(45,106,255,.4)}
+  .case-detail .cd-mock{aspect-ratio:16/10;position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+  .case-detail .cd-body{padding:14px;flex:1;display:flex;flex-direction:column}
+  .case-detail .cd-head{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:4px;flex-wrap:wrap}
+  .case-detail .cd-src{font-size:9px;letter-spacing:.1em;color:var(--text-mute);font-family:'JetBrains Mono',monospace;text-transform:uppercase}
+  .case-detail .cd-yr{font-size:9px;color:var(--orange);font-weight:700;font-family:'JetBrains Mono',monospace;letter-spacing:.1em;margin-bottom:6px}
+  .case-detail .cd-name{font-size:14px;font-weight:600;color:var(--text);letter-spacing:-.005em;margin-bottom:8px;line-height:1.25}
+  .case-detail .cd-ins{font-size:11.5px;color:var(--text-soft);line-height:1.55;margin-bottom:10px}
+  .case-detail .cd-ins em{color:var(--text);font-style:normal;background:linear-gradient(180deg,transparent 60%, rgba(45,106,255,.28) 60%);padding:0 2px}
+  .case-detail .cd-kw{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--blue-bright);letter-spacing:.05em;padding-top:8px;border-top:1px solid var(--line);margin-top:auto;margin-bottom:6px}
+  .case-detail .cd-source{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-mute);letter-spacing:.02em;line-height:1.5;word-break:break-all}
+  .case-detail .cd-source a{color:var(--blue-bright);text-decoration:none;border-bottom:1px dotted rgba(122,175,255,.4)}
+
+  /* Key findings */
+  .key-findings{margin-top:18px;padding:20px 24px;border-radius:14px;border:1px solid rgba(45,106,255,.3);background:linear-gradient(135deg, rgba(45,106,255,.08), rgba(45,106,255,.02))}
+  .kf-head{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+  .kf-tag{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2em;color:var(--blue-bright);background:rgba(45,106,255,.15);padding:5px 10px;border-radius:6px}
+  .kf-title{font-size:13.5px;font-weight:600;color:var(--text);letter-spacing:-.005em}
+  .kf-list{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  @media (max-width:920px){.kf-list{grid-template-columns:1fr}}
+  .kf-item{padding:12px 14px;border-radius:10px;background:rgba(255,255,255,.025);border:1px solid var(--line)}
+  .kf-item-num{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--blue-bright);letter-spacing:.1em;margin-bottom:6px}
+  .kf-item-text{font-size:12px;color:var(--text);line-height:1.55;letter-spacing:-.005em}
+  .kf-item-text strong{color:var(--blue-bright);font-weight:600}
+
+  /* AI-Native scope */
+  .ai-native-scope{margin-top:18px;padding:22px 26px;border-radius:18px;border:1px solid rgba(255,138,92,.3);background:linear-gradient(135deg, rgba(255,138,92,.08), rgba(255,138,92,.02))}
+  .ans-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.3em;color:var(--orange);margin-bottom:12px;text-transform:uppercase}
+  .ans-text{font-size:clamp(15px,1.3vw,18px);color:var(--text);line-height:1.55;font-weight:500;margin-bottom:14px}
+  .ans-text strong{color:var(--orange)}
+  .ans-text em{color:var(--blue-bright);font-style:normal;font-weight:600}
+  .ans-strip{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .ans-chip{padding:6px 12px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,.02);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.05em;color:var(--text-soft);display:flex;align-items:center;gap:8px}
+  .ans-chip .dot{width:6px;height:6px;border-radius:50%;background:var(--orange)}
+
+  /* P10 · Visual Keywords */
+  .vkw-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:24px}
+  @media (max-width:920px){.vkw-grid{grid-template-columns:1fr}}
+  .vkw-card{padding:0;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.012);overflow:hidden;display:flex;flex-direction:column}
+  .vkw-vis{height:180px;position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+  .vkw-body{padding:20px 22px;display:flex;flex-direction:column;flex:1}
+  .vkw-tag{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2em;color:var(--blue-bright);margin-bottom:6px}
+  .vkw-en{font-size:32px;font-weight:700;color:var(--text);letter-spacing:-.02em;line-height:1.05;margin-bottom:4px}
+  .vkw-kr{font-size:13px;color:var(--text-mute);margin-bottom:14px;letter-spacing:-.005em}
+  .vkw-derives{font-size:10px;color:var(--orange);font-family:'JetBrains Mono',monospace;letter-spacing:.05em;margin-bottom:10px;padding:5px 10px;border-radius:5px;background:rgba(255,138,92,.06);border:1px solid rgba(255,138,92,.2);display:inline-block;align-self:flex-start}
+  .vkw-meaning{font-size:13px;color:var(--text-soft);line-height:1.6;margin-bottom:14px}
+  .vkw-meaning em{color:var(--text);font-style:normal;font-weight:600}
+  .vkw-design-label{font-size:9px;letter-spacing:.25em;color:var(--text-mute);text-transform:uppercase;margin-bottom:6px;font-weight:600}
+  .vkw-design{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--text);letter-spacing:.05em;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+  .vkw-cases-label{font-size:9px;letter-spacing:.25em;color:var(--text-mute);text-transform:uppercase;margin-bottom:6px;font-weight:600;margin-top:auto}
+  .vkw-cases{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--blue-bright);letter-spacing:.05em;line-height:1.6}
+
+  /* P11 · Integrated */
+  .integrated-table{margin-top:24px;padding:14px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.015)}
+  .integrated-table table{width:100%;border-collapse:collapse}
+  .integrated-table th, .integrated-table td{padding:14px 14px;text-align:left;border-bottom:1px solid var(--line);font-size:12.5px;vertical-align:top}
+  .integrated-table th{font-size:10px;letter-spacing:.2em;color:var(--text-mute);text-transform:uppercase;font-weight:500;background:rgba(45,106,255,.04)}
+  .integrated-table th.area-h{width:18%}
+  .integrated-table th.samsung-h{color:var(--blue-bright)}
+  .integrated-table td{color:var(--text-soft)}
+  .integrated-table td.area-cell{color:var(--text);font-weight:600;background:rgba(45,106,255,.04)}
+  .integrated-table td.area-cell .area-name{font-size:13.5px;letter-spacing:-.005em;margin-bottom:2px}
+  .integrated-table td.area-cell .area-kw{font-size:9px;color:var(--blue-bright);font-family:'JetBrains Mono',monospace;letter-spacing:.05em;font-weight:400}
+  .integrated-table td.samsung-cell{color:var(--blue-bright);font-weight:600;background:rgba(45,106,255,.06)}
+  .integrated-table tr:last-child td{border-bottom:0}
+
+  .strategic-approach{margin-top:24px;padding:28px 32px;border-radius:18px;border:1px solid rgba(45,106,255,.4);background:linear-gradient(135deg, rgba(45,106,255,.1), rgba(45,106,255,.02))}
+  .sa-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.3em;color:var(--blue-bright);margin-bottom:12px;text-transform:uppercase;display:flex;align-items:center;gap:10px}
+  .sa-label::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--blue);box-shadow:0 0 12px var(--blue)}
+  .sa-statement{font-size:clamp(18px,2vw,26px);color:var(--text);line-height:1.4;font-weight:500;letter-spacing:-.01em;margin-bottom:18px}
+  .sa-statement strong{color:var(--blue-bright);font-weight:600}
+  .sa-statement em{color:var(--text);font-style:normal;background:linear-gradient(180deg,transparent 65%, rgba(45,106,255,.32) 65%);padding:0 2px}
+
+  /* Hypothesis */
+  .hyp-overview{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:24px}
+  @media (max-width:920px){.hyp-overview{grid-template-columns:1fr}}
+  .hov{padding:14px 18px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.02);display:flex;align-items:center;gap:14px}
+  .hov .n{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--blue-bright);letter-spacing:.1em;flex-shrink:0;width:34px}
+  .hov .ti{font-size:14px;color:var(--text);font-weight:500;flex:1}
+  .hov .cat{font-size:10px;letter-spacing:.2em;color:var(--text-mute);text-transform:uppercase}
+
+  .vh-detail{display:grid;grid-template-columns:240px 1fr;gap:24px;padding:24px;border-radius:18px;border:1px solid var(--line);background:rgba(255,255,255,.015);margin-bottom:18px;align-items:center}
+  @media (max-width:920px){.vh-detail{grid-template-columns:1fr}}
+  .vh-vis{height:180px;border-radius:14px;background:#0A1024;border:1px solid var(--line);position:relative;overflow:hidden}
+  .vh-detail .h-tag{font-size:11px;letter-spacing:.32em;color:var(--blue-bright);font-weight:600;margin-bottom:6px}
+  .vh-detail .h-title{font-size:21px;font-weight:600;margin-bottom:10px;letter-spacing:-.01em}
+  .vh-detail .h-kw{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
+  .vh-detail .h-trace{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--orange);letter-spacing:.05em;margin-bottom:12px;padding:6px 10px;border-radius:6px;background:rgba(255,138,92,.06);border:1px solid rgba(255,138,92,.2);display:inline-block}
+  .vh-detail .h-body{font-size:13.5px;color:var(--text-soft);line-height:1.7}
+  .vh-detail .h-body em{color:var(--text);font-style:normal;background:linear-gradient(180deg,transparent 65%, rgba(45,106,255,.32) 65%);padding:0 2px}
+
+  .conclusion-banner{margin-top:14px;padding:24px 28px;border-radius:18px;border:1px solid rgba(45,106,255,.5);background:linear-gradient(135deg, rgba(45,106,255,.15), rgba(45,106,255,.04));position:relative;overflow:hidden}
+  .conclusion-banner::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--blue)}
+  .cb-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.3em;color:var(--blue-bright);margin-bottom:14px;text-transform:uppercase;display:flex;align-items:center;gap:10px}
+  .cb-label::before{content:"●";color:var(--blue);font-size:14px}
+  .cb-title{font-size:clamp(20px,1.8vw,26px);color:var(--text);line-height:1.35;font-weight:600;letter-spacing:-.01em;margin-bottom:12px}
+  .cb-title strong{color:var(--blue-bright)}
+  .cb-text{font-size:13.5px;color:var(--text-soft);line-height:1.65}
+  .cb-text em{color:var(--blue-bright);font-style:normal;font-weight:600}
+
+  /* 10-hypothesis */
+  .hyp10{display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(2,1fr);gap:12px;margin-top:18px}
+  @media (max-width:920px){.hyp10{grid-template-columns:repeat(2,1fr);grid-template-rows:auto}}
+  .h10c{padding:16px 14px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.015);display:flex;flex-direction:column;position:relative;overflow:hidden}
+  .h10c::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--blue)}
+  .h10c .h-id{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--blue-bright);letter-spacing:.1em;margin-bottom:4px}
+  .h10c .h-cat{font-size:9px;letter-spacing:.25em;color:var(--text-mute);text-transform:uppercase;margin-bottom:8px}
+  .h10c .h-shift{font-size:12px;color:var(--text);font-weight:600;letter-spacing:-.005em;line-height:1.3;margin-bottom:6px}
+  .h10c .h-desc{font-size:10.5px;color:var(--text-mute);line-height:1.5;margin-top:auto}
+  .h10c .h-arrow{display:inline-block;color:var(--blue-bright);margin:0 4px;font-size:11px}
+
+  /* Flow */
+  .flow{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:32px}
+  .flow .node{flex:1;min-width:120px;padding:14px;border:1px solid var(--line-strong);border-radius:12px;text-align:center}
+  .flow .node .n-k{font-size:10px;letter-spacing:.25em;color:var(--text-mute);margin-bottom:6px}
+  .flow .node h3{font-size:14px;margin-bottom:4px}
+  .flow .arrow{color:var(--text-mute);font-size:22px}
+
+  .color-rule{display:inline-flex;align-items:center;gap:8px;padding:5px 12px;border-radius:99px;background:rgba(45,106,255,.12);border:1px solid rgba(45,106,255,.4);font-size:11px;letter-spacing:.15em;color:var(--blue-bright);text-transform:uppercase}
+  .color-rule .dot{width:8px;height:8px;border-radius:50%;background:var(--blue);box-shadow:0 0 10px var(--blue)}
+
+  footer{padding:48px 5vw;border-top:1px solid var(--line);text-align:center;color:var(--text-mute);font-size:11px;letter-spacing:.15em;text-transform:uppercase}
+</style>
+</head>
+<body>
+
+<div class="light-bg"></div>
+<div class="grain"></div>
+
+<main>
+
+<!-- ============ 01. COVER ============ -->
+<section class="slide" data-index="01 / 15" data-section="COVER">
+  <div class="part-opener">
+    <span class="pill solid">SAMSUNG · VISUAL PART · N+2~3 YEARS</span>
+    <h1 style="margin-top:32px">For the <span class="blue-text">AI-Native Era.</span></h1>
+    <p class="lead" style="margin:24px auto 0">
+      AI 시대 N+2~3년을 대비한 삼성 TV One UI 비주얼 전략 —<br/>
+      Research · Hypothesis · Visual References · Deliverables
+    </p>
+    <div style="margin-top:32px"><span class="color-rule"><span class="dot"></span>POINT COLOR · SOLID BLUE #2D6AFF</span></div>
+  </div>
+</section>
+
+
+<!-- ============ 02. WHY NOW ============ -->
+<section class="slide" data-index="02 / 15" data-section="BACKGROUND">
+  <span class="eyebrow">Why Now · 지금이어야 하는 이유</span>
+  <h2>네 개의 변화가 같은 시점에 <span class="blue-text">교차하는 3년의 창문.</span></h2>
+  <p class="lead" style="margin-top:14px">파라다임 전환 · On-Device AI · One UI Cross-Device 확산 · AI-Native 서비스의 부상.</p>
+
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:32px">
+    <div class="case-detail" style="padding:18px;display:block">
+      <div class="cd-yr" style="color:var(--blue-bright)">01 · PARADIGM</div>
+      <div class="cd-name">From Display to Hub</div>
+      <p class="cd-ins" style="margin-top:8px;border:none;padding:0">콘텐츠 디바이스에서 거실의 두뇌로. TV 정체성이 'Home AI Hub'로 이행.</p>
+    </div>
+    <div class="case-detail" style="padding:18px;display:block">
+      <div class="cd-yr" style="color:var(--blue-bright)">02 · ON-DEVICE AI</div>
+      <div class="cd-name">NPU Goes Mainstream</div>
+      <p class="cd-ins" style="margin-top:8px;border:none;padding:0">2026 30% → 2029 70%+. AI가 비주얼·미리보기·메타까지 생성.</p>
+    </div>
+    <div class="case-detail" style="padding:18px;display:block;border-color:rgba(255,138,92,.4);background:linear-gradient(180deg,rgba(255,138,92,.05),rgba(255,138,92,.01))">
+      <div class="cd-yr" style="color:var(--orange)">03 · AI-NATIVE</div>
+      <div class="cd-name">New Visual Vocabulary</div>
+      <p class="cd-ins" style="margin-top:8px;border:none;padding:0">Krea·Midjourney·Higgsfield·Recraft 등 *AI 중심으로 설계*된 서비스들이 2025년 시각적 표준 재정의.</p>
+    </div>
+    <div class="case-detail" style="padding:18px;display:block">
+      <div class="cd-yr" style="color:var(--blue-bright)">04 · ONE UI EXPANSION</div>
+      <div class="cd-name">TV is the Last Surface</div>
+      <p class="cd-ins" style="margin-top:8px;border:none;padding:0">Mobile · Tablet · Watch · Fold · Book · Appliances → TV가 통합 경험의 마지막 완결점.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============ 03. READING GUIDE ============ -->
+<section class="slide" data-index="03 / 15" data-section="READING GUIDE">
+  <span class="eyebrow">Reading Guide · 보고 흐름</span>
+  <h2>4부 구성, <span class="blue-text">하나의 인과로</span> 흐른다.</h2>
+  <p class="lead" style="margin-top:14px">시장 → 경쟁사 → AI-Native 트렌드(3축 + 종합) → 자사 진단 → 가설.</p>
+
+  <div class="flow">
+    <div class="node"><div class="n-k">PART 1</div><h3>Research</h3><p class="small">시장·경쟁·AI-Native·자사·공백</p></div>
+    <div class="arrow">→</div>
+    <div class="node"><div class="n-k">PART 2</div><h3>Hypothesis</h3><p class="small">AI-Native 시대의 5 비주얼 가설</p></div>
+    <div class="arrow">→</div>
+    <div class="node"><div class="n-k">PART 3</div><h3>Visual References</h3><p class="small">가설별 비주얼 방향성</p></div>
+    <div class="arrow">→</div>
+    <div class="node"><div class="n-k">PART 4</div><h3>Deliverables & Schedule</h3><p class="small">예상 산출물 + 스케줄</p></div>
+  </div>
+
+  <div class="ai-native-scope" style="margin-top:32px;border-color:rgba(45,106,255,.3);background:linear-gradient(135deg, rgba(45,106,255,.08), rgba(45,106,255,.02))">
+    <div class="ans-label" style="color:var(--blue-bright)">COLOR PRINCIPLE</div>
+    <p class="ans-text" style="font-size:13px;font-weight:400;color:var(--text-soft);margin-bottom:0">전체 보고서는 단일 포인트 컬러 <strong style="color:var(--blue-bright)">Solid Blue #2D6AFF</strong>의 농도·투명도 변화로만 표현된다.</p>
+  </div>
+</section>
+
+
+<!-- ============ 04. PART 1 OPENER ============ -->
+<section class="slide" data-section="PART 1 · RESEARCH" data-index="">
+  <div class="part-opener">
+    <span class="pill solid">PART 1</span>
+    <h1 style="margin-top:32px">Research</h1>
+    <p class="lead" style="margin:24px auto 0">시장 거시 → 경쟁사 → AI-Native 트렌드 3축 + 종합 → 자사 · 공백.</p>
+  </div>
+</section>
+
+
+<!-- ============ 05. MARKET TREND ============ -->
+<section class="slide" data-index="04 / 15" data-section="MARKET TREND">
+  <span class="eyebrow">External Research · 시장 거시 트렌드</span>
+  <h2>세 개의 변화가 같은 시점에 <span class="blue-text">교차한다.</span></h2>
+  <p class="lead" style="margin-top:14px">AI 칩 · 대화면 · AI-Native 서비스 대두.</p>
+
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:32px">
+    <div class="case-detail" style="padding:20px;display:block">
+      <div class="cd-yr" style="color:var(--blue-bright)">CURVE 01 · AI INSIDE</div>
+      <div class="cd-name">On-Device NPU 보급</div>
+      <p class="cd-ins" style="border:none;padding:0;margin-top:8px">2026 30%, 2029 70%+. AI가 추천을 넘어 비주얼·메타·미리보기까지 생성.</p>
+    </div>
+    <div class="case-detail" style="padding:20px;display:block">
+      <div class="cd-yr" style="color:var(--blue-bright)">CURVE 02 · LARGE SURFACE</div>
+      <div class="cd-name">80인치+ 대화면 확산</div>
+      <p class="cd-ins" style="border:none;padding:0;margin-top:8px">9M(2025) → 13M(2029). 디스플레이 면적이 1.4배, 비주얼 책임도 비례.</p>
+    </div>
+    <div class="case-detail" style="padding:20px;display:block;border-color:rgba(255,138,92,.4)">
+      <div class="cd-yr">CURVE 03 · AI-NATIVE</div>
+      <div class="cd-name">AI-Native 시각 미학 폭발</div>
+      <p class="cd-ins" style="border:none;padding:0;margin-top:8px">Midjourney V7·Higgsfield·Recraft·Krea — *AI 중심 설계 + 디자인 어워드급 시각 미학*이 2025년 표준이 됨.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============ 06. COMPETITOR ============ -->
+<section class="slide" data-index="05 / 15" data-section="COMPETITOR">
+  <span class="eyebrow">External Research · 경쟁사 비주얼 진단</span>
+  <h2>세 비주얼 축에서 <span class="blue-text">모두가 약하다.</span></h2>
+  <p class="lead" style="margin-top:14px">글로벌 TV OS 6개사를 Visual DNA · Device Fit · AI Visual 3축으로 평가.</p>
+
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:32px">
+    <div class="case-detail" style="padding:20px;display:block">
+      <div class="cd-yr" style="color:var(--blue-bright)">FINDING 01 · VISUAL DNA</div>
+      <div class="cd-name">고유 비주얼 정체성 부재</div>
+      <p class="cd-ins" style="border:none;padding:0;margin-top:8px">Apple만이 강한 DNA. 다른 OS는 모듈러적 차용에 그쳐 시그니처 약함.</p>
+    </div>
+    <div class="case-detail" style="padding:20px;display:block">
+      <div class="cd-yr" style="color:var(--blue-bright)">FINDING 02 · DEVICE FIT</div>
+      <div class="cd-name">TV 특화 비주얼 부재</div>
+      <p class="cd-ins" style="border:none;padding:0;margin-top:8px">대부분 OS가 모바일 DNA를 확장. TV 고유 조건에 최적화된 시스템 없음.</p>
+    </div>
+    <div class="case-detail" style="padding:20px;display:block">
+      <div class="cd-yr" style="color:var(--blue-bright)">FINDING 03 · AI VISUAL</div>
+      <div class="cd-name">AI-Native 비주얼 부재</div>
+      <p class="cd-ins" style="border:none;padding:0;margin-top:8px">모든 OS가 AI 기능을 외치지만, AI-Native 시각 어휘를 시스템화한 곳은 없음.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============ 07. FRAMEWORK · AI-Native (Curated Cases) ============ -->
+<section class="slide" data-index="06 / 15" data-section="TREND RESEARCH · AI-NATIVE FRAMEWORK">
+  <span class="eyebrow">External Research · AI-Native 트렌드 프레임</span>
+  <h2>Beyond Apple & Google: <span class="blue-text">AI-Native Era.</span></h2>
+  <p class="lead" style="margin-top:10px">
+    이번 트렌드 리서치는 빅테크 OS가 아닌, <strong style="color:var(--orange)">2025년 디자인 어워드급 시각 미학을 보여준 AI-Native 서비스</strong>들의 비주얼만을 살핀다.
+    Krea·Midjourney·Higgsfield·Recraft 등 <em style="color:var(--blue-bright);font-style:normal;font-weight:600">처음부터 AI를 중심에 두고 설계된, 디자이너 영감을 자극하는 인터페이스</em>들. 이들은 TV의 3축에 어떤 새로운 응답을 보내고 있는가.
+  </p>
+
+  <div class="ai-native-scope">
+    <div class="ans-label">9 SERVICES · CURATED FOR VISUAL IMPACT</div>
+    <div class="ans-strip">
+      <span class="ans-chip"><span class="dot"></span>Krea AI</span>
+      <span class="ans-chip"><span class="dot"></span>Higgsfield AI</span>
+      <span class="ans-chip"><span class="dot"></span>Tldraw makereal</span>
+      <span class="ans-chip"><span class="dot"></span>Midjourney V7</span>
+      <span class="ans-chip"><span class="dot"></span>Recraft V3</span>
+      <span class="ans-chip"><span class="dot"></span>Comfy UI · Glif</span>
+      <span class="ans-chip"><span class="dot"></span>Granola</span>
+      <span class="ans-chip"><span class="dot"></span>Vision Pro Persona</span>
+      <span class="ans-chip"><span class="dot"></span>Friend · omi · Limitless</span>
+    </div>
+  </div>
+
+  <div class="axes">
+    <div class="axis">
+      <div class="ax-tag">AXIS 01</div>
+      <div class="ax-title">AI × Live Canvas</div>
+      <div class="ax-cond">실시간 생성형 캔버스 — 50ms 갱신, 시네마틱 영상, 손그림 즉시 변환</div>
+      <div class="ax-label">Curated Cases</div>
+      <div class="ax-cases">· Krea AI Realtime Canvas<br/>· Higgsfield AI Cinematic<br/>· Tldraw makereal</div>
+      <div class="ax-arrow">→ TREND SLIDE 1</div>
+    </div>
+    <div class="axis">
+      <div class="ax-tag">AXIS 02</div>
+      <div class="ax-title">AI × Vibe Generated</div>
+      <div class="ax-cond">비주얼 생성의 정수 — 한 프롬프트에서 4 variants·디자이너용 도구·노드 워크플로우</div>
+      <div class="ax-label">Curated Cases</div>
+      <div class="ax-cases">· Midjourney V7<br/>· Recraft V3<br/>· Comfy UI · Glif</div>
+      <div class="ax-arrow">→ TREND SLIDE 2</div>
+    </div>
+    <div class="axis">
+      <div class="ax-tag">AXIS 03</div>
+      <div class="ax-title">AI × Invisible / Agentic</div>
+      <div class="ax-cond">화면이 사라지고 신체로 — 두 톤 분리, 디지털 페르소나, 펜던트 디바이스</div>
+      <div class="ax-label">Curated Cases</div>
+      <div class="ax-cases">· Granola Dual-Authorship<br/>· Vision Pro Persona<br/>· Friend · omi · Limitless</div>
+      <div class="ax-arrow">→ TREND SLIDE 3</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============ 08. AXIS 01 · LIVE CANVAS ============ -->
+<section class="slide" data-index="07 / 15" data-section="AXIS 01 · LIVE CANVAS">
+  <div class="axis-header">
+    <div class="axis-header-left">
+      <div class="axis-num">AXIS 01 · AI × LIVE CANVAS</div>
+      <h2>대화면이 <span class="blue-text">실시간 박동하는 캔버스</span>가 된다.</h2>
+      <p class="axis-cond">입력에 즉시 반응하는 살아있는 표면. 50ms 갱신·시네마틱 카메라·손그림 즉시 UI 변환.</p>
+    </div>
+  </div>
+
+  <div class="case-grid">
+    <!-- Krea AI -->
+    <div class="case-detail">
+      <div class="cd-mock" style="background:radial-gradient(ellipse 80% 60% at 30% 40%, rgba(127,255,182,.12), #050810 80%)">
+        <svg viewBox="0 0 320 200" style="width:100%;height:100%">
+          <defs><linearGradient id="lg-krea-v8" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7FFFB6" stop-opacity=".4"/><stop offset=".5" stop-color="#7AAFFF" stop-opacity=".35"/><stop offset="1" stop-color="#FF8A5C" stop-opacity=".3"/></linearGradient></defs>
+          <rect x="20" y="20" width="280" height="160" rx="6" fill="rgba(15,24,48,.5)" stroke="rgba(127,255,182,.3)"/>
+          <path d="M 40 140 Q 80 60 130 90 T 220 70 T 290 100" stroke="rgba(127,255,182,.7)" stroke-width="1.5" fill="none" stroke-dasharray="3 3"/>
+          <rect x="40" y="50" width="200" height="80" rx="4" fill="url(#lg-krea-v8)" opacity=".85"/>
+          <circle cx="270" cy="70" r="5" fill="#7FFFB6"/>
+          <circle cx="270" cy="70" r="11" fill="none" stroke="#7FFFB6" opacity=".4"/>
+          <text x="40" y="160" font-family="monospace" font-size="10" fill="rgba(127,255,182,.7)">~50ms · cursor follow</text>
+        </svg>
+      </div>
+      <div class="cd-body">
+        <div class="cd-head"><span class="cd-src">KREA AI · REALTIME CANVAS</span></div>
+        <div class="cd-yr">2025 · 30M users / 191 countries</div>
+        <div class="cd-name">Draw-while-Generate</div>
+        <p class="cd-ins" style="border:none;padding:0">스케치하는 순간 <em>50ms 이내 이미지가 갱신</em>된다. *캔버스가 사용자의 손과 동기화*되며 64개 모델이 단일 인터페이스로 통합.</p>
+        <div class="cd-kw">Realtime · Live Canvas · 50ms · Stream</div>
+        <div class="cd-source">SOURCE → <a href="https://www.krea.ai/" target="_blank">krea.ai</a></div>
+      </div>
+    </div>
+
+    <!-- Higgsfield AI -->
+    <div class="case-detail">
+      <div class="cd-mock" style="background:#050810">
+        <svg viewBox="0 0 320 200" style="width:100%;height:100%">
+          <defs>
+            <linearGradient id="cinema-grad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF8A5C" stop-opacity=".7"/><stop offset="1" stop-color="#2D6AFF" stop-opacity=".6"/></linearGradient>
+          </defs>
+          <!-- letterbox black bars -->
+          <rect x="0" y="0" width="320" height="200" fill="#000"/>
+          <rect x="0" y="40" width="320" height="120" fill="url(#cinema-grad)" opacity=".9"/>
+          <!-- silhouette -->
+          <ellipse cx="120" cy="125" rx="40" ry="14" fill="rgba(0,0,0,.5)"/>
+          <rect x="105" y="80" width="30" height="50" rx="14" fill="rgba(0,0,0,.65)"/>
+          <circle cx="120" cy="80" r="14" fill="rgba(0,0,0,.7)"/>
+          <!-- sun/light -->
+          <circle cx="240" cy="80" r="22" fill="rgba(255,255,255,.65)" opacity=".8"/>
+          <!-- camera control UI overlay -->
+          <rect x="14" y="170" width="292" height="24" rx="6" fill="rgba(0,0,0,.85)" stroke="rgba(255,255,255,.2)"/>
+          <text x="22" y="186" font-family="monospace" font-size="8" fill="#fff" letter-spacing="1.5">CAMERA</text>
+          <rect x="74" y="178" width="40" height="10" rx="2" fill="rgba(255,255,255,.18)"/>
+          <text x="94" y="186" text-anchor="middle" font-family="monospace" font-size="7" fill="#fff">DOLLY</text>
+          <rect x="118" y="178" width="42" height="10" rx="2" fill="rgba(255,138,92,.5)"/>
+          <text x="139" y="186" text-anchor="middle" font-family="monospace" font-size="7" fill="#fff">ORBIT</text>
+          <rect x="164" y="178" width="48" height="10" rx="2" fill="rgba(255,255,255,.18)"/>
+          <text x="188" y="186" text-anchor="middle" font-family="monospace" font-size="7" fill="#fff">PUSH-IN</text>
+          <rect x="216" y="178" width="40" height="10" rx="2" fill="rgba(255,255,255,.18)"/>
+          <text x="236" y="186" text-anchor="middle" font-family="monospace" font-size="7" fill="#fff">PAN</text>
+          <text x="260" y="186" font-family="monospace" font-size="7" fill="rgba(255,255,255,.5)">35mm</text>
+          <!-- letterbox top -->
+          <rect x="0" y="0" width="320" height="36" fill="#000"/>
+          <text x="160" y="22" text-anchor="middle" font-family="monospace" font-size="8" fill="rgba(255,138,92,.7)" letter-spacing="3">CINEMATIC AI · DOP MODE</text>
+        </svg>
+      </div>
+      <div class="cd-body">
+        <div class="cd-head"><span class="cd-src">HIGGSFIELD AI · DOP</span></div>
+        <div class="cd-yr">2025 · Cinematic Camera</div>
+        <div class="cd-name">Cinematic Camera Control</div>
+        <p class="cd-ins" style="border:none;padding:0">AI 영상에 <em>영화 같은 카메라 무빙</em>(dolly · orbit · push-in · crane)을 직접 지정. *시네마틱 그래머가 프롬프트가 되는* 영상 생성 — 영화 감독의 도구.</p>
+        <div class="cd-kw">Cinematic · DOP Control · Dolly · Orbit · 35mm</div>
+        <div class="cd-source">SOURCE → <a href="https://higgsfield.ai/" target="_blank">higgsfield.ai</a></div>
+      </div>
+    </div>
+
+    <!-- Tldraw makereal -->
+    <div class="case-detail">
+      <div class="cd-mock" style="background:#050810">
+        <svg viewBox="0 0 320 200" style="width:100%;height:100%">
+          <!-- left: hand sketch -->
+          <rect x="14" y="20" width="130" height="160" rx="6" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.18)"/>
+          <path d="M30 50 Q60 38 90 50 T130 50" stroke="rgba(122,175,255,.6)" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M30 78 L100 78" stroke="rgba(122,175,255,.5)" stroke-width="2" stroke-linecap="round"/>
+          <path d="M30 78 L100 78 L100 100 L30 100 Z" stroke="rgba(122,175,255,.5)" stroke-width="2" fill="none"/>
+          <path d="M30 130 L60 130 M30 145 L80 145" stroke="rgba(122,175,255,.4)" stroke-width="1.8" stroke-linecap="round"/>
+          <text x="80" y="170" text-anchor="middle" fill="rgba(255,255,255,.4)" font-size="8" letter-spacing="1.5" font-family="monospace">HAND-DRAWN</text>
+          <!-- arrow -->
+          <text x="160" y="105" fill="#7AAFFF" font-size="24" font-weight="700">→</text>
+          <!-- right: live UI -->
+          <rect x="180" y="20" width="126" height="160" rx="6" fill="rgba(45,106,255,.18)" stroke="#2D6AFF" stroke-width="1.2"/>
+          <rect x="192" y="32" width="102" height="22" rx="3" fill="rgba(255,255,255,.95)"/>
+          <text x="243" y="46" text-anchor="middle" fill="#0F1830" font-size="9" font-weight="600">Welcome</text>
+          <rect x="192" y="62" width="60" height="5" rx="1" fill="#fff"/>
+          <rect x="192" y="72" width="50" height="5" rx="1" fill="rgba(255,255,255,.6)"/>
+          <rect x="192" y="92" width="102" height="32" rx="3" fill="rgba(122,175,255,.55)"/>
+          <text x="243" y="112" text-anchor="middle" fill="#fff" font-size="10" font-weight="600">Submit</text>
+          <rect x="192" y="135" width="50" height="4" rx="1" fill="rgba(255,255,255,.45)"/>
+          <rect x="192" y="145" width="80" height="4" rx="1" fill="rgba(255,255,255,.3)"/>
+          <text x="243" y="170" text-anchor="middle" fill="rgba(122,175,255,.85)" font-size="8" letter-spacing="1.5" font-family="monospace">LIVE UI</text>
+        </svg>
+      </div>
+      <div class="cd-body">
+        <div class="cd-head"><span class="cd-src">TLDRAW · MAKEREAL</span></div>
+        <div class="cd-yr">2024-25 지속 · Open-source</div>
+        <div class="cd-name">Sketch → Working UI</div>
+        <p class="cd-ins" style="border:none;padding:0">손으로 그린 와이어프레임이 <em>작동하는 UI로 즉시 변환</em>. 입력과 결과가 *같은 캔버스 위에 나란히 박동* — 비주얼 비포/애프터 자체가 충격.</p>
+        <div class="cd-kw">Sketch · Live Render · Side-by-side · Iterate</div>
+        <div class="cd-source">SOURCE → <a href="https://makereal.tldraw.com/" target="_blank">makereal.tldraw.com</a></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="key-findings">
+    <div class="kf-head"><span class="kf-tag">KEY FINDINGS · AXIS 01</span><span class="kf-title">대화면이 마주한 AI-Native의 새로운 응답</span></div>
+    <div class="kf-list">
+      <div class="kf-item"><div class="kf-item-num">01</div><div class="kf-item-text">캔버스가 <strong>"결과를 보여주는 곳" → "결과가 자라나는 곳"</strong>으로. Krea 50ms가 캔버스를 *손의 연장*으로.</div></div>
+      <div class="kf-item"><div class="kf-item-num">02</div><div class="kf-item-text">영상이 <strong>시네마틱 그래머</strong>를 갖는다. Higgsfield의 DOP 컨트롤은 *영화 언어가 곧 프롬프트*가 됨.</div></div>
+      <div class="kf-item"><div class="kf-item-num">03</div><div class="kf-item-text">손그림이 <strong>UI로 변환</strong>되는 *비포/애프터*는 입력과 결과가 한 표면에 박동하는 새 어휘.</div></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============ 09. AXIS 02 · VIBE GENERATED ============ -->
+<section class="slide" data-index="08 / 15" data-section="AXIS 02 · VIBE GENERATED">
+  <div class="axis-header">
+    <div class="axis-header-left">
+      <div class="axis-num">AXIS 02 · AI × VIBE GENERATED</div>
+      <h2>콘텐츠는 <span class="blue-text">한 점에서 피어난다.</span></h2>
+      <p class="axis-cond">AI 비주얼 생성의 정수 — 4 variants · 디자이너용 스타일 컨트롤 · 노드 그래프 워크플로우.</p>
+    </div>
+  </div>
+
+  <div class="case-grid">
+    <!-- Midjourney V7 -->
+    <div class="case-detail">
+      <div class="cd-mock" style="background:#050810">
+        <svg viewBox="0 0 320 200" style="width:100%;height:100%">
+          <defs>
+            <linearGradient id="mj1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF6EC7"/><stop offset="1" stop-color="#7B61FF"/></linearGradient>
+            <linearGradient id="mj2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFB86B"/><stop offset="1" stop-color="#FF6EC7"/></linearGradient>
+            <linearGradient id="mj3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7B61FF"/><stop offset="1" stop-color="#2D6AFF"/></linearGradient>
+            <linearGradient id="mj4" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4ECDC4"/><stop offset="1" stop-color="#FFB86B"/></linearGradient>
+          </defs>
+          <!-- prompt bar -->
+          <rect x="20" y="20" width="280" height="22" rx="11" fill="rgba(45,106,255,.18)" stroke="rgba(45,106,255,.5)"/>
+          <text x="34" y="35" fill="rgba(255,255,255,.85)" font-size="9" font-family="monospace">/imagine cinematic portrait, warm light --v 7</text>
+          <!-- 4 variants -->
+          <rect x="20" y="56" width="64" height="64" rx="4" fill="url(#mj1)"/>
+          <circle cx="52" cy="80" r="14" fill="rgba(0,0,0,.4)"/>
+          <text x="52" y="128" text-anchor="middle" font-family="monospace" font-size="7" fill="rgba(255,255,255,.6)">V1</text>
+          <rect x="92" y="56" width="64" height="64" rx="4" fill="url(#mj2)"/>
+          <circle cx="124" cy="86" r="16" fill="rgba(0,0,0,.4)"/>
+          <text x="124" y="128" text-anchor="middle" font-family="monospace" font-size="7" fill="rgba(255,255,255,.6)">V2</text>
+          <rect x="164" y="56" width="64" height="64" rx="4" fill="url(#mj3)" stroke="#fff" stroke-width="2"/>
+          <circle cx="196" cy="78" r="13" fill="rgba(0,0,0,.4)"/>
+          <text x="196" y="128" text-anchor="middle" font-family="monospace" font-size="7" fill="#fff">V3 ✓</text>
+          <rect x="236" y="56" width="64" height="64" rx="4" fill="url(#mj4)"/>
+          <circle cx="268" cy="84" r="15" fill="rgba(0,0,0,.4)"/>
+          <text x="268" y="128" text-anchor="middle" font-family="monospace" font-size="7" fill="rgba(255,255,255,.6)">V4</text>
+          <!-- actions -->
+          <rect x="20" y="140" width="50" height="20" rx="3" fill="rgba(45,106,255,.4)"/>
+          <text x="45" y="153" text-anchor="middle" font-family="monospace" font-size="8" fill="#fff">UPSCALE</text>
+          <rect x="76" y="140" width="50" height="20" rx="3" fill="rgba(45,106,255,.25)"/>
+          <text x="101" y="153" text-anchor="middle" font-family="monospace" font-size="8" fill="rgba(255,255,255,.7)">VARY</text>
+          <rect x="132" y="140" width="50" height="20" rx="3" fill="rgba(45,106,255,.25)"/>
+          <text x="157" y="153" text-anchor="middle" font-family="monospace" font-size="8" fill="rgba(255,255,255,.7)">PAN</text>
+          <text x="160" y="184" text-anchor="middle" font-family="monospace" font-size="8" fill="rgba(122,175,255,.6)" letter-spacing="2">4 PETALS FROM ONE PROMPT</text>
+        </svg>
+      </div>
+      <div class="cd-body">
+        <div class="cd-head"><span class="cd-src">MIDJOURNEY · V7</span></div>
+        <div class="cd-yr">2025 · AI Image Aesthetic</div>
+        <div class="cd-name">Image Generation Aesthetics</div>
+        <p class="cd-ins" style="border:none;padding:0">한 프롬프트가 <em>4 variants로 동시에 피어남</em>. AI 이미지 생성의 *미학적 정수* — 콘텐츠가 한 형태가 아닌 *여러 가능태로* 펼쳐진다.</p>
+        <div class="cd-kw">4 Variants · Aesthetic · Style Reference · Vary</div>
+        <div class="cd-source">SOURCE → <a href="https://www.midjourney.com/" target="_blank">midjourney.com</a></div>
+      </div>
+    </div>
+
+    <!-- Recraft V3 -->
+    <div class="case-detail">
+      <div class="cd-mock" style="background:#050810">
+        <svg viewBox="0 0 320 200" style="width:100%;height:100%">
+          <rect x="20" y="20" width="280" height="160" rx="6" fill="rgba(15,24,48,.5)" stroke="rgba(122,175,255,.25)"/>
+          <!-- style chips -->
+          <text x="30" y="38" font-family="monospace" font-size="8" fill="rgba(122,175,255,.7)" letter-spacing="1.5">STYLE</text>
+          <rect x="30" y="44" width="44" height="14" rx="7" fill="rgba(45,106,255,.55)"/>
+          <text x="52" y="54" text-anchor="middle" font-family="monospace" font-size="7" fill="#fff">3D</text>
+          <rect x="78" y="44" width="56" height="14" rx="7" fill="rgba(45,106,255,.18)" stroke="rgba(45,106,255,.4)"/>
+          <text x="106" y="54" text-anchor="middle" font-family="monospace" font-size="7" fill="rgba(255,255,255,.7)">VECTOR</text>
+          <rect x="138" y="44" width="56" height="14" rx="7" fill="rgba(45,106,255,.18)" stroke="rgba(45,106,255,.4)"/>
+          <text x="166" y="54" text-anchor="middle" font-family="monospace" font-size="7" fill="rgba(255,255,255,.7)">PIXEL</text>
+          <rect x="198" y="44" width="72" height="14" rx="7" fill="rgba(45,106,255,.18)" stroke="rgba(45,106,255,.4)"/>
+          <text x="234" y="54" text-anchor="middle" font-family="monospace" font-size="7" fill="rgba(255,255,255,.7)">BRUTALIST</text>
+          <!-- generated icons grid -->
+          <rect x="30" y="72" width="58" height="58" rx="6" fill="rgba(45,106,255,.18)"/>
+          <circle cx="59" cy="100" r="16" fill="rgba(122,175,255,.7)"/>
+          <rect x="50" y="92" width="18" height="6" rx="2" fill="rgba(255,255,255,.5)"/>
+          <rect x="92" y="72" width="58" height="58" rx="6" fill="rgba(45,106,255,.18)"/>
+          <polygon points="111,86 91,118 131,118" fill="rgba(127,255,182,.7)"/>
+          <rect x="154" y="72" width="58" height="58" rx="6" fill="rgba(45,106,255,.18)"/>
+          <rect x="170" y="86" width="26" height="26" rx="3" fill="rgba(255,184,107,.7)"/>
+          <circle cx="183" cy="99" r="6" fill="rgba(0,0,0,.5)"/>
+          <rect x="216" y="72" width="58" height="58" rx="6" fill="rgba(45,106,255,.18)"/>
+          <path d="M 232 110 L 245 90 L 258 110 Z" fill="rgba(255,110,199,.7)"/>
+          <rect x="240" y="105" width="10" height="10" fill="rgba(255,110,199,.7)"/>
+          <!-- brand kit -->
+          <rect x="30" y="142" width="240" height="26" rx="4" fill="rgba(127,255,182,.06)" stroke="rgba(127,255,182,.3)"/>
+          <text x="40" y="156" font-family="monospace" font-size="7" fill="rgba(127,255,182,.7)">BRAND STYLE · learned</text>
+          <text x="40" y="166" font-family="monospace" font-size="7" fill="rgba(255,255,255,.5)">all variations · same brand DNA</text>
+        </svg>
+      </div>
+      <div class="cd-body">
+        <div class="cd-head"><span class="cd-src">RECRAFT · V3</span></div>
+        <div class="cd-yr">2025 · Designer-grade AI</div>
+        <div class="cd-name">AI for Designers</div>
+        <p class="cd-ins" style="border:none;padding:0">일러스트레이션·아이콘·벡터를 <em>디자이너 워크플로우에 맞춰 생성</em>. *Brand Style*을 학습해 모든 변형이 일관된 DNA — Vector·3D·Pixel·Brutalist 스타일 직접 전환.</p>
+        <div class="cd-kw">Style Control · Vector · Brand Style · Designer</div>
+        <div class="cd-source">SOURCE → <a href="https://www.recraft.ai/" target="_blank">recraft.ai</a></div>
+      </div>
+    </div>
+
+    <!-- Comfy UI / Glif -->
+    <div class="case-detail">
+      <div class="cd-mock" style="background:#050810">
+        <svg viewBox="0 0 320 200" style="width:100%;height:100%">
+          <!-- grid bg -->
+          <g stroke="rgba(255,255,255,.03)" stroke-width=".5">
+            <line x1="0" y1="30" x2="320" y2="30"/>
+            <line x1="0" y1="60" x2="320" y2="60"/>
+            <line x1="0" y1="90" x2="320" y2="90"/>
+            <line x1="0" y1="120" x2="320" y2="120"/>
+            <line x1="0" y1="150" x2="320" y2="150"/>
+            <line x1="0" y1="180" x2="320" y2="180"/>
+            <line x1="40" y1="0" x2="40" y2="200"/>
+            <line x1="100" y1="0" x2="100" y2="200"/>
+            <line x1="160" y1="0" x2="160" y2="200"/>
+            <line x1="220" y1="0" x2="220" y2="200"/>
+            <line x1="280" y1="0" x2="280" y2="200"/>
+          </g>
+          <!-- node 1: prompt -->
+          <rect x="14" y="40" width="80" height="50" rx="6" fill="rgba(45,106,255,.45)" stroke="#2D6AFF"/>
+          <text x="20" y="56" font-family="monospace" font-size="7" fill="rgba(255,255,255,.85)">PROMPT</text>
+          <rect x="20" y="62" width="68" height="3" rx="1" fill="rgba(255,255,255,.6)"/>
+          <rect x="20" y="68" width="54" height="3" rx="1" fill="rgba(255,255,255,.4)"/>
+          <circle cx="94" cy="65" r="3" fill="#7AAFFF"/>
+          <!-- node 2: model -->
+          <rect x="120" y="20" width="72" height="50" rx="6" fill="rgba(122,175,255,.35)" stroke="rgba(122,175,255,.7)"/>
+          <text x="126" y="36" font-family="monospace" font-size="7" fill="rgba(255,255,255,.85)">FLUX MODEL</text>
+          <rect x="126" y="42" width="48" height="14" rx="2" fill="rgba(255,138,92,.55)"/>
+          <text x="150" y="52" text-anchor="middle" font-family="monospace" font-size="7" fill="#fff">v1.1</text>
+          <circle cx="120" cy="45" r="3" fill="#7AAFFF"/>
+          <circle cx="192" cy="45" r="3" fill="#7AAFFF"/>
+          <!-- node 3: style -->
+          <rect x="120" y="100" width="72" height="50" rx="6" fill="rgba(122,175,255,.35)" stroke="rgba(122,175,255,.7)"/>
+          <text x="126" y="116" font-family="monospace" font-size="7" fill="rgba(255,255,255,.85)">STYLE LORA</text>
+          <rect x="126" y="122" width="60" height="6" rx="3" fill="rgba(127,255,182,.5)"/>
+          <text x="126" y="142" font-family="monospace" font-size="6" fill="rgba(255,255,255,.5)">cinematic · 0.7</text>
+          <circle cx="120" cy="125" r="3" fill="#7AAFFF"/>
+          <circle cx="192" cy="125" r="3" fill="#7AAFFF"/>
+          <!-- node 4: output -->
+          <rect x="218" y="60" width="84" height="80" rx="6" fill="rgba(45,106,255,.6)" stroke="#2D6AFF"/>
+          <text x="224" y="76" font-family="monospace" font-size="7" fill="#fff">OUTPUT</text>
+          <rect x="226" y="82" width="68" height="50" rx="2" fill="rgba(255,255,255,.18)"/>
+          <circle cx="260" cy="107" r="14" fill="rgba(255,138,92,.7)"/>
+          <circle cx="218" cy="85" r="3" fill="#7AAFFF"/>
+          <!-- edges -->
+          <path d="M97 65 Q108 65 120 45" stroke="rgba(122,175,255,.55)" stroke-width="1.2" fill="none"/>
+          <path d="M97 65 Q108 65 120 125" stroke="rgba(122,175,255,.55)" stroke-width="1.2" fill="none"/>
+          <path d="M195 45 Q207 45 218 85" stroke="rgba(45,106,255,.7)" stroke-width="1.2" fill="none"/>
+          <path d="M195 125 Q207 125 218 85" stroke="rgba(45,106,255,.7)" stroke-width="1.2" fill="none"/>
+          <!-- add btn -->
+          <circle cx="298" cy="180" r="8" fill="#2D6AFF"/>
+          <text x="298" y="184" text-anchor="middle" fill="#fff" font-size="10" font-weight="700">+</text>
+          <text x="14" y="195" font-family="monospace" font-size="7" fill="rgba(122,175,255,.6)" letter-spacing="1.5">NODE WORKFLOW</text>
+        </svg>
+      </div>
+      <div class="cd-body">
+        <div class="cd-head"><span class="cd-src">COMFY UI · GLIF</span></div>
+        <div class="cd-yr">2024-25 발전 · Open-source</div>
+        <div class="cd-name">Visual Workflow Graph</div>
+        <p class="cd-ins" style="border:none;padding:0">AI 작업이 <em>노드와 연결선으로 가시화</em>된다. 추상적 LLM/diffusion 처리가 *볼 수 있는 시각 흐름*이 됨 — 디자이너에게 *AI 워크플로우가 곧 비주얼*인 시대.</p>
+        <div class="cd-kw">Node Graph · Visual Workflow · Live Preview · Composable</div>
+        <div class="cd-source">SOURCE → <a href="https://www.comfy.org/" target="_blank">comfy.org</a> · <a href="https://glif.app/" target="_blank">glif.app</a></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="key-findings">
+    <div class="kf-head"><span class="kf-tag">KEY FINDINGS · AXIS 02</span><span class="kf-title">콘텐츠 생성이 마주한 AI-Native의 새로운 응답</span></div>
+    <div class="kf-list">
+      <div class="kf-item"><div class="kf-item-num">01</div><div class="kf-item-text">콘텐츠가 <strong>"한 결과" → "4 variants의 동시 피어남"</strong>으로. Midjourney는 *복수 가능태가 시각의 정수*임을 보여줌.</div></div>
+      <div class="kf-item"><div class="kf-item-num">02</div><div class="kf-item-text">디자이너용 AI가 <strong>Brand Style을 학습</strong>해 모든 변형이 일관된 DNA. Recraft V3 — *스타일이 곧 생성 규칙*.</div></div>
+      <div class="kf-item"><div class="kf-item-num">03</div><div class="kf-item-text">AI 워크플로우가 <strong>노드 그래프</strong>로 시각화. Comfy UI·Glif — *AI 흐름 자체가 디자이너의 비주얼 작업물*.</div></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============ 10. AXIS 03 · INVISIBLE / AGENTIC ============ -->
+<section class="slide" data-index="09 / 15" data-section="AXIS 03 · INVISIBLE / AGENTIC">
+  <div class="axis-header">
+    <div class="axis-header-left">
+      <div class="axis-num">AXIS 03 · AI × INVISIBLE / AGENTIC</div>
+      <h2>컨트롤러는 <span class="blue-text">신체와 페르소나</span>로 녹는다.</h2>
+      <p class="axis-cond">화면이 사라지거나 신체로 옮겨감. 두 톤 분리(Granola)·디지털 화신(Vision Pro)·펜던트 디바이스(Friend).</p>
+    </div>
+  </div>
+
+  <div class="case-grid">
+    <!-- Granola -->
+    <div class="case-detail">
+      <div class="cd-mock" style="background:linear-gradient(135deg, #0A1024, #050810)">
+        <svg viewBox="0 0 320 200" style="width:100%;height:100%">
+          <rect x="20" y="20" width="146" height="160" rx="6" fill="rgba(15,24,48,.5)" stroke="rgba(255,255,255,.15)"/>
+          <text x="30" y="36" font-family="monospace" font-size="8" fill="rgba(255,255,255,.55)">USER · TYPED</text>
+          <rect x="30" y="46" width="120" height="3" rx="1" fill="rgba(255,255,255,.95)"/>
+          <rect x="30" y="54" width="100" height="3" rx="1" fill="rgba(255,255,255,.95)"/>
+          <rect x="30" y="62" width="125" height="3" rx="1" fill="rgba(255,255,255,.95)"/>
+          <rect x="30" y="70" width="85" height="3" rx="1" fill="rgba(255,255,255,.95)"/>
+          <text x="30" y="92" font-family="monospace" font-size="8" fill="rgba(140,150,172,.6)">AI · GRAY</text>
+          <rect x="30" y="102" width="120" height="3" rx="1" fill="rgba(140,150,172,.5)"/>
+          <rect x="30" y="110" width="100" height="3" rx="1" fill="rgba(140,150,172,.5)"/>
+          <rect x="30" y="118" width="125" height="3" rx="1" fill="rgba(140,150,172,.5)"/>
+          <rect x="30" y="126" width="80" height="3" rx="1" fill="rgba(140,150,172,.5)"/>
+          <rect x="180" y="20" width="120" height="160" rx="6" fill="rgba(15,24,48,.3)" stroke="rgba(255,255,255,.08)" stroke-dasharray="3 3"/>
+          <text x="195" y="80" font-family="monospace" font-size="9" fill="rgba(140,150,172,.5)">NO BOT</text>
+          <text x="195" y="96" font-family="monospace" font-size="9" fill="rgba(140,150,172,.5)">NO PARTICIPANT</text>
+          <text x="195" y="112" font-family="monospace" font-size="9" fill="rgba(140,150,172,.5)">— quiet</text>
+        </svg>
+      </div>
+      <div class="cd-body">
+        <div class="cd-head"><span class="cd-src">GRANOLA</span></div>
+        <div class="cd-yr">2024–25 · $43M Series B · $250M val.</div>
+        <div class="cd-name">The Invisible Bot</div>
+        <p class="cd-ins" style="border:none;padding:0">미팅에 봇으로 참여하지 않는다. 사용자 노트는 검정, AI 보강은 회색 — <em>두 작성자가 한 문서를 나눠 쓰는 듀얼 톤</em>. "AI가 옆에 있지만 보이지 않는" 표준.</p>
+        <div class="cd-kw">Split Authorship · Bot-less · Two-Tone · Quiet AI</div>
+        <div class="cd-source">SOURCE → <a href="https://www.granola.ai/" target="_blank">granola.ai</a></div>
+      </div>
+    </div>
+
+    <!-- Apple Vision Pro Persona -->
+    <div class="case-detail">
+      <div class="cd-mock" style="background:radial-gradient(ellipse 70% 60% at 50% 50%, rgba(45,106,255,.3), #050810 90%)">
+        <svg viewBox="0 0 320 200" style="width:100%;height:100%">
+          <defs>
+            <radialGradient id="persona-aura" cx="50%" cy="50%" r="60%"><stop offset="0" stop-color="#7AAFFF" stop-opacity=".6"/><stop offset="1" stop-color="#7AAFFF" stop-opacity="0"/></radialGradient>
+            <linearGradient id="persona-body" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(255,255,255,.95)"/><stop offset="1" stop-color="rgba(122,175,255,.4)"/></linearGradient>
+          </defs>
+          <!-- spatial aura -->
+          <ellipse cx="160" cy="100" rx="100" ry="80" fill="url(#persona-aura)" opacity=".5"/>
+          <ellipse cx="160" cy="170" rx="100" ry="14" fill="rgba(45,106,255,.2)"/>
+          <!-- persona head -->
+          <circle cx="160" cy="78" r="26" fill="url(#persona-body)"/>
+          <circle cx="151" cy="74" r="2" fill="#0F1830"/>
+          <circle cx="169" cy="74" r="2" fill="#0F1830"/>
+          <ellipse cx="160" cy="84" rx="6" ry="2" fill="rgba(45,106,255,.5)"/>
+          <!-- persona shoulders/body (half) -->
+          <path d="M 130 105 Q 160 115 190 105 L 195 150 Q 160 155 125 150 Z" fill="url(#persona-body)" opacity=".85"/>
+          <!-- glow / scan lines -->
+          <line x1="100" y1="60" x2="220" y2="60" stroke="rgba(122,175,255,.3)" stroke-width=".5"/>
+          <line x1="100" y1="90" x2="220" y2="90" stroke="rgba(122,175,255,.2)" stroke-width=".5"/>
+          <line x1="100" y1="120" x2="220" y2="120" stroke="rgba(122,175,255,.25)" stroke-width=".5"/>
+          <!-- labels -->
+          <text x="160" y="22" text-anchor="middle" font-family="monospace" font-size="8" fill="rgba(122,175,255,.7)" letter-spacing="2">DIGITAL PERSONA · visionOS 2.4</text>
+          <rect x="60" y="180" width="60" height="14" rx="3" fill="rgba(255,255,255,.08)" stroke="rgba(255,255,255,.18)"/>
+          <text x="90" y="190" text-anchor="middle" font-family="monospace" font-size="7" fill="rgba(255,255,255,.7)">WIDE FOV</text>
+          <rect x="200" y="180" width="60" height="14" rx="3" fill="rgba(255,255,255,.08)" stroke="rgba(255,255,255,.18)"/>
+          <text x="230" y="190" text-anchor="middle" font-family="monospace" font-size="7" fill="rgba(255,255,255,.7)">SPATIAL</text>
+        </svg>
+      </div>
+      <div class="cd-body">
+        <div class="cd-head"><span class="cd-src">APPLE · VISION PRO PERSONA</span></div>
+        <div class="cd-yr">visionOS 2.4 · 2025.04 Update</div>
+        <div class="cd-name">Digital Persona</div>
+        <p class="cd-ins" style="border:none;padding:0">사용자가 <em>공간에 존재하는 디지털 화신</em>으로 나타난다. AI가 사람의 *시각적 표현 자체*를 만드는 시대 — 페르소나가 화면 안 일급 객체로.</p>
+        <div class="cd-kw">Persona · Spatial Body · Avatar · Wide FOV</div>
+        <div class="cd-source">SOURCE → <a href="https://www.apple.com/newsroom/2025/04/visionos-2-4-introduces-apple-intelligence/" target="_blank">apple.com/visionos-2-4</a></div>
+      </div>
+    </div>
+
+    <!-- Friend / omi / Limitless pendant -->
+    <div class="case-detail">
+      <div class="cd-mock" style="background:radial-gradient(ellipse 60% 50% at 50% 50%, rgba(45,106,255,.2), #050810 90%)">
+        <svg viewBox="0 0 320 200" style="width:100%;height:100%">
+          <!-- neck silhouette -->
+          <path d="M 140 200 L 140 165 Q 140 150 160 150 Q 180 150 180 165 L 180 200 Z" fill="rgba(255,255,255,.06)"/>
+          <!-- chain -->
+          <line x1="120" y1="155" x2="155" y2="105" stroke="rgba(255,255,255,.25)" stroke-width="1"/>
+          <line x1="200" y1="155" x2="165" y2="105" stroke="rgba(255,255,255,.25)" stroke-width="1"/>
+          <!-- pendant aura -->
+          <defs><radialGradient id="pendant-glow-v8" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#7AAFFF" stop-opacity=".7"/><stop offset="1" stop-color="#7AAFFF" stop-opacity="0"/></radialGradient></defs>
+          <circle cx="160" cy="105" r="48" fill="url(#pendant-glow-v8)"/>
+          <!-- pendant body -->
+          <circle cx="160" cy="105" r="22" fill="#0F1830" stroke="rgba(45,106,255,.85)" stroke-width="1.5"/>
+          <!-- breathing inner light -->
+          <circle cx="160" cy="105" r="12" fill="#2D6AFF" opacity=".75"/>
+          <circle cx="160" cy="105" r="5" fill="#fff"/>
+          <!-- listening rings -->
+          <g transform="translate(160,105)">
+            <circle r="32" fill="none" stroke="rgba(122,175,255,.35)" stroke-width=".8" stroke-dasharray="3 3"/>
+            <circle r="40" fill="none" stroke="rgba(122,175,255,.22)" stroke-width=".8" stroke-dasharray="2 4"/>
+          </g>
+          <!-- labels -->
+          <text x="160" y="24" text-anchor="middle" font-family="monospace" font-size="8" fill="rgba(122,175,255,.65)" letter-spacing="2">FRIEND · LIMITLESS · OMI</text>
+          <text x="160" y="178" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="8" font-style="italic">"Always with you, never on screen"</text>
+        </svg>
+      </div>
+      <div class="cd-body">
+        <div class="cd-head"><span class="cd-src">FRIEND · LIMITLESS · OMI</span></div>
+        <div class="cd-yr">2024–25 · AI Pendants</div>
+        <div class="cd-name">Body-Worn Ambient AI</div>
+        <p class="cd-ins" style="border:none;padding:0">화면이 없거나 미세한 빛 하나로 줄어든 <em>목걸이형 AI 디바이스</em>. 물리적 존재 자체가 인터페이스이며, 상호작용은 *호흡하는 빛*으로만.</p>
+        <div class="cd-kw">Pendant · No-display · Breathing · Always-on</div>
+        <div class="cd-source">SOURCE → <a href="https://friend.com/" target="_blank">friend.com</a> · <a href="https://www.limitless.ai/" target="_blank">limitless.ai</a> · <a href="https://omi.me/" target="_blank">omi.me</a></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="key-findings">
+    <div class="kf-head"><span class="kf-tag">KEY FINDINGS · AXIS 03</span><span class="kf-title">컨트롤러가 마주한 AI-Native의 새로운 응답</span></div>
+    <div class="kf-list">
+      <div class="kf-item"><div class="kf-item-num">01</div><div class="kf-item-text">AI는 <strong>두 톤으로 분리되어 옆에 존재</strong>. Granola의 흑/회색은 사용자와 AI의 공동 저작을 *명도로만* 표현.</div></div>
+      <div class="kf-item"><div class="kf-item-num">02</div><div class="kf-item-text">AI가 만드는 <strong>디지털 화신</strong>이 화면 안 일급 객체로. Vision Pro Persona — *사용자 자신이 비주얼이 되는* 시대.</div></div>
+      <div class="kf-item"><div class="kf-item-num">03</div><div class="kf-item-text">디바이스가 <strong>신체로 옮겨간다</strong>. Friend·Limitless·omi 펜던트 — 화면 없는 빛 하나가 AI의 존재 신호.</div></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============ 11. SYNTHESIS · PULSE BLOOM WHISPER ============ -->
+<section class="slide" data-index="10 / 15" data-section="SYNTHESIS · VISUAL KEYWORDS">
+  <span class="eyebrow">Synthesis · AI 비주얼 트렌드의 정수</span>
+  <h2>AI-Native 비주얼은 <span class="blue-text">세 가지 결</span>로 압축된다.</h2>
+  <p class="lead" style="margin-top:8px">
+    9개 사례에서 반복적으로 관찰된 비주얼의 본질을 <em style="color:var(--blue-bright);font-style:normal;font-weight:600">비주얼 디자이너가 즉시 그릴 수 있는 어휘</em>로 가공하면 — *박동(Pulse)*, *피어남(Bloom)*, *속삭임(Whisper)*.
+    이 셋이 다음 가설(레이아웃·콘텐츠·재질·컬러·앰비언트)의 비주얼 출발점이 된다.
+  </p>
+
+  <div class="vkw-grid">
+    <!-- PULSE -->
+    <div class="vkw-card">
+      <div class="vkw-vis" style="background:#050810">
+        <svg viewBox="0 0 320 180" style="width:100%;height:100%">
+          <defs><radialGradient id="pulse-glow-v8" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#2D6AFF" stop-opacity=".8"/><stop offset="1" stop-color="#2D6AFF" stop-opacity="0"/></radialGradient></defs>
+          <circle cx="160" cy="90" r="70" fill="url(#pulse-glow-v8)" opacity=".4"/>
+          <circle cx="160" cy="90" r="50" fill="url(#pulse-glow-v8)" opacity=".55"/>
+          <circle cx="160" cy="90" r="32" fill="url(#pulse-glow-v8)" opacity=".75"/>
+          <circle cx="160" cy="90" r="16" fill="#2D6AFF"/>
+          <circle cx="160" cy="90" r="6" fill="#fff"/>
+          <path d="M 30 150 L 70 150 L 80 130 L 90 170 L 100 110 L 110 160 L 120 150 L 290 150" stroke="#2D6AFF" stroke-width="1.5" fill="none" opacity=".6"/>
+          <text x="160" y="20" text-anchor="middle" fill="rgba(122,175,255,.6)" font-size="8" letter-spacing="2" font-family="monospace">~50ms HEARTBEAT</text>
+        </svg>
+      </div>
+      <div class="vkw-body">
+        <div class="vkw-tag">VISUAL KEYWORD 01</div>
+        <div class="vkw-en">Pulse</div>
+        <div class="vkw-kr">박동한다 · 끊임없이 호흡한다</div>
+        <div class="vkw-derives">DERIVED FROM · Live</div>
+        <p class="vkw-meaning"><em>입력과 출력의 시차가 0</em>. 표면이 손의 박동에 따라 깜빡이고, 카드가 0.5초 주기로 미세 호흡한다. *시간이 시각이 되는 어휘*.</p>
+        <div class="vkw-design-label">Design Vocabulary</div>
+        <div class="vkw-design">Heartbeat · Breath · Stream · Flow · Throb</div>
+        <div class="vkw-cases-label">From AI-Native</div>
+        <div class="vkw-cases">Krea · Higgsfield · Tldraw makereal</div>
+      </div>
+    </div>
+
+    <!-- BLOOM -->
+    <div class="vkw-card">
+      <div class="vkw-vis" style="background:#050810">
+        <svg viewBox="0 0 320 180" style="width:100%;height:100%">
+          <defs>
+            <linearGradient id="bloom-grad-v8" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#2D6AFF" stop-opacity=".6"/><stop offset=".5" stop-color="#7AAFFF" stop-opacity=".7"/><stop offset="1" stop-color="#BFD9FF" stop-opacity=".5"/></linearGradient>
+          </defs>
+          <g transform="translate(160,90)">
+            <ellipse cx="0" cy="-30" rx="22" ry="55" fill="url(#bloom-grad-v8)" opacity=".5"/>
+            <ellipse cx="-30" cy="-15" rx="55" ry="22" fill="url(#bloom-grad-v8)" opacity=".5" transform="rotate(40)"/>
+            <ellipse cx="-30" cy="15" rx="55" ry="22" fill="url(#bloom-grad-v8)" opacity=".5" transform="rotate(-40)"/>
+            <ellipse cx="0" cy="30" rx="22" ry="55" fill="url(#bloom-grad-v8)" opacity=".5"/>
+            <ellipse cx="30" cy="15" rx="55" ry="22" fill="url(#bloom-grad-v8)" opacity=".5" transform="rotate(40)"/>
+            <ellipse cx="30" cy="-15" rx="55" ry="22" fill="url(#bloom-grad-v8)" opacity=".5" transform="rotate(-40)"/>
+            <circle r="14" fill="#fff"/>
+            <circle r="8" fill="#7AAFFF"/>
+          </g>
+          <circle cx="50" cy="40" r="2" fill="#7AAFFF" opacity=".6"/>
+          <circle cx="280" cy="50" r="2" fill="#7AAFFF" opacity=".5"/>
+          <circle cx="40" cy="140" r="2" fill="#7AAFFF" opacity=".7"/>
+          <circle cx="270" cy="140" r="2" fill="#7AAFFF" opacity=".5"/>
+          <text x="160" y="170" text-anchor="middle" fill="rgba(122,175,255,.6)" font-size="8" letter-spacing="2" font-family="monospace">PETALS FROM A PROMPT</text>
+        </svg>
+      </div>
+      <div class="vkw-body">
+        <div class="vkw-tag">VISUAL KEYWORD 02</div>
+        <div class="vkw-en">Bloom</div>
+        <div class="vkw-kr">피어난다 · 매번 새로 자라난다</div>
+        <div class="vkw-derives">DERIVED FROM · Generative</div>
+        <p class="vkw-meaning"><em>한 점에서 빛이 모여 형태를 이룬다</em>. 빈 캔버스에서 콘텐츠가 떠오르고, 같은 프롬프트가 매번 다른 모양으로 피어난다. *생성이 시각이 되는 어휘*.</p>
+        <div class="vkw-design-label">Design Vocabulary</div>
+        <div class="vkw-design">Emerge · Spawn · Crystallize · Petal · Variant</div>
+        <div class="vkw-cases-label">From AI-Native</div>
+        <div class="vkw-cases">Midjourney V7 · Recraft V3 · Comfy UI</div>
+      </div>
+    </div>
+
+    <!-- WHISPER -->
+    <div class="vkw-card">
+      <div class="vkw-vis" style="background:#050810">
+        <svg viewBox="0 0 320 180" style="width:100%;height:100%">
+          <rect x="20" y="20" width="280" height="140" rx="6" fill="rgba(15,24,48,.4)" stroke="rgba(255,255,255,.05)"/>
+          <text x="40" y="50" font-family="monospace" font-size="9" fill="rgba(255,255,255,.85)">user typed here</text>
+          <rect x="40" y="58" width="120" height="2" rx="1" fill="rgba(255,255,255,.85)"/>
+          <rect x="40" y="66" width="100" height="2" rx="1" fill="rgba(255,255,255,.85)"/>
+          <text x="40" y="100" font-family="monospace" font-size="9" fill="rgba(140,150,172,.4)">ai whispered here</text>
+          <rect x="40" y="108" width="140" height="2" rx="1" fill="rgba(140,150,172,.4)"/>
+          <rect x="40" y="116" width="115" height="2" rx="1" fill="rgba(140,150,172,.4)"/>
+          <rect x="40" y="124" width="125" height="2" rx="1" fill="rgba(140,150,172,.4)"/>
+          <circle cx="280" cy="40" r="3" fill="#2D6AFF" opacity=".7"/>
+          <circle cx="280" cy="40" r="7" fill="none" stroke="#2D6AFF" stroke-width=".7" opacity=".4"/>
+          <text x="266" y="58" text-anchor="end" fill="rgba(122,175,255,.5)" font-size="6" letter-spacing="1" font-family="monospace">quiet · ambient</text>
+        </svg>
+      </div>
+      <div class="vkw-body">
+        <div class="vkw-tag">VISUAL KEYWORD 03</div>
+        <div class="vkw-en">Whisper</div>
+        <div class="vkw-kr">속삭인다 · 보이지 않게 존재한다</div>
+        <div class="vkw-derives">DERIVED FROM · Invisible</div>
+        <p class="vkw-meaning"><em>색이 아닌 톤, 점이 아닌 그림자</em>. AI는 별도 패널이 아니라 작은 빛의 농도 차이로만 존재를 드러낸다. *부재가 시각이 되는 어휘*.</p>
+        <div class="vkw-design-label">Design Vocabulary</div>
+        <div class="vkw-design">Subdued · Veil · Halo · Tone-shift · Ambient Hint</div>
+        <div class="vkw-cases-label">From AI-Native</div>
+        <div class="vkw-cases">Granola · Vision Pro Persona · Friend pendant</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="conclusion-banner" style="margin-top:24px">
+    <div class="cb-label">CONCLUSION · AI-Native 비주얼의 정수</div>
+    <p class="cb-title">AI-Native의 비주얼은 *그래픽이 아닌 <strong>박동·피어남·속삭임</strong>의 시각 어휘*다.</p>
+    <p class="cb-text">9개 사례에서 반복적으로 관찰된 비주얼의 본질은 <em>"실시간성·생성성·투명성"</em> — 이 셋은 디자인 시스템이 아니라 *비주얼이 작동하는 방식의 변화*다. 이 어휘가 다음 가설(레이아웃·콘텐츠·재질·컬러·앰비언트)의 시각적 출발점이 된다.</p>
+  </div>
+</section>
+
+
+<!-- ============ 12. SAMSUNG'S APPROACH (Self Audit + White Space 합본) ============ -->
+<section class="slide" data-index="11 / 15" data-section="SAMSUNG'S APPROACH">
+  <span class="eyebrow">Synthesis · 비어 있는 영역과 삼성의 관점</span>
+  <h2>다섯 영역, <span class="blue-text">아무도 통합하지 않은 답.</span></h2>
+  <p class="lead" style="margin-top:10px">
+    AI-Native 트렌드는 다섯 비주얼 영역에 새 답을 가져왔다. 삼성도 경쟁사도 모두 *이 5영역에서 비어 있다*.
+    <strong style="color:var(--blue-bright)">박동·피어남·속삭임의 어휘로 다섯 영역을 통합한 사업자는 없다</strong>. 삼성이 먼저 답하면 N+3년 TV 비주얼 표준의 기준점이 된다.
+  </p>
+
+  <div class="integrated-table">
+    <table>
+      <thead>
+        <tr>
+          <th class="area-h">5 비주얼 영역</th>
+          <th>Samsung 현재 · GAP</th>
+          <th>Apple</th>
+          <th>Google</th>
+          <th>LG / Huawei</th>
+          <th class="samsung-h">Samsung · 본 보고서 가설</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="area-cell"><div class="area-name">① Generative Layout</div><div class="area-kw">Bloom 어휘</div></td>
+          <td>고정 그리드 — AI 큐레이션과 단절</td>
+          <td>고정 그리드</td>
+          <td>대형 프리뷰</td>
+          <td>고정 그리드</td>
+          <td class="samsung-cell">유동 그리드 + 빌드 결과</td>
+        </tr>
+        <tr>
+          <td class="area-cell"><div class="area-name">② Co-authored Content</div><div class="area-kw">Bloom + Whisper</div></td>
+          <td>표준 썸네일 — 두 저자 분리 없음</td>
+          <td>정적 포스터</td>
+          <td>일부 개인화</td>
+          <td>표준 썸네일</td>
+          <td class="samsung-cell">사용자+AI 두 톤 카드</td>
+        </tr>
+        <tr>
+          <td class="area-cell"><div class="area-name">③ Living Material</div><div class="area-kw">Pulse 어휘</div></td>
+          <td>평면 재질 — 콘텐츠와 분리</td>
+          <td>Liquid Glass (모바일)</td>
+          <td>Material 3 정적</td>
+          <td>평면 반사</td>
+          <td class="samsung-cell">콘텐츠 통합 광학 재질</td>
+        </tr>
+        <tr>
+          <td class="area-cell"><div class="area-name">④ Solid Light</div><div class="area-kw">Whisper 어휘</div></td>
+          <td>다채색 — 콘텐츠 색과 경쟁</td>
+          <td>딥다크 + 액센트</td>
+          <td>앱별 다채색</td>
+          <td>브랜드 컬러</td>
+          <td class="samsung-cell">단일 광원 + 빛 시그니처</td>
+        </tr>
+        <tr>
+          <td class="area-cell"><div class="area-name">⑤ Quiet Canvas</div><div class="area-kw">Whisper + Pulse</div></td>
+          <td>갤러리 앰비언트 — 정보 가치 없음</td>
+          <td>스크린세이버</td>
+          <td>Photo Frame</td>
+          <td>아트워크 갤러리</td>
+          <td class="samsung-cell">조용한 정보 캔버스</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="strategic-approach">
+    <div class="sa-label">SAMSUNG'S STRATEGIC APPROACH</div>
+    <p class="sa-statement">
+      "삼성은 다섯 영역을 단편적으로 채우는 것이 아니라,
+      <strong>박동·피어남·속삭임의 단일 비주얼 시스템</strong>으로 <em>다섯 영역을 동시에 통합하는 첫 사업자</em>가 되어야 한다."
+    </p>
+    <p style="font-size:13.5px;color:var(--text-soft);line-height:1.65">
+      Apple은 Material(Liquid Glass)에서, Google은 Content(Material 3)에서 단편적으로 답을 시도하지만 — *다섯 영역을 AI-Native 정신으로 통합한 단일 시스템은 없다*.
+      삼성이 One UI Cross-Device의 마지막 표면인 TV에서 이 통합 시스템을 만든다면, 이것이 N+3년 TV 비주얼 표준의 기준점이 된다.
+    </p>
+  </div>
+</section>
+
+
+<!-- ============ 13. PART 2 OPENER ============ -->
+<section class="slide" data-section="PART 2 · VISUAL HYPOTHESIS" data-index="">
+  <div class="part-opener">
+    <span class="pill solid">PART 2</span>
+    <h1 style="margin-top:32px">Visual Hypothesis</h1>
+    <p class="lead" style="margin:24px auto 0">
+      박동·피어남·속삭임의 어휘로 풀어낸 비주얼 5영역의 가설.
+    </p>
+  </div>
+</section>
+
+
+<!-- ============ 14. 10 GUI 가설 ============ -->
+<section class="slide" data-index="12 / 15" data-section="VISUAL SHIFT · 10 HYPOTHESES">
+  <span class="eyebrow">Hypothesis A · 10개의 변화 가설</span>
+  <h2>먼저 <span class="blue-text">열 가지 가설</span>을 본다.</h2>
+  <p class="lead" style="margin-top:8px">AI-Native 시대가 콘텐츠 비주얼에 가져오는 변화를 10영역으로. 다섯 비주얼 축으로 수렴한다.</p>
+
+  <div class="hyp10">
+    <div class="h10c"><div class="h-id">H1</div><div class="h-cat">GEN LAYOUT</div><div class="h-shift">고정 그리드 <span class="h-arrow">→</span> 빌드 결과물</div><div class="h-desc">Comfy UI 노드처럼 *매번 생성되는 레이아웃*.</div></div>
+    <div class="h10c"><div class="h-id">H2</div><div class="h-cat">CO-AUTHORED</div><div class="h-shift">표준 썸네일 <span class="h-arrow">→</span> 두 톤 카드</div><div class="h-desc">Granola처럼 사용자+AI 두 저자의 톤이 *카드에 분리*.</div></div>
+    <div class="h10c"><div class="h-id">H3</div><div class="h-cat">CO-AUTHORED</div><div class="h-shift">정적 KV <span class="h-arrow">→</span> 4 Variants 합성</div><div class="h-desc">Midjourney처럼 *사용자별 다른 KV가 4 variants로 즉시 피어남*.</div></div>
+    <div class="h10c"><div class="h-id">H4</div><div class="h-cat">LIVING MAT.</div><div class="h-shift">평면 카드 <span class="h-arrow">→</span> Live Surface</div><div class="h-desc">Krea처럼 *콘텐츠와 매터리얼이 통합된 실시간 표면*.</div></div>
+    <div class="h10c"><div class="h-id">H5</div><div class="h-cat">LIVING MAT.</div><div class="h-shift">그래픽 위계 <span class="h-arrow">→</span> 빛 위계</div><div class="h-desc">10ft 원거리에서 *빛의 농도가 위계*.</div></div>
+    <div class="h10c"><div class="h-id">H6</div><div class="h-cat">SOLID LIGHT</div><div class="h-shift">다채색 <span class="h-arrow">→</span> 단일 광원</div><div class="h-desc">콘텐츠 색과 경쟁하지 않는 *Solid Blue 농도 시스템*.</div></div>
+    <div class="h10c"><div class="h-id">H7</div><div class="h-cat">SOLID LIGHT</div><div class="h-shift">고정 톤 <span class="h-arrow">→</span> 환경 톤</div><div class="h-desc">시간·환경광·재실에 자동 적응하는 *Atmospheric Tone*.</div></div>
+    <div class="h10c"><div class="h-id">H8</div><div class="h-cat">CO-AUTHORED</div><div class="h-shift">단일 굵기 <span class="h-arrow">→</span> Variable Typo</div><div class="h-desc">AI 메타에 따라 *굵기·자간이 가변*되는 적응 타이포.</div></div>
+    <div class="h10c"><div class="h-id">H9</div><div class="h-cat">QUIET CANVAS</div><div class="h-shift">갤러리 <span class="h-arrow">→</span> Intelligent Canvas</div><div class="h-desc">Friend 펜던트처럼 *조용히 살아있는 정보 표면*.</div></div>
+    <div class="h10c"><div class="h-id">H10</div><div class="h-cat">QUIET CANVAS</div><div class="h-shift">리스트 <span class="h-arrow">→</span> Persona Visual</div><div class="h-desc">Vision Pro Persona처럼 *AI 화신이 화면 위 시각 객체*.</div></div>
+  </div>
+</section>
+
+
+<!-- ============ 15. 5 VISUAL HYPOTHESES (트렌드 리서치의 최종 결론) ============ -->
+<section class="slide" data-index="13 / 15" data-section="VISUAL HYPOTHESIS · CONCLUSION">
+  <span class="eyebrow">Hypothesis B · Conclusion of AI Visual Trend Research</span>
+  <h2>다섯 가설, <span class="blue-text">트렌드 리서치의 최종 결론.</span></h2>
+
+  <div class="conclusion-banner">
+    <div class="cb-label">FROM TREND TO HYPOTHESIS</div>
+    <p class="cb-title">9개 AI-Native 사례에서 추출한 <strong>박동·피어남·속삭임</strong>의 비주얼 어휘는, 비주얼 5영역의 다섯 가설로 응축된다.</p>
+    <p class="cb-text">아래 다섯 가설은 본 보고서 트렌드 리서치의 <em>최종 결론</em>이자, 이후 모든 디자인 시스템·키비주얼·핵심 스크린의 *근거*다. 각 가설은 어느 사례에서 도출되었는지(TRACE) 추적 가능하며, 다섯이 함께 작동할 때 AI-Native 정신의 통합 시스템이 완성된다.</p>
+  </div>
+
+  <div class="hyp-overview" style="margin-top:20px">
+    <div class="hov"><span class="n">H1</span><span class="ti">Generative Layout — 고정 그리드에서 빌드되는 레이아웃으로</span><span class="cat">LAYOUT</span></div>
+    <div class="hov"><span class="n">H2</span><span class="ti">Co-authored Content — 단일 썸네일에서 두 저자 카드로</span><span class="cat">CONTENT</span></div>
+    <div class="hov"><span class="n">H3</span><span class="ti">Living Material — 평면에서 콘텐츠 통합 광학 재질로</span><span class="cat">MATERIAL</span></div>
+    <div class="hov"><span class="n">H4</span><span class="ti">Solid Light — 다채색에서 단일 광원 시그니처로</span><span class="cat">COLOR</span></div>
+    <div class="hov"><span class="n">H5</span><span class="ti">Quiet Canvas — 갤러리에서 조용한 정보 표면으로</span><span class="cat">AMBIENT</span></div>
+  </div>
+
+  <h3 style="margin-top:28px">각 가설 상세 — 비주얼 요소 · 키워드 · 트렌드 기원</h3>
+
+  <!-- H1 -->
+  <div class="vh-detail" style="margin-top:18px">
+    <div class="vh-vis">
+      <svg viewBox="0 0 240 180" style="width:100%;height:100%">
+        <rect x="10" y="10" width="100" height="80" rx="6" fill="#2D6AFF" opacity=".95"/>
+        <rect x="118" y="10" width="58" height="36" rx="6" fill="#2D6AFF" opacity=".55"/>
+        <rect x="184" y="10" width="46" height="36" rx="6" fill="#2D6AFF" opacity=".38"/>
+        <rect x="118" y="54" width="55" height="36" rx="6" fill="#2D6AFF" opacity=".3"/>
+        <rect x="181" y="54" width="49" height="36" rx="6" fill="#2D6AFF" opacity=".22"/>
+        <rect x="10" y="98" width="52" height="72" rx="6" fill="#2D6AFF" opacity=".22"/>
+        <rect x="70" y="98" width="98" height="72" rx="6" fill="#2D6AFF" opacity=".15"/>
+        <rect x="176" y="98" width="54" height="72" rx="6" fill="#2D6AFF" opacity=".1"/>
+      </svg>
+    </div>
+    <div>
+      <div class="h-tag">H1 · GENERATIVE LAYOUT</div>
+      <div class="h-title">고정 그리드에서 빌드되는 레이아웃으로</div>
+      <div class="h-trace">TRACE ← Comfy UI · Tldraw makereal · Recraft (Bloom)</div>
+      <div class="h-kw"><span class="pill kw">Magnetic Grid</span><span class="pill kw">Node-based</span><span class="pill kw">Build Result</span></div>
+      <p class="h-body">Comfy UI의 노드 워크플로우와 Recraft의 스타일 컨트롤이 보여주듯, AI 시대엔 *콘텐츠 배치가 매번 생성 규칙으로부터 빌드*된다. 따라서 레이아웃은 <em>매 진입마다 카드 크기·위치가 동적으로 재배치되며, 카드 컴포넌트도 LLM이 생성하는 마그네틱 빌드 그리드</em>로 전환되어야 한다.</p>
+    </div>
+  </div>
+
+  <!-- H2 -->
+  <div class="vh-detail">
+    <div class="vh-vis">
+      <svg viewBox="0 0 240 180" style="width:100%;height:100%">
+        <rect x="14" y="14" width="100" height="152" rx="10" fill="#0F1830" stroke="#2D6AFF" stroke-width="1.2"/>
+        <rect x="22" y="22" width="84" height="46" rx="4" fill="rgba(45,106,255,.7)"/>
+        <text x="22" y="86" fill="#fff" font-size="9" font-weight="600">USER · TYPED</text>
+        <rect x="22" y="94" width="80" height="3" rx="1" fill="rgba(255,255,255,.95)"/>
+        <rect x="22" y="102" width="65" height="3" rx="1" fill="rgba(255,255,255,.95)"/>
+        <text x="22" y="126" fill="rgba(140,150,172,.7)" font-size="9" font-weight="600">AI · GRAY</text>
+        <rect x="22" y="134" width="78" height="3" rx="1" fill="rgba(140,150,172,.55)"/>
+        <rect x="22" y="142" width="60" height="3" rx="1" fill="rgba(140,150,172,.55)"/>
+        <rect x="124" y="14" width="100" height="152" rx="10" fill="#0F1830" opacity=".75"/>
+        <rect x="132" y="22" width="84" height="46" rx="4" fill="rgba(255,255,255,.06)"/>
+        <text x="132" y="86" fill="#C0C7D6" font-size="9" font-weight="600">DIFFERENT USER</text>
+        <rect x="132" y="94" width="60" height="3" rx="1" fill="rgba(255,255,255,.6)"/>
+      </svg>
+    </div>
+    <div>
+      <div class="h-tag">H2 · CO-AUTHORED CONTENT</div>
+      <div class="h-title">단일 썸네일에서 두 저자 카드로</div>
+      <div class="h-trace">TRACE ← Granola · Midjourney V7 (Bloom + Whisper)</div>
+      <div class="h-kw"><span class="pill kw">Dual Stream</span><span class="pill kw">Two-tone</span><span class="pill kw">4 Variants</span></div>
+      <p class="h-body">Granola의 흑/회색 두 톤 분리와 Midjourney의 4 variants는 *AI와 사용자가 공동 저자*임을 비주얼로 드러낸다. 따라서 콘텐츠 카드는 <em>사용자가 만든 부분과 AI가 합성한 부분이 두 톤으로 분리되며, 사용자·맥락에 따라 KV·하이라이트·근거가 4 variants로 함께 피어나는 적응형 표면</em>으로 진화한다.</p>
+    </div>
+  </div>
+
+  <!-- H3 -->
+  <div class="vh-detail">
+    <div class="vh-vis">
+      <svg viewBox="0 0 240 180" style="width:100%;height:100%">
+        <defs><radialGradient id="vh3-v8" cx="50%" cy="50%" r="60%"><stop offset="0" stop-color="#2D6AFF" stop-opacity=".6"/><stop offset="1" stop-color="#2D6AFF" stop-opacity="0"/></radialGradient></defs>
+        <rect x="14" y="20" width="100" height="140" rx="14" fill="#0F1830" stroke="#2D6AFF" stroke-width="1.5"/>
+        <rect x="14" y="20" width="100" height="140" rx="14" fill="url(#vh3-v8)"/>
+        <text x="24" y="44" fill="#fff" font-size="9" font-weight="600">Live Surface</text>
+        <text x="24" y="58" fill="#BFD9FF" font-size="7">Krea-like 50ms</text>
+        <rect x="22" y="68" width="40" height="40" rx="4" fill="rgba(45,106,255,.4)"/>
+        <rect x="64" y="68" width="42" height="40" rx="4" fill="rgba(122,175,255,.35)"/>
+        <rect x="22" y="112" width="84" height="6" rx="3" fill="#2D6AFF" opacity=".7"/>
+        <text x="22" y="138" fill="#7AAFFF" font-size="6">Inner Light + Edge Bloom</text>
+        <rect x="126" y="20" width="100" height="140" rx="14" fill="#0F1830"/>
+        <text x="136" y="44" fill="#8C96AC" font-size="9" font-weight="600">Base Surface</text>
+        <text x="136" y="58" fill="#8C96AC" font-size="7" opacity=".7">현재 평면 카드</text>
+      </svg>
+    </div>
+    <div>
+      <div class="h-tag">H3 · LIVING MATERIAL</div>
+      <div class="h-title">평면에서 콘텐츠 통합 광학 재질로</div>
+      <div class="h-trace">TRACE ← Krea · Higgsfield · Tldraw makereal (Pulse)</div>
+      <div class="h-kw"><span class="pill kw">Live Surface</span><span class="pill kw">Inner Light</span><span class="pill kw">Edge Bloom</span><span class="pill kw">Cinematic</span></div>
+      <p class="h-body">Krea의 50ms 캔버스와 Higgsfield의 시네마틱 영상은 *콘텐츠와 매터리얼이 분리되지 않음*을 보여준다. 카드 위 콘텐츠가 매 순간 합성되는 시대엔 그 콘텐츠를 담는 *그릇(재질)도 함께 박동*해야 한다. 따라서 카드는 <em>광원 내장형(Inner Light + Edge Bloom) 살아있는 표면 — 콘텐츠와 매터리얼이 통합된 광학 재질</em>로 재해석된다.</p>
+    </div>
+  </div>
+
+  <!-- H4 -->
+  <div class="vh-detail">
+    <div class="vh-vis">
+      <svg viewBox="0 0 240 180" style="width:100%;height:100%">
+        <rect x="20" y="32" width="200" height="22" rx="4" fill="#2D6AFF"/>
+        <rect x="20" y="64" width="170" height="22" rx="4" fill="rgba(45,106,255,.55)"/>
+        <rect x="20" y="96" width="130" height="22" rx="4" fill="rgba(45,106,255,.28)"/>
+        <rect x="20" y="128" width="90" height="22" rx="4" fill="rgba(45,106,255,.1)"/>
+        <text x="20" y="172" fill="#8C96AC" font-size="9" letter-spacing="2">SOLID BLUE · TONAL HIERARCHY</text>
+      </svg>
+    </div>
+    <div>
+      <div class="h-tag">H4 · SOLID LIGHT</div>
+      <div class="h-title">다채색에서 단일 광원 시그니처로</div>
+      <div class="h-trace">TRACE ← Granola(흑/회색) · Friend pendant (Whisper)</div>
+      <div class="h-kw"><span class="pill kw">Solid Blue</span><span class="pill kw">Tonal Density</span><span class="pill kw">Atmospheric Tone</span></div>
+      <p class="h-body">AI-Native 서비스들이 *색을 줄이고 톤으로 신호*하는 흐름을 보여준다(Granola의 흑/회색, Friend 펜던트의 호흡 빛). TV에서는 콘텐츠 자체가 색을 가지므로 UI 다채색이 콘텐츠와 경쟁한다. 따라서 컬러는 <em>단일 광원(Solid Blue) 의 농도·투명도·블러 시스템 — 빛의 패턴이 시그니처가 되는 톤 어휘</em>로 축소된다.</p>
+    </div>
+  </div>
+
+  <!-- H5 -->
+  <div class="vh-detail">
+    <div class="vh-vis" style="background:radial-gradient(ellipse 80% 60% at 50% 50%, rgba(45,106,255,.35), #050810 70%)">
+      <svg viewBox="0 0 240 180" style="width:100%;height:100%">
+        <ellipse cx="70" cy="50" rx="100" ry="40" fill="#2D6AFF" opacity=".18"/>
+        <ellipse cx="180" cy="130" rx="80" ry="35" fill="#2D6AFF" opacity=".14"/>
+        <text x="20" y="48" fill="#E8ECF3" font-size="22" font-weight="300" letter-spacing="-1">7:42</text>
+        <text x="20" y="62" fill="#8C96AC" font-size="8">Tuesday</text>
+        <rect x="148" y="32" width="84" height="28" rx="6" fill="#0F1830" opacity=".5"/>
+        <text x="156" y="50" fill="#7AAFFF" font-size="8">Tomorrow 9AM</text>
+        <text x="20" y="152" fill="#8C96AC" font-size="7" letter-spacing="2">QUIET · LIVE · PERSONA-AWARE</text>
+      </svg>
+    </div>
+    <div>
+      <div class="h-tag">H5 · QUIET CANVAS</div>
+      <div class="h-title">갤러리에서 조용한 정보 표면으로</div>
+      <div class="h-trace">TRACE ← Friend pendant · Vision Pro Persona · Granola (Whisper + Pulse)</div>
+      <div class="h-kw"><span class="pill kw">Quiet</span><span class="pill kw">Live Activity</span><span class="pill kw">Persona</span><span class="pill kw">Ambient</span></div>
+      <p class="h-body">Friend·omi 펜던트와 Vision Pro Persona는 *AI가 가장 강력할 때 가장 조용하다*는 것을 보여준다. TV는 비시청 시간이 시청 시간보다 길어 *최대 자산이 정적 갤러리로 유실*되므로, 앰비언트는 <em>시간·환경·AI 페르소나·일정에 조용히 박동하는 정보 캔버스</em>로 재정의되어 비시청 시간을 자산화한다.</p>
+    </div>
+  </div>
+
+  <div class="key-findings" style="margin-top:18px">
+    <div class="kf-head"><span class="kf-tag">REJECTION CRITERIA</span><span class="kf-title">각 가설의 정량 검증 기준</span></div>
+    <div class="kf-list" style="grid-template-columns:repeat(5,1fr)">
+      <div class="kf-item"><div class="kf-item-num">H1 기각</div><div class="kf-item-text" style="font-size:11px">빌드 그리드 위계 인지율 &lt; 70%</div></div>
+      <div class="kf-item"><div class="kf-item-num">H2 기각</div><div class="kf-item-text" style="font-size:11px">두 톤 카드 클릭율 ≤ 표준 카드</div></div>
+      <div class="kf-item"><div class="kf-item-num">H3 기각</div><div class="kf-item-text" style="font-size:11px">Live Surface 시청 몰입 저해 &gt; 15%</div></div>
+      <div class="kf-item"><div class="kf-item-num">H4 기각</div><div class="kf-item-text" style="font-size:11px">단일 톤 위계 인지율 &lt; 70%</div></div>
+      <div class="kf-item"><div class="kf-item-num">H5 기각</div><div class="kf-item-text" style="font-size:11px">Quiet Canvas 일일 활성 &lt; 1.5x</div></div>
+    </div>
+  </div>
+
+  <div class="ai-native-scope" style="margin-top:14px">
+    <div class="ans-label" style="color:var(--orange)">OUT OF SCOPE</div>
+    <p class="ans-text" style="font-size:13px;font-weight:400;color:var(--text-soft);margin-bottom:0">AI 인터랙션 시각화(Listening·Thinking·Responding 등)는 본 보고서 범위 아님 — AI·UI 파트의 별도 트랙. 본 보고서는 그 결과물이 들어올 *비주얼 그릇*을 정의한다.</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  Samsung Visual Display · Visual Part · Living Light v8.0 · AI-Native Visual Strategy · Curated Cases
+</footer>
+
+</body>
+</html>
