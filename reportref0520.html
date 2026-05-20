@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Preview · p15.5 Relationship × Visual + p15.6 Appendix</title>
+<style>
+  :root{
+    --bg:#050810;--bg-2:#0A1024;--bg-3:#0F1830;
+    --line:rgba(255,255,255,.07);--line-strong:rgba(255,255,255,.16);
+    --text:#E8ECF3;--text-mute:#8C96AC;--text-soft:#C0C7D6;
+    --blue:#2D6AFF;--blue-bright:#7AAFFF;--blue-pale:#BFD9FF;
+    --green:#7FFFB6;--orange:#FF8A5C;
+    --light-grad: linear-gradient(120deg, #2D6AFF 0%, #7AAFFF 100%);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--text);font-family:'Inter','Pretendard','SamsungOne',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased;letter-spacing:-.005em}
+  ::selection{background:rgba(45,106,255,.45)}
+
+  .light-bg{position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:radial-gradient(ellipse 1200px 600px at 15% -10%, rgba(45,106,255,.22), transparent 60%),
+               radial-gradient(ellipse 1000px 500px at 90% 110%, rgba(45,106,255,.12), transparent 60%);
+    filter:blur(40px)}
+  .grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.035;mix-blend-mode:overlay;
+    background-image:radial-gradient(rgba(255,255,255,.6) 1px, transparent 1px);background-size:3px 3px}
+
+  main{position:relative;z-index:2}
+  section.slide{min-height:100vh;padding:64px 5vw;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+  section.slide::before{content:attr(data-index);position:absolute;top:24px;right:5vw;font-size:11px;letter-spacing:.3em;color:var(--text-mute);font-weight:500}
+  section.slide::after{content:attr(data-section);position:absolute;top:24px;left:5vw;font-size:11px;letter-spacing:.3em;color:var(--text-mute);font-weight:500}
+
+  .eyebrow{display:inline-block;font-size:11px;letter-spacing:.32em;color:var(--text-mute);text-transform:uppercase;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--line-strong)}
+  h2{font-size:clamp(26px,2.8vw,38px);line-height:1.12;font-weight:600;letter-spacing:-.02em;margin-bottom:4px}
+  .blue-text{background:var(--light-grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+  .title-kr{display:block;font-size:13px;color:var(--text-mute);font-weight:400;letter-spacing:0;margin-top:8px;margin-bottom:14px;line-height:1.4}
+  .lead{font-size:clamp(13.5px,1.15vw,16px);color:var(--text-soft);max-width:1020px;line-height:1.55}
+
+  /* ============ Matrix layout ============ */
+  .rel-matrix{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:32px}
+  @media (max-width:1100px){.rel-matrix{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:600px){.rel-matrix{grid-template-columns:1fr}}
+
+  .rm-col{border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.012);display:flex;flex-direction:column;overflow:hidden;position:relative}
+  .rm-col::before{content:"";position:absolute;left:0;top:0;width:100%;height:3px;z-index:1}
+  .rm-col.rm-agent::before{background:var(--orange)}
+  .rm-col.rm-commentator::before{background:#FF8A5C;opacity:.7}
+  .rm-col.rm-concierge::before{background:#7AAFFF}
+  .rm-col.rm-generator::before{background:var(--blue)}
+
+  /* Header — title + KR description */
+  .rm-header{padding:24px 20px 18px;text-align:left;border-bottom:1px solid var(--line)}
+  .rm-num{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.25em;color:var(--text-mute);margin-bottom:8px;margin-top:4px}
+  .rm-name{font-size:24px;font-weight:700;color:var(--text);letter-spacing:-.01em;margin-bottom:6px;line-height:1.05}
+  .rm-kr-desc{font-size:12px;color:var(--text-soft);line-height:1.5;font-weight:400}
+  .rm-kr-desc strong{color:var(--text);font-weight:600}
+
+  /* Situation */
+  .rm-situation{padding:12px 20px;display:flex;gap:10px;align-items:baseline;background:rgba(255,255,255,.02);border-bottom:1px dashed var(--line)}
+  .rm-sit-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.25em;color:var(--text-mute);text-transform:uppercase;flex-shrink:0}
+  .rm-sit-text{font-size:12px;color:var(--text);font-weight:500;line-height:1.4}
+
+  /* Tags */
+  .rm-tags{padding:14px 20px;display:flex;flex-wrap:wrap;gap:5px;border-bottom:1px dashed var(--line)}
+  .rm-tag{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.03em;padding:4px 9px;border-radius:99px;border:1px solid var(--line);background:rgba(255,255,255,.02);color:var(--text-soft);white-space:nowrap}
+  .rm-tag.tag-role{background:rgba(45,106,255,.08);color:var(--blue-bright);border-color:rgba(45,106,255,.25)}
+  .rm-tag.tag-ratio{background:rgba(255,138,92,.08);color:var(--orange);border-color:rgba(255,138,92,.25)}
+  .rm-tag.tag-time{background:rgba(127,255,182,.06);color:var(--green);border-color:rgba(127,255,182,.2)}
+  .rm-tag.tag-layer{background:rgba(255,255,255,.03);color:var(--text-soft);border-color:var(--line-strong)}
+
+  /* Visual key — the star */
+  .rm-visual-key{padding:22px 20px;background:linear-gradient(180deg,rgba(45,106,255,.1),rgba(45,106,255,.02));flex:1;display:flex;flex-direction:column;justify-content:flex-start;border-bottom:1px solid var(--line);min-height:180px}
+  .rm-vk-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.25em;color:var(--blue-bright);margin-bottom:14px;font-weight:600;display:flex;align-items:center;gap:6px}
+  .rm-vk-label::before{content:"✦";font-size:11px}
+  .rm-vk-text{font-size:14px;color:var(--text);line-height:1.65;letter-spacing:-.005em;font-weight:500}
+  .rm-vk-text strong{color:var(--blue-bright);font-weight:700}
+  .rm-vk-text em{color:var(--text);font-style:normal;font-weight:600;background:linear-gradient(180deg,transparent 65%, rgba(45,106,255,.25) 65%);padding:0 2px}
+
+  /* Signature */
+  .rm-signature{padding:14px 20px 18px;font-size:12px;color:var(--blue-bright);font-style:italic;line-height:1.45;text-align:left;background:rgba(255,255,255,.015)}
+  .rm-signature::before{content:"SIGNATURE";display:block;font-style:normal;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.25em;color:var(--text-mute);margin-bottom:6px;font-weight:600}
+
+  /* Conclusion banner */
+  .conclusion-banner{margin-top:32px;padding:24px 28px;border-radius:18px;border:1px solid rgba(45,106,255,.5);background:linear-gradient(135deg, rgba(45,106,255,.15), rgba(45,106,255,.04));position:relative;overflow:hidden}
+  .conclusion-banner::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--blue)}
+  .cb-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.3em;color:var(--blue-bright);margin-bottom:14px;text-transform:uppercase;display:flex;align-items:center;gap:10px}
+  .cb-label::before{content:"●";color:var(--blue);font-size:14px}
+  .cb-title{font-size:clamp(18px,1.6vw,22px);color:var(--text);line-height:1.4;font-weight:600;letter-spacing:-.01em;margin-bottom:10px}
+  .cb-title strong{color:var(--blue-bright)}
+  .cb-text{font-size:13px;color:var(--text-soft);line-height:1.65}
+  .cb-text em{color:var(--blue-bright);font-style:normal;font-weight:600}
+
+  /* ============ Appendix table ============ */
+  .appendix-table{margin-top:24px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:rgba(255,255,255,.012)}
+  .appendix-table table{width:100%;border-collapse:collapse}
+  .appendix-table th, .appendix-table td{padding:14px 16px;text-align:left;border-bottom:1px solid var(--line);font-size:12px;vertical-align:top;line-height:1.55}
+  .appendix-table tr:last-child td{border-bottom:0}
+  .appendix-table th{font-size:10px;letter-spacing:.18em;color:var(--text-mute);text-transform:uppercase;font-weight:600;background:rgba(45,106,255,.04)}
+  .appendix-table th.row-h{width:13%}
+  .appendix-table th.col-agent{color:var(--orange);background:rgba(255,138,92,.06)}
+  .appendix-table th.col-commentator{color:#FF8A5C;background:rgba(255,138,92,.03)}
+  .appendix-table th.col-concierge{color:#7AAFFF;background:rgba(122,175,255,.06)}
+  .appendix-table th.col-generator{color:var(--blue-bright);background:rgba(45,106,255,.08)}
+  .appendix-table th.col-agent .col-name, .appendix-table th.col-commentator .col-name, .appendix-table th.col-concierge .col-name, .appendix-table th.col-generator .col-name{font-size:13px;letter-spacing:-.005em;font-weight:700;margin-bottom:4px;text-transform:none}
+  .appendix-table th.col-agent .col-meta, .appendix-table th.col-commentator .col-meta, .appendix-table th.col-concierge .col-meta, .appendix-table th.col-generator .col-meta{font-size:9px;font-family:'JetBrains Mono',monospace;color:var(--text-mute);letter-spacing:.1em;font-weight:400;text-transform:uppercase}
+  .appendix-table td.row-label{font-weight:600;color:var(--text);background:rgba(45,106,255,.03)}
+  .appendix-table td.row-label .row-sub{display:block;font-size:9.5px;color:var(--text-mute);font-family:'JetBrains Mono',monospace;letter-spacing:.05em;font-weight:400;margin-top:3px;text-transform:uppercase}
+  .appendix-table td{color:var(--text-soft)}
+  .appendix-table td strong{color:var(--text);font-weight:600}
+</style>
+</head>
+<body>
+
+<div class="light-bg"></div>
+<div class="grain"></div>
+
+<main>
+
+<!-- ============ PAGE 1 · p15.5 — Main Matrix ============ -->
+<section class="slide" data-index="p15.5 PREVIEW" data-section="RELATIONSHIP × VISUAL">
+  <span class="eyebrow">Conclusion 3 · 확장 — 관계의 특성이 비주얼을 끌어낸다</span>
+  <h2>Different "Doing", <span class="blue-text">Different Visual.</span></h2>
+  <span class="title-kr">AI의 두잉이 다르면 비주얼도 달라야 한다</span>
+  <p class="lead">각 컬럼은 *AI 4관계의 특성*(상황·역할·비율·시간·Layer)과 *그에 맞는 비주얼 핵심*을 하나의 흐름으로 보여준다. <strong style="color:var(--blue-bright)">관계의 특성 → 비주얼 결정으로 이어지는 인과 매트릭스</strong>. Part 3 비주얼 가설의 정초.</p>
+
+  <div class="rel-matrix">
+
+    <!-- ============ AGENT ============ -->
+    <div class="rm-col rm-agent">
+      <div class="rm-header">
+        <div class="rm-num">RELATIONSHIP 01</div>
+        <div class="rm-name">Agent</div>
+        <div class="rm-kr-desc"><strong>에이전트</strong> — AI가 사용자 위임을 받아 일을 처리하고 결과만 알리는 관계</div>
+      </div>
+      <div class="rm-situation">
+        <span class="rm-sit-label">상황</span>
+        <span class="rm-sit-text">티켓 예매·구매·전송</span>
+      </div>
+      <div class="rm-tags">
+        <span class="rm-tag tag-role">의뢰인 ↔ 비서·에이전트</span>
+        <span class="rm-tag tag-ratio">20 : 80</span>
+        <span class="rm-tag tag-time">즉시</span>
+        <span class="rm-tag tag-layer">Layer 2 · 코너</span>
+      </div>
+      <div class="rm-visual-key">
+        <div class="rm-vk-label">비주얼 핵심</div>
+        <p class="rm-vk-text"><strong>완료 인지</strong>를 위한 <em>강한 액센트 컬러</em> + <em>체크 아이콘</em>, <em>일회성 모션</em> 사용</p>
+      </div>
+      <div class="rm-signature">"비서가 다녀온 자리의 영수증"</div>
+    </div>
+
+    <!-- ============ COMMENTATOR ============ -->
+    <div class="rm-col rm-commentator">
+      <div class="rm-header">
+        <div class="rm-num">RELATIONSHIP 02</div>
+        <div class="rm-name">Commentator</div>
+        <div class="rm-kr-desc"><strong>해설자</strong> — 시청 중 옆에서 정보·해설을 더해주는 관계</div>
+      </div>
+      <div class="rm-situation">
+        <span class="rm-sit-label">상황</span>
+        <span class="rm-sit-text">경기·영화 보며 정보·OST</span>
+      </div>
+      <div class="rm-tags">
+        <span class="rm-tag tag-role">시청자 ↔ 해설자·옆자리 친구</span>
+        <span class="rm-tag tag-ratio">30 : 70</span>
+        <span class="rm-tag tag-time">백그라운드 지속</span>
+        <span class="rm-tag tag-layer">Layer 2 · 가장자리</span>
+      </div>
+      <div class="rm-visual-key">
+        <div class="rm-vk-label">비주얼 핵심</div>
+        <p class="rm-vk-text"><strong>시청 침범 최소화</strong>를 위한 <em>저채도의 가장자리 띠 레이아웃</em>, <em>정적 모션</em>과 <em>글랜서블 타이포</em> 활용</p>
+      </div>
+      <div class="rm-signature">"영화관에서 귓속말로 알려주는 친구"</div>
+    </div>
+
+    <!-- ============ CONCIERGE ============ -->
+    <div class="rm-col rm-concierge">
+      <div class="rm-header">
+        <div class="rm-num">RELATIONSHIP 03</div>
+        <div class="rm-name">Concierge</div>
+        <div class="rm-kr-desc"><strong>컨시어지</strong> — 사용자와 대화하며 추천·큐레이션해주는 관계</div>
+      </div>
+      <div class="rm-situation">
+        <span class="rm-sit-label">상황</span>
+        <span class="rm-sit-text">콘텐츠·분위기 추천 (탐색적 대화)</span>
+      </div>
+      <div class="rm-tags">
+        <span class="rm-tag tag-role">손님 ↔ 소믈리에·큐레이터</span>
+        <span class="rm-tag tag-ratio">50 : 50</span>
+        <span class="rm-tag tag-time">초 단위</span>
+        <span class="rm-tag tag-layer">Layer 3 · 풀스크린</span>
+      </div>
+      <div class="rm-visual-key">
+        <div class="rm-vk-label">비주얼 핵심</div>
+        <p class="rm-vk-text"><strong>추천 비교</strong>를 위한 <em>카드 그리드 레이아웃</em> + <em>따뜻한 액센트 컬러</em>, <em>큰 타이포</em> 활용</p>
+      </div>
+      <div class="rm-signature">"소믈리에처럼 다정하게, 와인은 빠르게"</div>
+    </div>
+
+    <!-- ============ GENERATOR ============ -->
+    <div class="rm-col rm-generator">
+      <div class="rm-header">
+        <div class="rm-num">RELATIONSHIP 04</div>
+        <div class="rm-name">Generator</div>
+        <div class="rm-kr-desc"><strong>창작자</strong> — 사용자가 감독, AI가 도구로 함께 콘텐츠를 만드는 관계</div>
+      </div>
+      <div class="rm-situation">
+        <span class="rm-sit-label">상황</span>
+        <span class="rm-sit-text">영상 생성·콘텐츠 창작</span>
+      </div>
+      <div class="rm-tags">
+        <span class="rm-tag tag-role">감독·창작자 ↔ 도구·조수</span>
+        <span class="rm-tag tag-ratio">90 : 10</span>
+        <span class="rm-tag tag-time">분 단위</span>
+        <span class="rm-tag tag-layer">Layer 3 · 풀스크린</span>
+      </div>
+      <div class="rm-visual-key">
+        <div class="rm-vk-label">비주얼 핵심</div>
+        <p class="rm-vk-text"><strong>장시간 작업 피로도</strong>를 고려한 <em>다크 환경</em>과 <em>저채도</em>, <em>풀스크린 캔버스</em> 우위 + <em>UI 최소화</em></p>
+      </div>
+      <div class="rm-signature">"무대 뒤의 AI, 무대 위의 작업물"</div>
+    </div>
+
+  </div>
+
+  <div class="conclusion-banner">
+    <div class="cb-label">FROM RELATIONSHIP TO VISUAL HYPOTHESIS</div>
+    <p class="cb-title">관계의 특성이 다르면 *비주얼 결정도 다르게 떨어진다*. 이 인과가 <strong>Part 3 비주얼 가설의 정초</strong>가 된다.</p>
+    <p class="cb-text">상세 디자인 요소(Color · Motion · Lifecycle · Layout · Typography)별 비교는 <em>다음 어펜딕스 페이지</em>에서 확인.</p>
+  </div>
+</section>
+
+
+<!-- ============ PAGE 2 · p15.6 — Appendix Table ============ -->
+<section class="slide" data-index="p15.6 APPENDIX" data-section="APPENDIX · 요소별 상세">
+  <span class="eyebrow">Appendix · 관계 × 비주얼 요소 상세 매트릭스</span>
+  <h2>Element by Element, <span class="blue-text">All Four Relationships.</span></h2>
+  <span class="title-kr">5 비주얼 요소 × 4 관계 — 상세 비교 매트릭스</span>
+  <p class="lead">p15.5의 비주얼 핵심 한 문장을 *Color · Motion · Lifecycle · Layout · Typography 5요소로 풀어낸* 참고용 표. 디자이너가 각 비주얼 차원에서 *4관계가 어떻게 다른지*를 정량 비교할 수 있다.</p>
+
+  <div class="appendix-table">
+    <table>
+      <thead>
+        <tr>
+          <th class="row-h">요소</th>
+          <th class="col-agent"><div class="col-name">Agent</div><div class="col-meta">20:80 · 즉시 · L2 코너</div></th>
+          <th class="col-commentator"><div class="col-name">Commentator</div><div class="col-meta">30:70 · 지속 · L2 가장자리</div></th>
+          <th class="col-concierge"><div class="col-name">Concierge</div><div class="col-meta">50:50 · 초 단위 · L3</div></th>
+          <th class="col-generator"><div class="col-name">Generator</div><div class="col-meta">90:10 · 분 단위 · L3</div></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="row-label">Color<span class="row-sub">채도·톤</span></td>
+          <td><strong>최대 채도 한 점</strong> (놓치지 않게)</td>
+          <td><strong>최저 채도</strong> + 투명도 ↑ (시청 비침범)</td>
+          <td>중간 채도 + <strong>따뜻한 액센트</strong></td>
+          <td><strong>최저 채도</strong> + 다크 환경 (피로도 ↓)</td>
+        </tr>
+        <tr>
+          <td class="row-label">Motion<span class="row-sub">움직임·속도</span></td>
+          <td>Appear + fade · <strong>일회성</strong></td>
+          <td><strong>거의 정적</strong> · 정보만 교체</td>
+          <td><strong>Bloom</strong> 빠른 reveal (4 variants 동시)</td>
+          <td><strong>시네마틱 슬로우 reveal</strong> · 반복 없음</td>
+        </tr>
+        <tr>
+          <td class="row-label">Lifecycle<span class="row-sub">존속·소멸</span></td>
+          <td><strong>Auto-dismiss</strong> 3~5초</td>
+          <td><strong>Ambient</strong> (시청 내내)</td>
+          <td><strong>Session</strong> (대화 종료 시)</td>
+          <td><strong>Sticky</strong> (사용자가 떠날 때까지)</td>
+        </tr>
+        <tr>
+          <td class="row-label">Layout<span class="row-sub">카드·밀도</span></td>
+          <td><strong>토스트</strong> (단일 카드 · 체크 아이콘)</td>
+          <td><strong>정보 띠</strong> (1~2행 · 글랜서블)</td>
+          <td><strong>카드 그리드</strong> (4-up · 중간 밀도)</td>
+          <td><strong>풀스크린 캔버스</strong> (밀도 OK · UI 페이드)</td>
+        </tr>
+        <tr>
+          <td class="row-label">Typography<span class="row-sub">크기·강조</span></td>
+          <td>짧고 명료 · <strong>"완료" 한 단어</strong></td>
+          <td>작지만 고가독 · <strong>글랜서블</strong> (가벼운 굵기)</td>
+          <td><strong>크게</strong> · 대화 가독 우선</td>
+          <td><strong>최소화</strong> · 얇은 모노 시그널만</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="conclusion-banner" style="margin-top:24px">
+    <div class="cb-label">HOW TO READ THIS APPENDIX</div>
+    <p class="cb-title">세로로 읽으면 *한 관계의 모든 비주얼 결정*, 가로로 읽으면 *한 요소가 4관계에 걸쳐 어떻게 변화*하는지.</p>
+    <p class="cb-text">예: Color 행을 가로로 따라가면 <em>채도가 최대(Agent) → 최저(Commentator) → 중간(Concierge) → 최저+다크(Generator)</em>로 출렁이는 패턴이 보인다. 이 패턴이 Part 3 *H4 Solid Light 가설*의 입력이 된다.</p>
+  </div>
+</section>
+
+</main>
+
+</body>
+</html>
