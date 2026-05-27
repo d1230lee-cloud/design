@@ -1,0 +1,1604 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Visual Direction Set v2 · Alive · Fluid · Deep</title>
+<style>
+  :root{
+    --bg:#050810;
+    --bg2:#0A0E1A;
+    --bg3:#0E1426;
+    --line:#1A2030;
+    --line2:#252C40;
+    --text:#E8ECF5;
+    --text2:#A8B0C5;
+    --mute:#6A7390;
+    --dim:#4A5270;
+    --blue:#2D6AFF;
+    --blue-soft:#7AAFFF;
+    --blue-deep:#1A4090;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{background:#000;color:var(--text);font-family:'Inter','Pretendard',-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+  body{padding:48px 0;display:flex;flex-direction:column;align-items:center;gap:40px}
+
+  .slide{
+    width:min(1280px, 92vw);
+    aspect-ratio:16/9;
+    background:var(--bg);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:42px 50px;
+    position:relative;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+  }
+
+  /* 메타 */
+  .meta{
+    display:flex;align-items:center;justify-content:space-between;
+    padding-bottom:16px;border-bottom:1px solid var(--line);
+    margin-bottom:22px;flex-shrink:0;
+  }
+  .meta-l{display:flex;align-items:baseline;gap:14px}
+  .h-num{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;letter-spacing:.25em;color:var(--blue);
+    padding:3px 9px;border:1px solid var(--blue);border-radius:3px;
+  }
+  .h-label{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;letter-spacing:.3em;color:var(--mute);text-transform:uppercase;
+  }
+  .meta-r{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;letter-spacing:.25em;color:var(--dim);text-transform:uppercase;
+  }
+
+  /* 헤더 */
+  .header{
+    display:flex;align-items:flex-end;gap:24px;
+    margin-bottom:16px;flex-shrink:0;
+  }
+  .header-text{flex:1;min-width:0}
+  .title-en{
+    font-size:36px;font-weight:600;letter-spacing:-.02em;color:var(--text);line-height:1.05;
+  }
+  .title-ko{
+    font-size:12.5px;font-weight:400;color:var(--text2);margin-top:7px;letter-spacing:-.005em;
+  }
+  .deco{width:72px;height:72px;flex-shrink:0;opacity:0.95}
+
+  /* ============ DERIVATION ============ */
+  .deriv-title{
+    font-size:30px;font-weight:600;letter-spacing:-.02em;color:var(--text);line-height:1.1;text-align:center;
+    margin-bottom:4px;
+  }
+  .deriv-sub{
+    font-size:12px;color:var(--text2);text-align:center;margin-bottom:18px;letter-spacing:.05em;
+  }
+
+  .deriv-section-title{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;letter-spacing:.3em;color:var(--blue);text-transform:uppercase;
+    margin-bottom:10px;
+  }
+
+  /* 5-column shared grid */
+  .deriv-grid{
+    display:grid;grid-template-columns:repeat(5, 1fr);gap:8px;flex:1;min-height:0;
+    grid-auto-rows:auto;
+  }
+
+  /* Transition card */
+  .deriv-tcard{
+    background:var(--bg2);border:1px solid var(--line);border-radius:6px;
+    padding:14px 12px;display:flex;flex-direction:column;gap:7px;
+    min-height:0;
+  }
+  .deriv-tcard-num{
+    font-family:'JetBrains Mono',monospace;
+    font-size:14px;font-weight:700;color:var(--blue);line-height:1;
+  }
+  .deriv-tcard-ko{
+    font-size:13px;font-weight:600;line-height:1.3;letter-spacing:-.005em;
+    display:flex;flex-wrap:wrap;align-items:center;gap:5px;
+  }
+  .deriv-tcard-from{color:var(--mute);font-weight:500}
+  .deriv-tcard-arrow{color:var(--blue);font-weight:700}
+  .deriv-tcard-to{color:var(--blue-soft);font-weight:700}
+  .deriv-tcard-en{
+    font-family:'JetBrains Mono',monospace;
+    font-size:8.5px;letter-spacing:.12em;color:var(--mute);text-transform:uppercase;
+    padding-bottom:6px;border-bottom:1px solid var(--line);
+  }
+  .deriv-tcard-desc{
+    font-size:10.5px;line-height:1.5;color:var(--text2);letter-spacing:-.003em;
+  }
+
+  /* Connector row */
+  .deriv-connector{
+    grid-column:1 / -1;
+    display:flex;align-items:center;justify-content:center;gap:14px;
+    padding:6px 0 4px;
+  }
+  .deriv-connector-line{
+    flex:1;height:1px;background:linear-gradient(90deg, transparent, var(--blue), transparent);opacity:0.4;
+  }
+  .deriv-connector-text{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;letter-spacing:.3em;color:var(--blue);text-transform:uppercase;
+  }
+
+  /* Keyword card (spans columns) */
+  .deriv-kcard{
+    background:linear-gradient(180deg, rgba(45,106,255,0.18) 0%, rgba(45,106,255,0.05) 100%);
+    border:1px solid var(--blue);border-radius:6px;
+    padding:14px 16px;display:flex;flex-direction:column;gap:5px;justify-content:center;
+    text-align:center;align-items:center;
+    position:relative;
+  }
+  .deriv-kcard.span-2{grid-column:span 2}
+  .deriv-kcard.span-1{grid-column:span 1}
+  .deriv-kcard-tag{
+    font-family:'JetBrains Mono',monospace;
+    font-size:9px;letter-spacing:.25em;color:var(--blue-soft);text-transform:uppercase;
+  }
+  .deriv-kcard-en{
+    font-size:26px;font-weight:700;color:var(--blue-soft);letter-spacing:-.01em;line-height:1;
+  }
+  .deriv-kcard-ko{
+    font-size:11.5px;color:var(--text);letter-spacing:-.005em;font-weight:500;
+  }
+  .deriv-kcard-map{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;letter-spacing:.15em;color:var(--blue);font-weight:700;
+    padding-top:6px;margin-top:2px;border-top:1px solid rgba(45,106,255,0.3);width:100%;
+  }
+
+  /* ============ KEYWORD MAIN ============ */
+  .kw-what{
+    font-size:15px;line-height:1.55;color:var(--blue-soft);
+    padding:14px 18px;
+    background:linear-gradient(90deg, rgba(45,106,255,0.10) 0%, rgba(45,106,255,0.02) 100%);
+    border-left:3px solid var(--blue);
+    margin-bottom:18px;flex-shrink:0;
+    font-style:italic;letter-spacing:-.005em;
+  }
+  .kw-grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:14px;flex:1;min-height:0;
+  }
+  .kw-card{
+    background:var(--bg2);border:1px solid var(--line);border-radius:6px;
+    padding:14px 16px;display:flex;flex-direction:column;gap:8px;
+  }
+  .kw-card-title{
+    font-family:'JetBrains Mono',monospace;
+    font-size:9px;letter-spacing:.3em;color:var(--blue);text-transform:uppercase;
+  }
+  .kw-why{font-size:12px;line-height:1.55;color:var(--text2);letter-spacing:-.003em}
+  .kw-cues{display:flex;flex-wrap:wrap;gap:5px}
+  .kw-cue{
+    font-family:'JetBrains Mono',monospace;
+    font-size:9.5px;letter-spacing:.1em;color:var(--blue-soft);
+    padding:5px 9px;background:rgba(45,106,255,0.08);
+    border:1px solid rgba(45,106,255,0.25);border-radius:3px;
+  }
+  .kw-scn{display:flex;flex-direction:column;gap:5px}
+  .kw-scn-item{
+    display:flex;align-items:baseline;gap:8px;
+    font-size:11px;line-height:1.4;color:var(--text2);letter-spacing:-.003em;
+  }
+  .kw-scn-icon{font-size:12px;flex-shrink:0;width:18px}
+  .kw-scn-text{flex:1}
+  .kw-scn-text em{color:var(--blue-soft);font-style:normal;font-weight:600}
+  .kw-hypos{display:flex;flex-direction:column;gap:5px}
+  .kw-hypo-row{
+    display:flex;align-items:flex-start;gap:8px;
+    font-size:11px;line-height:1.4;
+  }
+  .kw-hypo-row.new .kw-hypo-pill{background:var(--blue);color:#fff}
+  .kw-hypo-pill{
+    font-family:'JetBrains Mono',monospace;
+    font-size:8.5px;letter-spacing:.15em;color:var(--blue);
+    padding:2px 6px;border:1px solid var(--blue);border-radius:2px;
+    flex-shrink:0;min-width:34px;text-align:center;line-height:1.4;
+  }
+  .kw-hypo-text{flex:1;color:var(--text2);letter-spacing:-.003em}
+  .kw-hypo-text strong{color:var(--text);font-weight:600}
+
+  /* ============ HYPOTHESIS PAGE ============ */
+  .hp-link{
+    display:inline-block;
+    font-family:'JetBrains Mono',monospace;
+    font-size:9px;letter-spacing:.2em;color:var(--blue);
+    padding:3px 8px;border:1px solid var(--blue);border-radius:3px;
+    margin-left:8px;text-transform:uppercase;
+  }
+  .hp-new{
+    display:inline-block;
+    font-family:'JetBrains Mono',monospace;
+    font-size:8.5px;letter-spacing:.2em;color:#fff;background:var(--blue);
+    padding:3px 7px;border-radius:2px;margin-left:6px;text-transform:uppercase;vertical-align:middle;
+  }
+  .hp-def{
+    font-size:15px;line-height:1.55;color:var(--blue-soft);
+    padding:14px 18px;
+    background:linear-gradient(90deg, rgba(45,106,255,0.10) 0%, rgba(45,106,255,0.02) 100%);
+    border-left:3px solid var(--blue);
+    margin-bottom:18px;flex-shrink:0;
+    font-style:italic;letter-spacing:-.005em;
+  }
+  .hp-body{
+    display:grid;grid-template-columns:1.4fr 1fr;gap:14px;flex:1;min-height:0;
+  }
+  .hp-left{display:flex;flex-direction:column;gap:10px}
+  .hp-right{display:flex;flex-direction:column;gap:10px}
+  .hp-section{
+    background:var(--bg2);border:1px solid var(--line);border-radius:6px;
+    padding:14px 16px;display:flex;flex-direction:column;gap:10px;
+  }
+  .hp-section.flex1{flex:1;min-height:0}
+  .hp-section-title{
+    font-family:'JetBrains Mono',monospace;
+    font-size:9px;letter-spacing:.3em;color:var(--blue);text-transform:uppercase;
+  }
+  .hp-elements{display:flex;flex-direction:column;gap:8px}
+  .hp-elem{
+    display:flex;align-items:flex-start;gap:10px;
+    padding:8px 10px;background:rgba(0,0,0,0.3);border-radius:4px;
+    border-left:2px solid rgba(45,106,255,0.4);
+  }
+  .hp-elem-num{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;letter-spacing:.1em;color:var(--blue);
+    min-width:20px;flex-shrink:0;font-weight:600;
+  }
+  .hp-elem-body{flex:1}
+  .hp-elem-name{font-size:12.5px;font-weight:600;color:var(--text);letter-spacing:-.005em;line-height:1.3}
+  .hp-elem-desc{font-size:10.5px;color:var(--text2);margin-top:2px;line-height:1.5;letter-spacing:-.003em}
+  .hp-scn-text{font-size:11.5px;line-height:1.55;color:var(--text2);letter-spacing:-.003em}
+  .hp-scn-text em{color:var(--blue-soft);font-style:normal;font-weight:600}
+
+  /* ============ SUMMARY ============ */
+  .sum-slogan{
+    text-align:center;padding:22px 0 18px;margin-bottom:16px;
+    background:linear-gradient(180deg, rgba(45,106,255,0.08) 0%, rgba(45,106,255,0.02) 100%);
+    border:1px solid rgba(45,106,255,0.3);border-radius:8px;flex-shrink:0;
+  }
+  .sum-slogan-ko{font-size:22px;font-weight:600;color:var(--blue-soft);letter-spacing:-.01em;line-height:1.3}
+  .sum-slogan-en{font-size:12.5px;font-weight:400;color:var(--text2);margin-top:5px;letter-spacing:.02em;font-style:italic}
+  .sum-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;flex:1;min-height:0}
+  .sum-card{
+    background:var(--bg2);border:1px solid var(--line);border-radius:6px;
+    padding:18px 16px;display:flex;flex-direction:column;gap:10px;position:relative;
+  }
+  .sum-card-num{position:absolute;top:14px;right:16px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.2em;color:var(--mute)}
+  .sum-kw-en{font-size:24px;font-weight:700;color:var(--blue-soft);letter-spacing:-.01em;line-height:1}
+  .sum-kw-ko{font-size:11.5px;color:var(--text);margin-top:2px;letter-spacing:-.005em}
+  .sum-thought{font-size:11px;line-height:1.5;color:var(--text2);padding:9px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);letter-spacing:-.003em;font-style:italic}
+  .sum-row{display:flex;align-items:baseline;gap:8px;font-size:10px;line-height:1.5}
+  .sum-row-label{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.2em;color:var(--mute);text-transform:uppercase;min-width:42px}
+  .sum-row-val{flex:1;color:var(--text2);font-size:10.5px;letter-spacing:-.003em}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     SLIDE 1 · DERIVATION
+============================================================ -->
+<div class="slide">
+  <div class="meta">
+    <div class="meta-l">
+      <span class="h-num">DRV</span>
+      <span class="h-label">Visual Direction · Derivation</span>
+    </div>
+    <div class="meta-r">VD Set v2 · 1/18</div>
+  </div>
+
+  <div class="deriv-title">왜 Alive · Fluid · Deep 인가</div>
+  <div class="deriv-sub">기존 TV → AI TV · 5가지 변화에서 도출한 3개의 비주얼 디렉션</div>
+
+  <div class="deriv-section-title">기존 TV → AI TV · 5가지 변화</div>
+
+  <div class="deriv-grid">
+    <!-- Row 1: 5 transition cards (reordered by mapping group) -->
+    <div class="deriv-tcard">
+      <div class="deriv-tcard-num">①</div>
+      <div class="deriv-tcard-ko">
+        <span class="deriv-tcard-from">정적</span>
+        <span class="deriv-tcard-arrow">→</span>
+        <span class="deriv-tcard-to">살아있음</span>
+      </div>
+      <div class="deriv-tcard-en">Static → Alive</div>
+      <div class="deriv-tcard-desc">정지된 화면에서, 호흡하고 반응하는 표면.</div>
+    </div>
+
+    <div class="deriv-tcard">
+      <div class="deriv-tcard-num">③</div>
+      <div class="deriv-tcard-ko">
+        <span class="deriv-tcard-from">일방향</span>
+        <span class="deriv-tcard-arrow">→</span>
+        <span class="deriv-tcard-to">응답성</span>
+      </div>
+      <div class="deriv-tcard-en">One-way → Responsive</div>
+      <div class="deriv-tcard-desc">일방적 호출에서, 사용자 존재와 맥락에 반응.</div>
+    </div>
+
+    <div class="deriv-tcard">
+      <div class="deriv-tcard-num">②</div>
+      <div class="deriv-tcard-ko">
+        <span class="deriv-tcard-from">카탈로그</span>
+        <span class="deriv-tcard-arrow">→</span>
+        <span class="deriv-tcard-to">가능성</span>
+      </div>
+      <div class="deriv-tcard-en">Catalog → Possibility</div>
+      <div class="deriv-tcard-desc">유한한 카탈로그에서, 무한히 펼쳐지는 가능성.</div>
+    </div>
+
+    <div class="deriv-tcard">
+      <div class="deriv-tcard-num">⑤</div>
+      <div class="deriv-tcard-ko">
+        <span class="deriv-tcard-from">결정</span>
+        <span class="deriv-tcard-arrow">→</span>
+        <span class="deriv-tcard-to">흐름</span>
+      </div>
+      <div class="deriv-tcard-en">Decision → Flow</div>
+      <div class="deriv-tcard-desc">결정 후 시청에서, 흐르듯 이어지는 발견과 변형.</div>
+    </div>
+
+    <div class="deriv-tcard">
+      <div class="deriv-tcard-num">④</div>
+      <div class="deriv-tcard-ko">
+        <span class="deriv-tcard-from">표면</span>
+        <span class="deriv-tcard-arrow">→</span>
+        <span class="deriv-tcard-to">깊이</span>
+      </div>
+      <div class="deriv-tcard-en">Surface → Depth</div>
+      <div class="deriv-tcard-desc">평면적 공간에서, 콘텐츠·정보·과정의 다층 공존.</div>
+    </div>
+
+    <!-- Connector -->
+    <div class="deriv-connector">
+      <div class="deriv-connector-line"></div>
+      <div class="deriv-connector-text">3 키워드로 묶음 · Synthesis</div>
+      <div class="deriv-connector-line"></div>
+    </div>
+
+    <!-- Row 2: 3 keyword cards (aligned to transitions above) -->
+    <div class="deriv-kcard span-2">
+      <div class="deriv-kcard-tag">VD-01</div>
+      <div class="deriv-kcard-en">Alive</div>
+      <div class="deriv-kcard-ko">호흡하고 응답하는 표면</div>
+      <div class="deriv-kcard-map">① + ③</div>
+    </div>
+
+    <div class="deriv-kcard span-2">
+      <div class="deriv-kcard-tag">VD-02</div>
+      <div class="deriv-kcard-en">Fluid</div>
+      <div class="deriv-kcard-ko">고정없는 유기적 구성</div>
+      <div class="deriv-kcard-map">② + ⑤</div>
+    </div>
+
+    <div class="deriv-kcard span-1">
+      <div class="deriv-kcard-tag">VD-03</div>
+      <div class="deriv-kcard-en">Deep</div>
+      <div class="deriv-kcard-ko">층층이 부유하는 공간</div>
+      <div class="deriv-kcard-map">④</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SLIDE 2 · ALIVE MAIN
+============================================================ -->
+<div class="slide">
+  <div class="meta">
+    <div class="meta-l">
+      <span class="h-num">VD-01</span>
+      <span class="h-label">Alive · Main</span>
+    </div>
+    <div class="meta-r">VD Set v2 · 2/18</div>
+  </div>
+
+  <div class="header">
+    <div class="header-text">
+      <div class="title-en">Alive</div>
+      <div class="title-ko">살아있다 — 화면이 사용자에 응답하며 호흡하는 표면</div>
+    </div>
+    <svg class="deco" viewBox="0 0 88 88">
+      <defs><radialGradient id="g1" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#7AAFFF" stop-opacity="0.9"/><stop offset="100%" stop-color="#2D6AFF" stop-opacity="0"/></radialGradient></defs>
+      <circle cx="44" cy="44" r="34" fill="url(#g1)"/>
+      <circle cx="44" cy="44" r="10" fill="#7AAFFF"/>
+    </svg>
+  </div>
+
+  <div class="kw-what">
+    "AI는 사용자의 존재·맥락에 의식적으로 반응하기 때문에, 화면은 정적 평면이 아니라 호흡하고 신호하는 살아있는 표면이 된다."
+  </div>
+
+  <div class="kw-grid">
+    <div class="kw-card">
+      <div class="kw-card-title">Why · 미래 AI TV에 왜 필요한가</div>
+      <div class="kw-why">기존 TV의 일방향·정적 한계를 깨고, 화면이 사용자와 대화한다는 인상으로 신뢰와 친밀감 형성.</div>
+    </div>
+
+    <div class="kw-card">
+      <div class="kw-card-title">5 Visual Cues · 비주얼 단서</div>
+      <div class="kw-cues">
+        <span class="kw-cue">Glow</span>
+        <span class="kw-cue">Breathe</span>
+        <span class="kw-cue">Color Shift</span>
+        <span class="kw-cue">Reflection</span>
+        <span class="kw-cue">Pulse</span>
+      </div>
+    </div>
+
+    <div class="kw-card">
+      <div class="kw-card-title">발현 시나리오</div>
+      <div class="kw-scn">
+        <div class="kw-scn-item"><span class="kw-scn-icon">🌙</span><span class="kw-scn-text"><em>Standby</em> · 카드가 호흡하듯 발광 사이클</span></div>
+        <div class="kw-scn-item"><span class="kw-scn-icon">👤</span><span class="kw-scn-text"><em>접근 감지</em> · 점진적 발광으로 깨어남</span></div>
+        <div class="kw-scn-item"><span class="kw-scn-icon">🎧</span><span class="kw-scn-text"><em>AI 듣는 중</em> · 가장자리 부드러운 펄스</span></div>
+        <div class="kw-scn-item"><span class="kw-scn-icon">✅</span><span class="kw-scn-text"><em>응답 완료</em> · 글로우 + 출처 신뢰 신호</span></div>
+        <div class="kw-scn-item"><span class="kw-scn-icon">🎬</span><span class="kw-scn-text"><em>시청 중</em> · 가장자리가 콘텐츠 톤에 동기화</span></div>
+      </div>
+    </div>
+
+    <div class="kw-card">
+      <div class="kw-card-title">매핑 가설 (5) · Mapped Hypotheses</div>
+      <div class="kw-hypos">
+        <div class="kw-hypo-row"><span class="kw-hypo-pill">H5</span><span class="kw-hypo-text"><strong>Living Material</strong> · 컨테이너·콘텐츠가 다른 어휘로 호흡</span></div>
+        <div class="kw-hypo-row"><span class="kw-hypo-pill">H7</span><span class="kw-hypo-text"><strong>Edge Ambient</strong> · 가장자리가 저채도 글로우로 신호</span></div>
+        <div class="kw-hypo-row"><span class="kw-hypo-pill">H6</span><span class="kw-hypo-text"><strong>Glanceable Surface</strong> · 꺼진 화면도 깨어있음</span></div>
+        <div class="kw-hypo-row"><span class="kw-hypo-pill">H4</span><span class="kw-hypo-text"><strong>Symbolic Cue</strong> · AI 상태를 명시적 글리프로 신호</span></div>
+        <div class="kw-hypo-row new"><span class="kw-hypo-pill">NEW</span><span class="kw-hypo-text"><strong>Trust Signal</strong> · 출처·확신도로 응답 신뢰 시각화</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SLIDE 3 · H5 Living Material
+============================================================ -->
+<div class="slide">
+  <div class="meta">
+    <div class="meta-l">
+      <span class="h-num">H5</span>
+      <span class="h-label">Alive · Hypothesis</span>
+      <span class="hp-link">Alive</span>
+    </div>
+    <div class="meta-r">VD Set v2 · 3/18</div>
+  </div>
+
+  <div class="header">
+    <div class="header-text">
+      <div class="title-en">Living Material</div>
+      <div class="title-ko">살아있는 매터리얼 — 컨테이너와 콘텐츠가 다른 매터리얼로 호흡</div>
+    </div>
+  </div>
+
+  <div class="hp-def">
+    "AI는 정보와 컨테이너를 다른 위계로 다루기 때문에, 화면은 두 매터리얼 어휘로 분리되어 호흡한다."
+  </div>
+
+  <div class="hp-body">
+    <div class="hp-left">
+      <div class="hp-section flex1">
+        <div class="hp-section-title">3 Elements · 핵심 요소</div>
+        <div class="hp-elements">
+          <div class="hp-elem">
+            <div class="hp-elem-num">01</div>
+            <div class="hp-elem-body">
+              <div class="hp-elem-name">Variable Blur Glass</div>
+              <div class="hp-elem-desc">컨테이너 어휘 — 가변 블러로 Layer 깊이 표현 (Light 5px · Medium 20px · Heavy 40px+)</div>
+            </div>
+          </div>
+          <div class="hp-elem">
+            <div class="hp-elem-num">02</div>
+            <div class="hp-elem-body">
+              <div class="hp-elem-name">Diffused Aurora</div>
+              <div class="hp-elem-desc">컨테이너 어휘 — 가장자리 발광으로 OLED 강점 활용한 4 Action 구분</div>
+            </div>
+          </div>
+          <div class="hp-elem">
+            <div class="hp-elem-num">03</div>
+            <div class="hp-elem-body">
+              <div class="hp-elem-name">Adaptive Typography</div>
+              <div class="hp-elem-desc">콘텐츠 어휘 — 가변 폰트가 정보 위계·확신도·시청 거리에 반응</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hp-right">
+      <div class="hp-section">
+        <div class="hp-section-title">적용 단서</div>
+        <div class="kw-cues">
+          <span class="kw-cue">Glow</span>
+          <span class="kw-cue">Breathe</span>
+          <span class="kw-cue">Reflection</span>
+        </div>
+      </div>
+      <div class="hp-section flex1">
+        <div class="hp-section-title">시나리오</div>
+        <div class="hp-scn-text">
+          AI 카드 등장 시 <em>Glass 컨테이너</em>는 뒤 영상을 부드럽게 가리고, <em>안의 타이포</em>는 확신도에 따라 weight가 증감. 컨테이너는 호흡하듯 발광 강도가 변하지만, 텍스트는 또렷이 유지되어 두 매터리얼이 분리된 생명을 가진 영역.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SLIDE 4 · H7 Edge Ambient
+============================================================ -->
+<div class="slide">
+  <div class="meta">
+    <div class="meta-l">
+      <span class="h-num">H7</span>
+      <span class="h-label">Alive · Hypothesis</span>
+      <span class="hp-link">Alive</span>
+    </div>
+    <div class="meta-r">VD Set v2 · 4/18</div>
+  </div>
+
+  <div class="header">
+    <div class="header-text">
+      <div class="title-en">Edge Ambient</div>
+      <div class="title-ko">엣지 앰비언트 — 화면 가장자리가 살아 신호하는 저채도 어휘</div>
+    </div>
+  </div>
+
+  <div class="hp-def">
+    "AI는 시청을 침범하지 않으면서 존재를 알려야 하기 때문에, 가장자리만 살아 움직이며 신호한다."
+  </div>
+
+  <div class="hp-body">
+    <div class="hp-left">
+      <div class="hp-section flex1">
+        <div class="hp-section-title">3 Elements · 핵심 요소</div>
+        <div class="hp-elements">
+          <div class="hp-elem">
+            <div class="hp-elem-num">01</div>
+            <div class="hp-elem-body">
+              <div class="hp-elem-name">Edge Band</div>
+              <div class="hp-elem-desc">화면 가장자리 얇은 띠로 AI 상태(듣는 중·생각 중·완료)를 표현하는 가장 보수적 신호</div>
+            </div>
+          </div>
+          <div class="hp-elem">
+            <div class="hp-elem-num">02</div>
+            <div class="hp-elem-body">
+              <div class="hp-elem-name">Ambient Hue Shift</div>
+              <div class="hp-elem-desc">화면 영역의 색온도·채도가 미세하게 전이하며 AI 모드 변화를 암시</div>
+            </div>
+          </div>
+          <div class="hp-elem">
+            <div class="hp-elem-num">03</div>
+            <div class="hp-elem-body">
+              <div class="hp-elem-name">Spotlight Dimming</div>
+              <div class="hp-elem-desc">특정 콘텐츠만 밝게, 주변은 디밍하는 역방향 강조 연출</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hp-right">
+      <div class="hp-section">
+        <div class="hp-section-title">적용 단서</div>
+        <div class="kw-cues">
+          <span class="kw-cue">Glow</span>
+          <span class="kw-cue">Color Shift</span>
+          <span class="kw-cue">Pulse</span>
+        </div>
+      </div>
+      <div class="hp-section flex1">
+        <div class="hp-section-title">시나리오</div>
+        <div class="hp-scn-text">
+          영화 시청 중 AI가 추천을 준비하면 <em>화면 우측 가장자리</em>가 부드럽게 빛나기 시작. 사용자가 인지하지 못해도 콘텐츠는 방해받지 않으며, 사용자가 시선을 옮길 때 신호가 강화되어 추천 카드로 자연스럽게 이어지는 영역.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SLIDE 5 · H6 Glanceable Surface
+============================================================ -->
+<div class="slide">
+  <div class="meta">
+    <div class="meta-l">
+      <span class="h-num">H6</span>
+      <span class="h-label">Alive · Hypothesis</span>
+      <span class="hp-link">Alive</span>
+    </div>
+    <div class="meta-r">VD Set v2 · 5/18</div>
+  </div>
+
+  <div class="header">
+    <div class="header-text">
+      <div class="title-en">Glanceable Surface</div>
+      <div class="title-ko">글랜서블 서피스 — 꺼진 화면도 깨어 정보를 흘리는 Layer 0</div>
+    </div>
+  </div>
+
+  <div class="hp-def">
+    "TV는 꺼져 있는 시간이 더 많기 때문에, 표면은 저전력 상태에서도 깨어 있어 핵심 정보를 흘려보낸다."
+  </div>
+
+  <div class="hp-body">
+    <div class="hp-left">
+      <div class="hp-section flex1">
+        <div class="hp-section-title">3 Elements · 핵심 요소</div>
+        <div class="hp-elements">
+          <div class="hp-elem">
+            <div class="hp-elem-num">01</div>
+            <div class="hp-elem-body">
+              <div class="hp-elem-name">Standby Glance</div>
+              <div class="hp-elem-desc">저전력 디스플레이로 시간·날씨·일정·요약을 시야 끝에서 인지 가능하게 노출</div>
+            </div>
+          </div>
+          <div class="hp-elem">
+            <div class="hp-elem-num">02</div>
+            <div class="hp-elem-body">
+              <div class="hp-elem-name">Ambient Information</div>
+              <div class="hp-elem-desc">주변광 수준의 정보 노출 — 글로우 색·세기로 정보 종류를 구분</div>
+            </div>
+          </div>
+          <div class="hp-elem">
+            <div class="hp-elem-num">03</div>
+            <div class="hp-elem-body">
+              <div class="hp-elem-name">Wake on Approach</div>
+              <div class="hp-elem-desc">접근·시선 감지 시 정보 깊이가 단계적으로 증가 (글로우→텍스트→상세)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hp-right">
+      <div class="hp-section">
+        <div class="hp-section-title">적용 단서</div>
+        <div class="kw-cues">
+          <span class="kw-cue">Glow</span>
+          <span class="kw-cue">Breathe</span>
+          <span class="kw-cue">Color Shift</span>
+        </div>
+      </div>
+      <div class="hp-section flex1">
+        <div class="hp-section-title">시나리오</div>
+        <div class="hp-scn-text">
+          거실에 들어서면 어두운 화면 위 <em>은은한 카드 글로우</em>가 보임. 가까이 가면 시간·약속이 떠오르고, 마주 서면 상세 정보로 확장. 사용자 발걸음과 동기화되는 살아있는 표면 영역.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SLIDE 6 · H4 Symbolic Cue
+============================================================ -->
+<div class="slide">
+  <div class="meta">
+    <div class="meta-l">
+      <span class="h-num">H4</span>
+      <span class="h-label">Alive · Hypothesis</span>
+      <span class="hp-link">Alive</span>
+    </div>
+    <div class="meta-r">VD Set v2 · 6/18</div>
+  </div>
+
+  <div class="header">
+    <div class="header-text">
+      <div class="title-en">Symbolic Cue</div>
+      <div class="title-ko">상징 큐 — AI 상태와 행위를 글리프로 명시적으로 신호</div>
+    </div>
+  </div>
+
+  <div class="hp-def">
+    "AI의 행위는 보이지 않기 때문에, 화면은 글리프·아이콘이라는 상징 어휘로 '지금 무엇을 하는가'를 명시한다."
+  </div>
+
+  <div class="hp-body">
+    <div class="hp-left">
+      <div class="hp-section flex1">
+        <div class="hp-section-title">3 Elements · 핵심 요소</div>
+        <div class="hp-elements">
+          <div class="hp-elem">
+            <div class="hp-elem-num">01</div>
+            <div class="hp-elem-body">
+              <div class="hp-elem-name">State Glyph</div>
+              <div class="hp-elem-desc">상태(듣는 중·생각 중·생성 중·완료·대기)별 고유 글리프 — 텍스트 없이 형태로 인지</div>
+            </div>
+          </div>
+          <div class="hp-elem">
+            <div class="hp-elem-num">02</div>
+            <div class="hp-elem-body">
+              <div class="hp-elem-name">Action Icon</div>
+              <div class="hp-elem-desc">행위(검색·추천·생성·요약·예약·실행)별 아이콘 + 모션으로 즉시 식별</div>
+            </div>
+          </div>
+          <div class="hp-elem">
+            <div class="hp-elem-num">03</div>
+            <div class="hp-elem-body">
+              <div class="hp-elem-name">Persona Mark</div>
+              <div class="hp-elem-desc">Agent·Commentator·Curator·Generator 4 관계가 각자의 시각 시그니처를 가짐</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hp-right">
+      <div class="hp-section">
+        <div class="hp-section-title">적용 단서</div>
+        <div class="kw-cues">
+          <span class="kw-cue">Pulse</span>
+          <span class="kw-cue">Breathe</span>
+          <span class="kw-cue">Reflection</span>
+        </div>
+      </div>
+      <div class="hp-section flex1">
+        <div class="hp-section-title">시나리오</div>
+        <div class="hp-scn-text">
+          "이 영화 분위기 알려줘"라고 말하면 <em>듣는 중 글리프</em>가 점→선으로 변형, <em>생각 중 글리프</em>로 morphing, 완료 시 <em>Curator 페르소나 마크</em>가 카드 위에 새겨져 어떤 AI가 응답했는지 명시되는 영역.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SLIDE 7 · NEW Trust Signal
+============================================================ -->
+<div class="slide">
+  <div class="meta">
+    <div class="meta-l">
+      <span class="h-num">NEW</span>
+      <span class="h-label">Alive · Hypothesis</span>
+      <span class="hp-link">Alive</span>
+    </div>
+    <div class="meta-r">VD Set v2 · 7/18</div>
+  </div>
+
+  <div class="header">
+    <div class="header-text">
+      <div class="title-en">Trust Signal<span class="hp-new">NEW</span></div>
+      <div class="title-ko">신뢰 신호 — AI 응답의 출처·확신도·생성 여부를 시각화</div>
+    </div>
+  </div>
+
+  <div class="hp-def">
+    "AI는 잘못된 응답·환각·과도한 자신감을 보일 수 있기 때문에, 화면은 응답의 신뢰성을 시각적 신호로 동반한다."
+  </div>
+
+  <div class="hp-body">
+    <div class="hp-left">
+      <div class="hp-section flex1">
+        <div class="hp-section-title">3 Elements · 핵심 요소</div>
+        <div class="hp-elements">
+          <div class="hp-elem">
+            <div class="hp-elem-num">01</div>
+            <div class="hp-elem-body">
+              <div class="hp-elem-name">Source Citation</div>
+              <div class="hp-elem-desc">응답의 출처(콘텐츠 메타·검색·사용자 이력)를 카드에 명시하는 인용 시그니처</div>
+            </div>
+          </div>
+          <div class="hp-elem">
+            <div class="hp-elem-num">02</div>
+            <div class="hp-elem-body">
+              <div class="hp-elem-name">Confidence Meter</div>
+              <div class="hp-elem-desc">AI 확신도를 글로우 강도·타이포 weight·블러 정도로 시각화</div>
+            </div>
+          </div>
+          <div class="hp-elem">
+            <div class="hp-elem-num">03</div>
+            <div class="hp-elem-body">
+              <div class="hp-elem-name">Origin Distinction</div>
+              <div class="hp-elem-desc">생성(AI 만든) · 검색(외부 가져온) · 사용자(직접 입력)를 다른 시그니처로 구분</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hp-right">
+      <div class="hp-section">
+        <div class="hp-section-title">적용 단서</div>
+        <div class="kw-cues">
+          <span class="kw-cue">Glow</span>
+          <span class="kw-cue">Reflection</span>
+          <span class="kw-cue">Color Shift</span>
+        </div>
+      </div>
+      <div class="hp-section flex1">
+        <div class="hp-section-title">시나리오</div>
+        <div class="hp-scn-text">
+          AI가 영화를 추천하면 카드 하단에 <em>"넷플릭스 시청 이력 + 평점 8.5+ 기반"</em> 출처가 미세하게 빛남. 확신도가 높을수록 글로우가 강하고, AI 생성 이미지는 <em>고유 마크</em>가 모서리에 새겨져 검색 결과와 시각적으로 구분되는 영역.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SLIDE 8 · FLUID MAIN
+============================================================ -->
+<div class="slide">
+  <div class="meta">
+    <div class="meta-l">
+      <span class="h-num">VD-02</span>
+      <span class="h-label">Fluid · Main</span>
+    </div>
+    <div class="meta-r">VD Set v2 · 8/18</div>
+  </div>
+
+  <div class="header">
+    <div class="header-text">
+      <div class="title-en">Fluid</div>
+      <div class="title-ko">흐른다 — 격자가 사라지고 의도가 화면을 빚는 유동 구성</div>
+    </div>
+    <svg class="deco" viewBox="0 0 88 88">
+      <path d="M 8 56 Q 22 28, 36 50 T 64 44 T 80 50" stroke="#2D6AFF" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <path d="M 8 64 Q 22 40, 36 60 T 64 54 T 80 60" stroke="rgba(45,106,255,0.5)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <circle cx="80" cy="50" r="2.5" fill="#2D6AFF"/>
+    </svg>
+  </div>
+
+  <div class="kw-what">
+    "AI는 콘텐츠와 사용자 의도를 매번 새로 해석하기 때문에, 화면은 고정 격자가 아니라 매번 빚어지는 유동적 구성이 된다."
+  </div>
+
+  <div class="kw-grid">
+    <div class="kw-card">
+      <div class="kw-card-title">Why · 미래 AI TV에 왜 필요한가</div>
+      <div class="kw-why">정형 카탈로그 한계를 깨고, 콘텐츠 형식·의도·맥락에 맞는 최적 구성을 매번 새로 생성.</div>
+    </div>
+
+    <div class="kw-card">
+      <div class="kw-card-title">5 Visual Cues · 비주얼 단서</div>
+      <div class="kw-cues">
+        <span class="kw-cue">Morph</span>
+        <span class="kw-cue">Easing</span>
+        <span class="kw-cue">Trail</span>
+        <span class="kw-cue">Cascade</span>
+        <span class="kw-cue">Magnetic</span>
+      </div>
+    </div>
+
+    <div class="kw-card">
+      <div class="kw-card-title">발현 시나리오</div>
+      <div class="kw-scn">
+        <div class="kw-scn-item"><span class="kw-scn-icon">🔍</span><span class="kw-scn-text"><em>탐색</em> · 카드들이 가중치·유사도로 자동 재배치</span></div>
+        <div class="kw-scn-item"><span class="kw-scn-icon">🎬</span><span class="kw-scn-text"><em>다양한 비율</em> · 영화·드라마·숏폼 모자이크 배치</span></div>
+        <div class="kw-scn-item"><span class="kw-scn-icon">▶️</span><span class="kw-scn-text"><em>추천→시청</em> · 카드가 풀스크린으로 모핑</span></div>
+        <div class="kw-scn-item"><span class="kw-scn-icon">✨</span><span class="kw-scn-text"><em>AI 생성</em> · 노이즈→형태→디테일 시퀀스</span></div>
+        <div class="kw-scn-item"><span class="kw-scn-icon">🎙️</span><span class="kw-scn-text"><em>입력</em> · 음성·D-pad에 카드가 공명·끌림</span></div>
+      </div>
+    </div>
+
+    <div class="kw-card">
+      <div class="kw-card-title">매핑 가설 (5) · Mapped Hypotheses</div>
+      <div class="kw-hypos">
+        <div class="kw-hypo-row"><span class="kw-hypo-pill">H2</span><span class="kw-hypo-text"><strong>Fluid Layout</strong> · 콘텐츠 속성이 화면 구성을 직접 결정</span></div>
+        <div class="kw-hypo-row"><span class="kw-hypo-pill">H3</span><span class="kw-hypo-text"><strong>Adaptive Card</strong> · 관계에 따라 카드 형태·밀도 변주</span></div>
+        <div class="kw-hypo-row"><span class="kw-hypo-pill">H8</span><span class="kw-hypo-text"><strong>Generative Motion</strong> · 생성 과정 자체가 시네마틱 시퀀스</span></div>
+        <div class="kw-hypo-row"><span class="kw-hypo-pill">H9</span><span class="kw-hypo-text"><strong>Continuous Flow</strong> · 모든 전환·액션이 끊김 없이 인계</span></div>
+        <div class="kw-hypo-row new"><span class="kw-hypo-pill">NEW</span><span class="kw-hypo-text"><strong>Input Resonance</strong> · 원거리 입력에 시각이 공명·응답</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SLIDE 9 · H2 Fluid Layout
+============================================================ -->
+<div class="slide">
+  <div class="meta">
+    <div class="meta-l">
+      <span class="h-num">H2</span>
+      <span class="h-label">Fluid · Hypothesis</span>
+      <span class="hp-link">Fluid</span>
+    </div>
+    <div class="meta-r">VD Set v2 · 9/18</div>
+  </div>
+
+  <div class="header">
+    <div class="header-text">
+      <div class="title-en">Fluid Layout</div>
+      <div class="title-ko">플루이드 레이아웃 — 콘텐츠 속성이 화면 구성을 결정하는 비격자</div>
+    </div>
+  </div>
+
+  <div class="hp-def">
+    "AI는 콘텐츠의 가중치·유사도·형식을 직접 판단하기 때문에, 격자선이 사라지고 콘텐츠가 자기 자리를 스스로 정한다."
+  </div>
+
+  <div class="hp-body">
+    <div class="hp-left">
+      <div class="hp-section flex1">
+        <div class="hp-section-title">3 Elements · 핵심 요소</div>
+        <div class="hp-elements">
+          <div class="hp-elem">
+            <div class="hp-elem-num">01</div>
+            <div class="hp-elem-body">
+              <div class="hp-elem-name">Mass-driven Sizing</div>
+              <div class="hp-elem-desc">가중치 → 면적 · 중요도와 시의성이 카드 크기로 환산되어 시선의 중심 차지</div>
+            </div>
+          </div>
+          <div class="hp-elem">
+            <div class="hp-elem-num">02</div>
+            <div class="hp-elem-body">
+              <div class="hp-elem-name">Magnetic Clustering</div>
+              <div class="hp-elem-desc">유사도 → 거리 · 의미·장르·맥락 유사성이 자기력처럼 카드 거리 결정</div>
+            </div>
+          </div>
+          <div class="hp-elem">
+            <div class="hp-elem-num">03</div>
+            <div class="hp-elem-body">
+              <div class="hp-elem-name">Free Mosaic</div>
+              <div class="hp-elem-desc">형식 → 비율 · 영화 2.39:1, 드라마 16:9, 숏폼 9:16이 본래 비율로 배치</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hp-right">
+      <div class="hp-section">
+        <div class="hp-section-title">적용 단서</div>
+        <div class="kw-cues">
+          <span class="kw-cue">Magnetic</span>
+          <span class="kw-cue">Morph</span>
+          <span class="kw-cue">Cascade</span>
+        </div>
+      </div>
+      <div class="hp-section flex1">
+        <div class="hp-section-title">시나리오</div>
+        <div class="hp-scn-text">
+          홈 진입 시 <em>가장 중요한 신작</em>이 크게 자리잡고, <em>유사 장르</em>는 그 옆으로 자석처럼 끌려와 군집. 영화는 가로로 길게, 숏폼은 세로로 좁게 배치되어 콘텐츠가 자기 본 모습을 잃지 않는 영역.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SLIDE 10 · H3 Adaptive Card
+============================================================ -->
+<div class="slide">
+  <div class="meta">
+    <div class="meta-l">
+      <span class="h-num">H3</span>
+      <span class="h-label">Fluid · Hypothesis</span>
+      <span class="hp-link">Fluid</span>
+    </div>
+    <div class="meta-r">VD Set v2 · 10/18</div>
+  </div>
+
+  <div class="header">
+    <div class="header-text">
+      <div class="title-en">Adaptive Card</div>
+      <div class="title-ko">관계 적응형 카드 — AI 관계에 따라 형태·밀도·경계가 변주</div>
+    </div>
+  </div>
+
+  <div class="hp-def">
+    "AI는 Agent·Commentator·Curator·Generator로 다른 역할을 하기 때문에, 카드는 단일 형태가 아니라 관계별로 다르게 빚어진다."
+  </div>
+
+  <div class="hp-body">
+    <div class="hp-left">
+      <div class="hp-section flex1">
+        <div class="hp-section-title">3 Elements · 핵심 요소</div>
+        <div class="hp-elements">
+          <div class="hp-elem">
+            <div class="hp-elem-num">01</div>
+            <div class="hp-elem-body">
+              <div class="hp-elem-name">Relationship-Tuned Density</div>
+              <div class="hp-elem-desc">Agent 단일 결과 1줄 · Curator 다중 옵션 그리드 · Generator 4-up · Commentator 가장자리</div>
+            </div>
+          </div>
+          <div class="hp-elem">
+            <div class="hp-elem-num">02</div>
+            <div class="hp-elem-body">
+              <div class="hp-elem-name">Permeable Card</div>
+              <div class="hp-elem-desc">Layer 2↔3 진입 시 경계가 흐려지거나 명확해짐 — 개입도에 따라 투과성 변화</div>
+            </div>
+          </div>
+          <div class="hp-elem">
+            <div class="hp-elem-num">03</div>
+            <div class="hp-elem-body">
+              <div class="hp-elem-name">Stateful Card</div>
+              <div class="hp-elem-desc">상호작용 이력에 따라 상태(접힘·확장·디밍·승격) 유지 — 정체성 보존</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hp-right">
+      <div class="hp-section">
+        <div class="hp-section-title">적용 단서</div>
+        <div class="kw-cues">
+          <span class="kw-cue">Morph</span>
+          <span class="kw-cue">Easing</span>
+          <span class="kw-cue">Magnetic</span>
+        </div>
+      </div>
+      <div class="hp-section flex1">
+        <div class="hp-section-title">시나리오</div>
+        <div class="hp-scn-text">
+          "이거 추천해줘"는 <em>Curator 그리드 카드</em>로, "이거 만들어줘"는 <em>Generator 4-up 카드</em>로 응답. 같은 콘텐츠라도 어떤 관계에서 등장했는지에 따라 카드 형태가 변형되어 사용자가 AI 역할을 직관적으로 인지하는 영역.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SLIDE 11 · H8 Generative Motion
+============================================================ -->
+<div class="slide">
+  <div class="meta">
+    <div class="meta-l">
+      <span class="h-num">H8</span>
+      <span class="h-label">Fluid · Hypothesis</span>
+      <span class="hp-link">Fluid</span>
+    </div>
+    <div class="meta-r">VD Set v2 · 11/18</div>
+  </div>
+
+  <div class="header">
+    <div class="header-text">
+      <div class="title-en">Generative Motion</div>
+      <div class="title-ko">생성형 모션 — AI 생성 과정이 시네마틱 시퀀스로 흐름</div>
+    </div>
+  </div>
+
+  <div class="hp-def">
+    "AI는 응답까지 시간이 걸리기 때문에, 화면은 로딩 스피너 대신 생성 과정 자체를 시청 가치를 갖는 시퀀스로 흘려보낸다."
+  </div>
+
+  <div class="hp-body">
+    <div class="hp-left">
+      <div class="hp-section flex1">
+        <div class="hp-section-title">3 Elements · 핵심 요소</div>
+        <div class="hp-elements">
+          <div class="hp-elem">
+            <div class="hp-elem-num">01</div>
+            <div class="hp-elem-body">
+              <div class="hp-elem-name">Generation Sequence</div>
+              <div class="hp-elem-desc">노이즈 → 형태 → 디테일 → 완성으로 이어지는 단계 전환 시퀀스</div>
+            </div>
+          </div>
+          <div class="hp-elem">
+            <div class="hp-elem-num">02</div>
+            <div class="hp-elem-body">
+              <div class="hp-elem-name">Process Visualization</div>
+              <div class="hp-elem-desc">프롬프트·데이터·노드가 흐르고 결합되는 과정 자체를 시각화</div>
+            </div>
+          </div>
+          <div class="hp-elem">
+            <div class="hp-elem-num">03</div>
+            <div class="hp-elem-body">
+              <div class="hp-elem-name">Reveal Choreography</div>
+              <div class="hp-elem-desc">최종 결과 등장이 안무처럼 의도된 연출 (동시 펼침·순차 등장·회전)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hp-right">
+      <div class="hp-section">
+        <div class="hp-section-title">적용 단서</div>
+        <div class="kw-cues">
+          <span class="kw-cue">Morph</span>
+          <span class="kw-cue">Cascade</span>
+          <span class="kw-cue">Easing</span>
+        </div>
+      </div>
+      <div class="hp-section flex1">
+        <div class="hp-section-title">시나리오</div>
+        <div class="hp-scn-text">
+          "주말 휴식 어울리는 영화 4편 만들어줘"라고 하면 화면이 <em>입자처럼 흩어진 노이즈</em>로 시작, 형태가 점점 또렷해지며 4개의 카드로 <em>안무하듯 펼쳐짐</em>. 기다림 자체가 시청 가치를 갖는 영역.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SLIDE 12 · H9 Continuous Flow
+============================================================ -->
+<div class="slide">
+  <div class="meta">
+    <div class="meta-l">
+      <span class="h-num">H9</span>
+      <span class="h-label">Fluid · Hypothesis</span>
+      <span class="hp-link">Fluid</span>
+    </div>
+    <div class="meta-r">VD Set v2 · 12/18</div>
+  </div>
+
+  <div class="header">
+    <div class="header-text">
+      <div class="title-en">Continuous Flow</div>
+      <div class="title-ko">컨티뉴어스 플로우 — 모든 전환·액션이 끊김 없이 인계되는 메타 원칙</div>
+    </div>
+  </div>
+
+  <div class="hp-def">
+    "AI 개입은 하나의 의도 흐름 안에서 일어나기 때문에, 화면은 요소가 사라지고 등장하지 않고 같은 요소가 다른 형태로 변형된다."
+  </div>
+
+  <div class="hp-body">
+    <div class="hp-left">
+      <div class="hp-section flex1">
+        <div class="hp-section-title">3 Elements · 핵심 요소</div>
+        <div class="hp-elements">
+          <div class="hp-elem">
+            <div class="hp-elem-num">01</div>
+            <div class="hp-elem-body">
+              <div class="hp-elem-name">Morph Over Replace</div>
+              <div class="hp-elem-desc">사라짐·등장 대신 변형 — 추천 → 상세 → 결제 카드가 같은 요소의 모핑</div>
+            </div>
+          </div>
+          <div class="hp-elem">
+            <div class="hp-elem-num">02</div>
+            <div class="hp-elem-body">
+              <div class="hp-elem-name">Layer Bridge</div>
+              <div class="hp-elem-desc">Layer 2 ↔ 3 전환이 끊김 없는 확장 — 반투명 패널이 풀스크린으로 자연 확장</div>
+            </div>
+          </div>
+          <div class="hp-elem">
+            <div class="hp-elem-num">03</div>
+            <div class="hp-elem-body">
+              <div class="hp-elem-name">Action Handoff</div>
+              <div class="hp-elem-desc">Commentator → Curator → Generator → Agent로 액션 인계 시 같은 요소가 역할 변경</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hp-right">
+      <div class="hp-section">
+        <div class="hp-section-title">적용 단서</div>
+        <div class="kw-cues">
+          <span class="kw-cue">Morph</span>
+          <span class="kw-cue">Easing</span>
+          <span class="kw-cue">Trail</span>
+        </div>
+      </div>
+      <div class="hp-section flex1">
+        <div class="hp-section-title">시나리오</div>
+        <div class="hp-scn-text">
+          영화 추천 카드를 보다 "예고편 보여줘"라고 말하면 카드가 <em>풀스크린으로 확장</em>되며 영상이 재생. "이거 비슷한 거 더"라고 말하면 다시 <em>패널로 축소</em>되며 새 추천이 자기적으로 모임. 새 카드가 등장하는 게 아니라 같은 표면이 변형되는 영역.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SLIDE 13 · NEW Input Resonance
+============================================================ -->
+<div class="slide">
+  <div class="meta">
+    <div class="meta-l">
+      <span class="h-num">NEW</span>
+      <span class="h-label">Fluid · Hypothesis</span>
+      <span class="hp-link">Fluid</span>
+    </div>
+    <div class="meta-r">VD Set v2 · 13/18</div>
+  </div>
+
+  <div class="header">
+    <div class="header-text">
+      <div class="title-en">Input Resonance<span class="hp-new">NEW</span></div>
+      <div class="title-ko">입력 공명 — 원거리 입력에 화면이 즉시 공명·응답</div>
+    </div>
+  </div>
+
+  <div class="hp-def">
+    "TV는 원거리·다중 입력(리모컨·음성·시선·제스처)으로 조작하기 때문에, 화면은 입력에 시각적으로 공명하며 응답한다."
+  </div>
+
+  <div class="hp-body">
+    <div class="hp-left">
+      <div class="hp-section flex1">
+        <div class="hp-section-title">3 Elements · 핵심 요소</div>
+        <div class="hp-elements">
+          <div class="hp-elem">
+            <div class="hp-elem-num">01</div>
+            <div class="hp-elem-body">
+              <div class="hp-elem-name">Voice Wave</div>
+              <div class="hp-elem-desc">음성 입력이 시작되면 화면이 음파처럼 공명 — 음성 강도·길이에 따라 시각 변화</div>
+            </div>
+          </div>
+          <div class="hp-elem">
+            <div class="hp-elem-num">02</div>
+            <div class="hp-elem-body">
+              <div class="hp-elem-name">Focus Trail</div>
+              <div class="hp-elem-desc">D-pad 이동 시 포커스에 잔향·트레일 — 시선이 어디서 어디로 가는지 인지</div>
+            </div>
+          </div>
+          <div class="hp-elem">
+            <div class="hp-elem-num">03</div>
+            <div class="hp-elem-body">
+              <div class="hp-elem-name">Gaze Resonance</div>
+              <div class="hp-elem-desc">시선·제스처 감지 시 해당 영역이 미세하게 부풀거나 빛남 — 입력 전 예열</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hp-right">
+      <div class="hp-section">
+        <div class="hp-section-title">적용 단서</div>
+        <div class="kw-cues">
+          <span class="kw-cue">Trail</span>
+          <span class="kw-cue">Magnetic</span>
+          <span class="kw-cue">Easing</span>
+        </div>
+      </div>
+      <div class="hp-section flex1">
+        <div class="hp-section-title">시나리오</div>
+        <div class="hp-scn-text">
+          "추천해줘"라고 말하면 <em>화면 전체가 음파로 공명</em>. D-pad 오른쪽을 누르면 카드들이 <em>자기적으로 끌려와</em> 포커스가 부드럽게 이동. 응시한 카드는 시선 도달 전부터 미세하게 부풀어 응답을 예고하는 영역.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SLIDE 14 · DEEP MAIN
+============================================================ -->
+<div class="slide">
+  <div class="meta">
+    <div class="meta-l">
+      <span class="h-num">VD-03</span>
+      <span class="h-label">Deep · Main</span>
+    </div>
+    <div class="meta-r">VD Set v2 · 14/18</div>
+  </div>
+
+  <div class="header">
+    <div class="header-text">
+      <div class="title-en">Deep</div>
+      <div class="title-ko">깊어진다 — 화면이 평면이 아니라 흐릿함과 거리로 위계를 만듦</div>
+    </div>
+    <svg class="deco" viewBox="0 0 88 88">
+      <rect x="14" y="14" width="52" height="34" rx="3" fill="rgba(45,106,255,0.15)"/>
+      <rect x="22" y="22" width="52" height="34" rx="3" fill="rgba(45,106,255,0.35)"/>
+      <rect x="30" y="30" width="52" height="34" rx="3" fill="#2D6AFF"/>
+    </svg>
+  </div>
+
+  <div class="kw-what">
+    "AI는 정보의 우선순위와 맥락을 위계로 판단하기 때문에, 화면은 평면적 나열이 아니라 흐릿함과 거리로 위계가 부유하는 다층 표면이 된다."
+  </div>
+
+  <div class="kw-grid">
+    <div class="kw-card">
+      <div class="kw-card-title">Why · 미래 AI TV에 왜 필요한가</div>
+      <div class="kw-why">정보량이 폭증하는 AI 시대, 평면 나열로는 우선순위 전달이 한계. 깊이가 곧 정보의 위계 신호.</div>
+    </div>
+
+    <div class="kw-card">
+      <div class="kw-card-title">5 Visual Cues · 비주얼 단서</div>
+      <div class="kw-cues">
+        <span class="kw-cue">Blur</span>
+        <span class="kw-cue">Scale</span>
+        <span class="kw-cue">Brightness</span>
+        <span class="kw-cue">Parallax</span>
+        <span class="kw-cue">Shadow</span>
+      </div>
+    </div>
+
+    <div class="kw-card">
+      <div class="kw-card-title">발현 시나리오</div>
+      <div class="kw-scn">
+        <div class="kw-scn-item"><span class="kw-scn-icon">🌙</span><span class="kw-scn-text"><em>Standby</em> · 카드들이 Z층으로 부유</span></div>
+        <div class="kw-scn-item"><span class="kw-scn-icon">🔍</span><span class="kw-scn-text"><em>탐색</em> · 포커스 앞으로, 주변 뒤로 후퇴</span></div>
+        <div class="kw-scn-item"><span class="kw-scn-icon">📺</span><span class="kw-scn-text"><em>시청 중</em> · Glass 카드가 영상 위 부유</span></div>
+        <div class="kw-scn-item"><span class="kw-scn-icon">📊</span><span class="kw-scn-text"><em>메타정보</em> · 뱃지·평점이 콘텐츠 위 Z층</span></div>
+        <div class="kw-scn-item"><span class="kw-scn-icon">🔄</span><span class="kw-scn-text"><em>레이어 전환</em> · L2→L3 전진 확장</span></div>
+      </div>
+    </div>
+
+    <div class="kw-card">
+      <div class="kw-card-title">매핑 가설 (3) · Mapped Hypotheses</div>
+      <div class="kw-hypos">
+        <div class="kw-hypo-row"><span class="kw-hypo-pill">H1</span><span class="kw-hypo-text"><strong>Layered Composition</strong> · 4 레이어가 의미적 위계로 공존</span></div>
+        <div class="kw-hypo-row"><span class="kw-hypo-pill">H10</span><span class="kw-hypo-text"><strong>Volumetric Surface</strong> · Z축 깊이로 정보 입체화</span></div>
+        <div class="kw-hypo-row new"><span class="kw-hypo-pill">NEW</span><span class="kw-hypo-text"><strong>Depth Cues</strong> · 블러·거리로 광학적 부유감 표현</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SLIDE 15 · H1 Layered Composition
+============================================================ -->
+<div class="slide">
+  <div class="meta">
+    <div class="meta-l">
+      <span class="h-num">H1</span>
+      <span class="h-label">Deep · Hypothesis</span>
+      <span class="hp-link">Deep</span>
+    </div>
+    <div class="meta-r">VD Set v2 · 15/18</div>
+  </div>
+
+  <div class="header">
+    <div class="header-text">
+      <div class="title-en">Layered Composition</div>
+      <div class="title-ko">레이어드 컴포지션 — 4 레이어의 의미적 위계와 컴포지션 원칙</div>
+    </div>
+  </div>
+
+  <div class="hp-def">
+    "AI는 어디에 등장하는가에 따라 다른 시각 문법을 가져야 하기 때문에, 화면은 4개의 의미 레이어로 분리되어 위계화된다."
+  </div>
+
+  <div class="hp-body">
+    <div class="hp-left">
+      <div class="hp-section flex1">
+        <div class="hp-section-title">3 Elements · 핵심 요소</div>
+        <div class="hp-elements">
+          <div class="hp-elem">
+            <div class="hp-elem-num">01</div>
+            <div class="hp-elem-body">
+              <div class="hp-elem-name">Layer-1 Sanctuary</div>
+              <div class="hp-elem-desc">콘텐츠 비침범 baseline — 상위 레이어가 콘텐츠를 가리지 않는 원칙</div>
+            </div>
+          </div>
+          <div class="hp-elem">
+            <div class="hp-elem-num">02</div>
+            <div class="hp-elem-body">
+              <div class="hp-elem-name">Layer-2 Slide Panel</div>
+              <div class="hp-elem-desc">화면 가장자리에서 슬라이드 인 하는 반투명 패널 — 콘텐츠와 공존</div>
+            </div>
+          </div>
+          <div class="hp-elem">
+            <div class="hp-elem-num">03</div>
+            <div class="hp-elem-body">
+              <div class="hp-elem-name">Layer-3 Full Canvas</div>
+              <div class="hp-elem-desc">사용자 명시 선택 시 풀스크린 전환 — AI 대화·큐레이션·창작 캔버스</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hp-right">
+      <div class="hp-section">
+        <div class="hp-section-title">적용 단서</div>
+        <div class="kw-cues">
+          <span class="kw-cue">Brightness</span>
+          <span class="kw-cue">Blur</span>
+          <span class="kw-cue">Scale</span>
+        </div>
+      </div>
+      <div class="hp-section flex1">
+        <div class="hp-section-title">시나리오</div>
+        <div class="hp-scn-text">
+          영화 시청 중 AI 추천이 필요할 때, <em>콘텐츠는 Layer 1</em>에서 보호되고 <em>추천 패널은 Layer 2</em>에서 가장자리에 등장. "자세히 보여줘"라고 하면 <em>Layer 3</em>로 풀스크린 확장. 각 레이어가 자기 문법으로 작동하는 영역.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SLIDE 16 · H10 Volumetric Surface
+============================================================ -->
+<div class="slide">
+  <div class="meta">
+    <div class="meta-l">
+      <span class="h-num">H10</span>
+      <span class="h-label">Deep · Hypothesis</span>
+      <span class="hp-link">Deep</span>
+    </div>
+    <div class="meta-r">VD Set v2 · 16/18</div>
+  </div>
+
+  <div class="header">
+    <div class="header-text">
+      <div class="title-en">Volumetric Surface</div>
+      <div class="title-ko">볼류메트릭 서피스 — Z축 깊이로 정보가 입체적으로 다층화</div>
+    </div>
+  </div>
+
+  <div class="hp-def">
+    "AI는 콘텐츠와 메타정보·뱃지·우선순위를 동시에 표현해야 하기 때문에, 화면은 평면이 아닌 Z축 깊이로 정보를 다층화한다."
+  </div>
+
+  <div class="hp-body">
+    <div class="hp-left">
+      <div class="hp-section flex1">
+        <div class="hp-section-title">3 Elements · 핵심 요소</div>
+        <div class="hp-elements">
+          <div class="hp-elem">
+            <div class="hp-elem-num">01</div>
+            <div class="hp-elem-body">
+              <div class="hp-elem-name">Z-Stacked Cards</div>
+              <div class="hp-elem-desc">콘텐츠·메타·뱃지·자막이 서로 다른 Z층에 부유하며 가리지 않고 공존</div>
+            </div>
+          </div>
+          <div class="hp-elem">
+            <div class="hp-elem-num">02</div>
+            <div class="hp-elem-body">
+              <div class="hp-elem-name">Priority Elevation</div>
+              <div class="hp-elem-desc">우선순위가 높은 정보일수록 앞으로 부유 — 위계가 곧 Z 좌표</div>
+            </div>
+          </div>
+          <div class="hp-elem">
+            <div class="hp-elem-num">03</div>
+            <div class="hp-elem-body">
+              <div class="hp-elem-name">Floating Meta</div>
+              <div class="hp-elem-desc">평점·뱃지·자막·번역이 콘텐츠 위 별도 Z층에 부유 — 콘텐츠 침범 없음</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hp-right">
+      <div class="hp-section">
+        <div class="hp-section-title">적용 단서</div>
+        <div class="kw-cues">
+          <span class="kw-cue">Shadow</span>
+          <span class="kw-cue">Scale</span>
+          <span class="kw-cue">Brightness</span>
+        </div>
+      </div>
+      <div class="hp-section flex1">
+        <div class="hp-section-title">시나리오</div>
+        <div class="hp-scn-text">
+          영화 시청 중 평점·예고편·캐스팅 정보가 콘텐츠를 가리지 않고 <em>다른 Z층에 떠 있음</em>. 사용자가 시선을 옮기면 응시한 메타가 앞으로 부유하고 나머지는 뒤로 후퇴. 깊이가 곧 우선순위 신호가 되는 영역.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SLIDE 17 · NEW Depth Cues
+============================================================ -->
+<div class="slide">
+  <div class="meta">
+    <div class="meta-l">
+      <span class="h-num">NEW</span>
+      <span class="h-label">Deep · Hypothesis</span>
+      <span class="hp-link">Deep</span>
+    </div>
+    <div class="meta-r">VD Set v2 · 17/18</div>
+  </div>
+
+  <div class="header">
+    <div class="header-text">
+      <div class="title-en">Depth Cues<span class="hp-new">NEW</span></div>
+      <div class="title-ko">깊이 단서 — 광학적 부유감을 만드는 5단서 시스템</div>
+    </div>
+  </div>
+
+  <div class="hp-def">
+    "TV는 원거리 시청 매체라 미세 깊이는 안 보이기 때문에, 화면은 5가지 명확한 광학 단서로 Z축 부유감을 만든다."
+  </div>
+
+  <div class="hp-body">
+    <div class="hp-left">
+      <div class="hp-section flex1">
+        <div class="hp-section-title">3 Elements · 핵심 요소</div>
+        <div class="hp-elements">
+          <div class="hp-elem">
+            <div class="hp-elem-num">01</div>
+            <div class="hp-elem-body">
+              <div class="hp-elem-name">Blur · 흐릿함</div>
+              <div class="hp-elem-desc">뒤로 갈수록 흐려짐 — Depth of Field로 광학적 깊이 표현</div>
+            </div>
+          </div>
+          <div class="hp-elem">
+            <div class="hp-elem-num">02</div>
+            <div class="hp-elem-body">
+              <div class="hp-elem-name">Scale + Brightness · 거리</div>
+              <div class="hp-elem-desc">뒤로 갈수록 작아지고 어두워짐 — 대기 원근법</div>
+            </div>
+          </div>
+          <div class="hp-elem">
+            <div class="hp-elem-num">03</div>
+            <div class="hp-elem-body">
+              <div class="hp-elem-name">Parallax + Shadow · 부유</div>
+              <div class="hp-elem-desc">이동 시 레이어별 속도 차이 + 카드 아래 부드러운 그림자로 부유감 강화</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hp-right">
+      <div class="hp-section">
+        <div class="hp-section-title">적용 단서</div>
+        <div class="kw-cues">
+          <span class="kw-cue">Blur</span>
+          <span class="kw-cue">Scale</span>
+          <span class="kw-cue">Brightness</span>
+          <span class="kw-cue">Parallax</span>
+          <span class="kw-cue">Shadow</span>
+        </div>
+      </div>
+      <div class="hp-section flex1">
+        <div class="hp-section-title">시나리오</div>
+        <div class="hp-scn-text">
+          탐색 화면에서 D-pad를 누르면 <em>포커스 카드가 앞으로 전진</em>(scale↑, blur↓, brightness↑), 주변 카드는 <em>뒤로 후퇴</em>하며 살짝 흐려지고 어두워짐. 카드 아래 그림자가 깊이를 강화하는 영역.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     SLIDE 18 · SUMMARY
+============================================================ -->
+<div class="slide">
+  <div class="meta">
+    <div class="meta-l">
+      <span class="h-num">SUM</span>
+      <span class="h-label">Visual Direction · Summary</span>
+    </div>
+    <div class="meta-r">VD Set v2 · 18/18</div>
+  </div>
+
+  <div class="sum-slogan">
+    <div class="sum-slogan-ko">"AI TV는 호흡하고, 흐르고, 부유한다."</div>
+    <div class="sum-slogan-en">AI TV breathes, flows, and floats.</div>
+  </div>
+
+  <div class="sum-grid">
+    <div class="sum-card">
+      <div class="sum-card-num">VD-01</div>
+      <div>
+        <div class="sum-kw-en">Alive</div>
+        <div class="sum-kw-ko">살아있다 · 호흡한다</div>
+      </div>
+      <div class="sum-thought">AI는 사용자에 의식적으로 반응하기 때문에, 화면은 호흡하는 살아있는 표면이 된다.</div>
+      <div class="sum-row"><div class="sum-row-label">단서</div><div class="sum-row-val">Glow · Breathe · Color Shift · Reflection · Pulse</div></div>
+      <div class="sum-row"><div class="sum-row-label">가설 5</div><div class="sum-row-val">Living Material · Edge Ambient · Glanceable Surface · Symbolic Cue · <strong style="color:var(--blue-soft)">Trust Signal ✦</strong></div></div>
+    </div>
+
+    <div class="sum-card">
+      <div class="sum-card-num">VD-02</div>
+      <div>
+        <div class="sum-kw-en">Fluid</div>
+        <div class="sum-kw-ko">흐른다 · 빚어진다</div>
+      </div>
+      <div class="sum-thought">AI는 의도를 매번 새로 해석하기 때문에, 화면은 매번 빚어지는 유동적 구성이 된다.</div>
+      <div class="sum-row"><div class="sum-row-label">단서</div><div class="sum-row-val">Morph · Easing · Trail · Cascade · Magnetic</div></div>
+      <div class="sum-row"><div class="sum-row-label">가설 5</div><div class="sum-row-val">Fluid Layout · Adaptive Card · Generative Motion · Continuous Flow · <strong style="color:var(--blue-soft)">Input Resonance ✦</strong></div></div>
+    </div>
+
+    <div class="sum-card">
+      <div class="sum-card-num">VD-03</div>
+      <div>
+        <div class="sum-kw-en">Deep</div>
+        <div class="sum-kw-ko">깊어진다 · 부유한다</div>
+      </div>
+      <div class="sum-thought">AI는 정보 위계를 판단하기 때문에, 화면은 흐릿함과 거리로 위계가 부유하는 다층 표면이 된다.</div>
+      <div class="sum-row"><div class="sum-row-label">단서</div><div class="sum-row-val">Blur · Scale · Brightness · Parallax · Shadow</div></div>
+      <div class="sum-row"><div class="sum-row-label">가설 3</div><div class="sum-row-val">Layered Composition · Volumetric Surface · <strong style="color:var(--blue-soft)">Depth Cues ✦</strong></div></div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
